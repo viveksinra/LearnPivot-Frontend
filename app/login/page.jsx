@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useLogin } from "../hooks/auth/useLogin";
 import CircularProgress from "@mui/material/CircularProgress";
 import Navbar from "../Components/ITStartup/Common/Navbar/Navbar";
+import LoginForm from "../Components/PublicPage/LoginSignUp/LoginForm";
 // import { useCurrentUser } from "../hooks/auth/useCurrentUser";
 
 function Login() {
@@ -101,95 +102,9 @@ function Login() {
                 </Typography>
               </Link>
             </div>
-            {/* <Tabs value={tabVal} onChange={(e,v)=>setTabs(v)} aria-label="tabs">
-          <Tab label="Email Based" />
-          <Tab label="Phone Based" />
-        </Tabs> */}
-            <br />
-            {/* {tabVal === 0 && */}
-            <form
-              onSubmit={(e) => handleLogin(e)}
-              id="login-form"
-              className="loginDataBox"
-            >
-              <Grid container spacing={4}>
-                <Grid item xs={12}>
-                  <TextField
-                    id="loginEmail"
-                    fullWidth
-                    required
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your Email Id"
-                    label="Email Address"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="loginPass"
-                    fullWidth
-                    required
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPass(e.target.value)}
-                    placeholder="Password"
-                    label="Password"
-                    variant="outlined"
-                    inputProps={{ autoComplete: "on" }}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            onClick={() => setShowPass(!showPassword)}
-                            edge="start"
-                          >
-                            {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
-                          </IconButton>
-                        </InputAdornment>
-                      ),
-                    }}
-                  />
-                </Grid>
-                <Grid item xs={12} className="center">
-                  <Fab
-                    variant="extended"
-                    type="submit"
-                    color="primary"
-                    aria-label="loginBtn"
-                    disabled={loading}
-                  >
-                    {loading ? (
-                      <CircularProgress color="secondary" size={24} />
-                    ) : (
-                      <>
-                        <FcKey style={{ fontSize: 25, marginRight: 10 }} />
-                        Login
-                      </>
-                    )}
-                  </Fab>
-                </Grid>
-              </Grid>
-            </form>
-            {/* } */}
-            {/* {tabVal === 1 && <div className="loginDataBox">
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-            <TextField id="phoneNo" fullWidth label="Enter your Phone Number" placeholder="Enter your Mobile No." type="number" variant="outlined" />
-            </Grid>
-            <Grid item xs={12}>
-            <TextField id="OTP" fullWidth label="Enter OTP" variant="outlined" />
-            </Grid>
-            <Grid item xs={12} className="center">
-            <Fab variant="extended" color="primary" onClick={()=>alert("Phone Based Login is under maintenance. We will fix it very soon. Meanwhile, Please Login with your Email id and Password.")} aria-label="loginBtn">
-              <FcKey style={{fontSize:25, marginRight:10}} />
-              Login
-            </Fab>
-            </Grid>
-          </Grid>
-      </div> } */}
+            <LoginForm isRedirectToDashboard={true}/>
+      
+                    
           </Grid>
           <Grid item xs={12} md={6} id="LoginImgSide">
             <img
