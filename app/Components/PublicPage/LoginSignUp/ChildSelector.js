@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
   TextField, MenuItem, Button, Dialog, DialogActions, DialogContent,
-  DialogContentText, DialogTitle, Box, Typography
+  DialogContentText, DialogTitle, Box, Typography, IconButton,
+  styled
 } from '@mui/material';
-import { styled } from '@mui/system';
-import { Add as AddIcon } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 import AnimatedButton from '../../Common/AnimatedButton';
 import { DatePicker } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -27,16 +27,14 @@ const ChildContainer = styled(Box)(({ theme, selected }) => ({
 }));
 
 const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
-    
-    const snackRef = useRef();
+  const snackRef = useRef();
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [newChild, setNewChild] = useState({
     _id: '',
     childName: '',
-    childDob: '',
+    childDob: null,
     childGender: '',
-    childImage: null,
   });
 
   const handleSelectChild = (child) => {
@@ -60,18 +58,18 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
     setNewChild(prev => ({ ...prev, childDob: date }));
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    setNewChild(prev => ({ ...prev, childImage: URL.createObjectURL(file) }));
-  };
 
   const handleGetAllChildren = async () => {
     try {
       const response = await childService.getAll();
-      console.log(response);
-      setAllChildren(response.data);
+      if (response.data) {
+        setAllChildren(response.data);
+      } else {
+        throw new Error('No data received');
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
+      snackRef.current.handleSnack({ message: "Failed to fetch children.", variant: "error" });
     }
   };
 
@@ -79,26 +77,29 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
     handleGetAllChildren();
   }, []);
 
+
+  useEffect(() => {
+    function autoSelectOneChild() {
+            setSelectedChild(allChildren[0]);
+    }
+    autoSelectOneChild();
+  }, [allChildren]);
+
   const handleAddChild = async () => {
+    if (!newChild.childName || !newChild.childGender) {
+      snackRef.current.handleSnack({ message: "Please fill all required fields.", variant: "error" });
+      return;
+    }
     try {
-      const myChildData = {
-        _id: newChild._id, 
-        childName: newChild.childName,
-        childDob: newChild.childDob,
-        childGender: newChild.childGender,
-        childImage: newChild.childImage,
-      };
-      const response = await childService.add(newChild._id,myChildData);
+      const response = await childService.add(newChild._id,newChild);
+      snackRef.current.handleSnack(response);
       if (response.variant === "success") {
-        snackRef.current.handleSnack(response);
         handleClose();
         handleGetAllChildren();
-      } else {
-        snackRef.current.handleSnack(response);
       }
     } catch (error) {
       console.error("Error submitting data:", error);
-      snackRef.current.handleSnack({ fullDescription: "Failed to submit data.", variant: "error" });
+      snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
     }
   };
 
@@ -137,17 +138,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
           <Box component="form" sx={{ mt: 2 }}>
-            <Button variant="contained" component="label">
-              Upload Child Image
-              <input type="file" hidden onChange={handleImageUpload} />
-            </Button>
-            {newChild.childImage && (
-              <img
-                src={newChild.childImage}
-                alt="Child"
-                style={{ width: 80, height: 80, marginTop: 16, borderRadius: '50%' }}
-              />
-            )}
+           
             <TextField
               autoFocus
               margin="dense"
@@ -160,14 +151,17 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               onChange={handleInputChange}
               required
             />
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Date of Birth"
-                value={newChild.childDob}
-                onChange={handleDateChange}
-                renderInput={(params) => <TextField {...params} fullWidth margin="dense" variant="outlined" />}
-              />
-            </LocalizationProvider>
+            <TextField
+            style={{ marginTop: 16 }}
+                  label={`Date Of Birth`}
+                  variant="outlined"
+                  value={newChild.childDob}
+                  type='date'
+                  focused
+                  fullWidth
+                  onChange={handleInputChange}
+                />
+    
             <TextField
               select
               margin="dense"
@@ -177,6 +171,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               variant="outlined"
               value={newChild.childGender}
               onChange={handleInputChange}
+              required
             >
               <MenuItem value="Boy">Boy</MenuItem>
               <MenuItem value="Girl">Girl</MenuItem>
@@ -196,7 +191,6 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         </AnimatedButton>
       )}
       <MySnackbar ref={snackRef} />
-
     </div>
   );
 };
