@@ -13,6 +13,7 @@ const BuyComponent = ({ data }) => {
   const [selectedDates, setSelectedDates] = useState([]);
   const [submittedId, setSubmittedId] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
+  const [selectedChild, setSelectedChild] = useState('');
 
   return (
     <section style={{ backgroundColor: "#fff", marginBottom: "10px", paddingTop:"20px" }} id="enquiry">
@@ -30,6 +31,8 @@ const BuyComponent = ({ data }) => {
                 totalAmount={totalAmount} 
                 selectedDates={selectedDates}
                  setSelectedDates={setSelectedDates}
+                 selectedChild={selectedChild} 
+                 setSelectedChild={setSelectedChild} 
               />
             )}
           </Grid>
