@@ -3,7 +3,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
-import { mockTestService, myCourseService } from '@/app/services';
+import {  myCourseService } from '@/app/services';
 
 const pulse = keyframes`
   0% {
