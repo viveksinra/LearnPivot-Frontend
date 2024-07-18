@@ -6,11 +6,12 @@ import { useState, useRef, useContext } from "react";
 import MySnackbar from "../../MySnackbar/MySnackbar";
 import ComLogSigForm from "../LoginSignUp/ComLogSigForm";
 import MainContext from "../../Context/MainContext";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Grid } from "@mui/material";
 import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
+import DateSelector from "../Classes/DateSelector";
 
-function CourseEnqForm() {
+function CourseEnqForm({data, totalAmount, selectedDates,setSelectedDates}) {
   const snackRef = useRef();
   
   // Context
@@ -19,7 +20,13 @@ function CourseEnqForm() {
   return (
    <>
           {(state?.isAuthenticated && currentUser) ? (
-                   <h1>Hello work</h1> 
+                         <Grid item xs={12}>
+                         {totalAmount? (
+                             <Typography variant="h4" gutterBottom>
+                             Proceed to pay Amount: € {totalAmount}
+                           </Typography>
+                         ): ( <DateSelector data={data} selectedDates={selectedDates} setSelectedDates={setSelectedDates}/>)}
+                        </Grid>
               ) : (
                 <ComLogSigForm isRedirectToDashboard={false}/>
               )}

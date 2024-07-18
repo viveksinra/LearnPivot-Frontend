@@ -15,22 +15,21 @@ const BuyComponent = ({ data }) => {
   const [totalAmount, setTotalAmount] = useState("");
 
   return (
-    <section style={{ backgroundColor: "#fff", marginBottom: "10px" }} id="enquiry">
+    <section style={{ backgroundColor: "#fff", marginBottom: "10px", paddingTop:"20px" }} id="enquiry">
       <Container maxWidth="xl">
         <Grid container>
           <Grid item xs={12} lg={6}>
-            <SmallOneClass data={data} totalAmount={totalAmount} selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+            <SmallOneClass data={data} totalAmount={totalAmount} selectedDates={selectedDates} />
           </Grid>
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12} lg={6} style={{paddingLeft:"40px"}}>
             {submitted ? (
               <StripePay submittedId={submittedId} />
             ) : (
               <CourseEnqForm 
-                data={data} 
-                setSubmitted={setSubmitted} 
-                setSubmittedId={setSubmittedId} 
-                setTotalAmount={setTotalAmount} 
-                snackRef={snackRef}
+                data={data}                 
+                totalAmount={totalAmount} 
+                selectedDates={selectedDates}
+                 setSelectedDates={setSelectedDates}
               />
             )}
           </Grid>

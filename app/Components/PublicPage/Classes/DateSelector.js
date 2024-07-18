@@ -15,10 +15,7 @@ const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
-//   const dates = [
-//     ["2024-03-11", "2024-03-15", "2024-03-19","2024-03-24"],
-//     ["2024-04-02", "2024-04-09", "2024-04-14"]
-//   ];
+
 
   // Get today's date
   const today = new Date();
@@ -84,6 +81,7 @@ const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
         <FormControl fullWidth>
           <InputLabel id="start-date-label">Start Date</InputLabel>
           <Select
+          focused
             labelId="start-date-label"
             id="start-date-select"
             value={startDate}
