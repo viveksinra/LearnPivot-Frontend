@@ -18,7 +18,7 @@ const ChildContainer = styled(Box)(({ theme, selected }) => ({
   },
 }));
 
-const ChildSelector = ({ selectedChild, setSelectedChild }) => {
+const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
   const [allChildren, setAllChildren] = useState([{
     _id: 'sdfgsgfsfgsfdgsdf',
     childName: 'Vivek',
@@ -147,7 +147,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild }) => {
       </Dialog>
 
       {selectedChild && (
-        <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }}>
+        <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }} onClick={() => setStep(3)}>
           Next
         </AnimatedButton>
       )}
