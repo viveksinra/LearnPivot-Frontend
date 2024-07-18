@@ -1,5 +1,6 @@
 import React from "react";
 import { Divider, Grid, Typography, Chip } from "@mui/material";
+import ProceedToPayButton from "./SubmitButton";
 
 const formatDateToShortMonth = (dates) => {
   return dates.map(date => new Date(date).toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' }));
@@ -82,6 +83,10 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
         >
       
         </Typography>
+        <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+        <ProceedToPayButton />
+        </div>
         <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
         {totalAmount && (
           <Typography variant="h4" gutterBottom>

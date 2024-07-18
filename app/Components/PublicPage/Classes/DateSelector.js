@@ -10,6 +10,7 @@ import {
   Select,
   MenuItem
 } from "@mui/material";
+import ProceedToPayButton from "./SubmitButton";
 
 const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
@@ -77,6 +78,12 @@ const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
 
   return (
     <Grid container spacing={2}>
+   
+      <Grid item xs={12}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
+        <ProceedToPayButton />
+        </div>
+      </Grid>
       <Grid item xs={12}>
         <FormControl fullWidth>
           <InputLabel id="start-date-label">Start Date</InputLabel>
