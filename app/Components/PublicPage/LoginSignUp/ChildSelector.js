@@ -1,8 +1,16 @@
-import React, { useState } from 'react';
-import { TextField, MenuItem, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Box, Typography } from '@mui/material';
+import React, { useState, useEffect, useRef } from 'react';
+import {
+  TextField, MenuItem, Button, Dialog, DialogActions, DialogContent,
+  DialogContentText, DialogTitle, Box, Typography
+} from '@mui/material';
 import { styled } from '@mui/system';
 import { Add as AddIcon } from '@mui/icons-material';
 import AnimatedButton from '../../Common/AnimatedButton';
+import { DatePicker } from '@mui/lab';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { childService } from '@/app/services';
+import MySnackbar from '../../MySnackbar/MySnackbar';
 
 const ChildContainer = styled(Box)(({ theme, selected }) => ({
   display: 'flex',
@@ -19,24 +27,20 @@ const ChildContainer = styled(Box)(({ theme, selected }) => ({
 }));
 
 const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
-  const [allChildren, setAllChildren] = useState([{
-    _id: 'sdfgsgfsfgsfdgsdf',
-    childName: 'Vivek',
-    childAge: '10',
-    childGender: 'Boy',
-    childImage: null,
-  }]);
-
+    
+    const snackRef = useRef();
+  const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [newChild, setNewChild] = useState({
+    _id: '',
     childName: '',
-    childAge: '',
+    childDob: '',
     childGender: '',
     childImage: null,
   });
 
   const handleSelectChild = (child) => {
-    setSelectedChild(child.childName);
+    setSelectedChild(child);
   };
 
   const handleOpenDialog = () => {
@@ -49,14 +53,53 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setNewChild({ ...newChild, [name]: value });
+    setNewChild(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddChild = () => {
-    setAllChildren([...allChildren, { ...newChild, _id: allChildren.length + 1 }]);
-    setOpen(false);
-    setSelectedChild(newChild.childName);
-    setNewChild({ childName: '', childAge: '', childGender: '', childImage: null });
+  const handleDateChange = (date) => {
+    setNewChild(prev => ({ ...prev, childDob: date }));
+  };
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    setNewChild(prev => ({ ...prev, childImage: URL.createObjectURL(file) }));
+  };
+
+  const handleGetAllChildren = async () => {
+    try {
+      const response = await childService.getAll();
+      console.log(response);
+      setAllChildren(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetAllChildren();
+  }, []);
+
+  const handleAddChild = async () => {
+    try {
+      const myChildData = {
+        _id: newChild._id, 
+        childName: newChild.childName,
+        childDob: newChild.childDob,
+        childGender: newChild.childGender,
+        childImage: newChild.childImage,
+      };
+      const response = await childService.add(newChild._id,myChildData);
+      if (response.variant === "success") {
+        snackRef.current.handleSnack(response);
+        handleClose();
+        handleGetAllChildren();
+      } else {
+        snackRef.current.handleSnack(response);
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      snackRef.current.handleSnack({ fullDescription: "Failed to submit data.", variant: "error" });
+    }
   };
 
   return (
@@ -68,7 +111,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
       {allChildren.map((child) => (
         <ChildContainer
           key={child._id}
-          selected={selectedChild === child.childName}
+          selected={selectedChild === child}
           onClick={() => handleSelectChild(child)}
         >
           {child.childImage && (
@@ -94,7 +137,10 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
           <Box component="form" sx={{ mt: 2 }}>
-          
+            <Button variant="contained" component="label">
+              Upload Child Image
+              <input type="file" hidden onChange={handleImageUpload} />
+            </Button>
             {newChild.childImage && (
               <img
                 src={newChild.childImage}
@@ -114,16 +160,14 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               onChange={handleInputChange}
               required
             />
-            <TextField
-              margin="dense"
-              name="childAge"
-              label="Age"
-              type="number"
-              fullWidth
-              variant="outlined"
-              value={newChild.childAge}
-              onChange={handleInputChange}
-            />
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label="Date of Birth"
+                value={newChild.childDob}
+                onChange={handleDateChange}
+                renderInput={(params) => <TextField {...params} fullWidth margin="dense" variant="outlined" />}
+              />
+            </LocalizationProvider>
             <TextField
               select
               margin="dense"
@@ -151,6 +195,8 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
           Next
         </AnimatedButton>
       )}
+      <MySnackbar ref={snackRef} />
+
     </div>
   );
 };
