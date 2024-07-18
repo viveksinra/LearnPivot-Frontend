@@ -5,10 +5,8 @@ import {
   styled
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AnimatedButton from '../../Common/AnimatedButton';
-import { DatePicker } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { childService } from '@/app/services';
 import MySnackbar from '../../MySnackbar/MySnackbar';
 
@@ -20,10 +18,35 @@ const ChildContainer = styled(Box)(({ theme, selected }) => ({
   borderRadius: theme.shape.borderRadius,
   border: `2px solid ${selected ? theme.palette.primary.main : theme.palette.grey[300]}`,
   cursor: 'pointer',
-  transition: 'border 0.3s',
+  transition: 'border 0.3s, transform 0.3s',
+  position: 'relative',
   '&:hover': {
     border: `2px solid ${theme.palette.primary.main}`,
   },
+  ...(selected && {
+    animation: 'pulse-border 1s infinite',
+    transform: 'scale(1.02)',
+    '&::after': {
+      content: '""',
+      position: 'absolute',
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+      borderRadius: theme.shape.borderRadius,
+      border: `2px solid ${theme.palette.primary.main}`,
+      animation: 'pulse-border 1s infinite',
+    },
+  }),
+}));
+
+const CheckIconContainer = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  top: 10,
+  right: 10,
+  backgroundColor: theme.palette.primary.main,
+  borderRadius: '50%',
+  padding: 2,
 }));
 
 const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
@@ -33,7 +56,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
   const [newChild, setNewChild] = useState({
     _id: '',
     childName: '',
-    childDob: null,
+    childDob: '',
     childGender: '',
   });
 
@@ -51,13 +74,8 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setNewChild(prev => ({ ...prev, [name]: value }));
+    setNewChild((prev) => ({ ...prev, [name]: value }));
   };
-
-  const handleDateChange = (date) => {
-    setNewChild(prev => ({ ...prev, childDob: date }));
-  };
-
 
   const handleGetAllChildren = async () => {
     try {
@@ -68,8 +86,8 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         throw new Error('No data received');
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
-      snackRef.current.handleSnack({ message: "Failed to fetch children.", variant: "error" });
+      console.error('Error fetching data:', error);
+      snackRef.current.handleSnack({ message: 'Failed to fetch children.', variant: 'error' });
     }
   };
 
@@ -77,29 +95,27 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
     handleGetAllChildren();
   }, []);
 
-
   useEffect(() => {
-    function autoSelectOneChild() {
-            setSelectedChild(allChildren[0]);
+    if (allChildren.length > 0) {
+      setSelectedChild(allChildren[0]);
     }
-    autoSelectOneChild();
   }, [allChildren]);
 
   const handleAddChild = async () => {
     if (!newChild.childName || !newChild.childGender) {
-      snackRef.current.handleSnack({ message: "Please fill all required fields.", variant: "error" });
+      snackRef.current.handleSnack({ message: 'Please fill all required fields.', variant: 'error' });
       return;
     }
     try {
-      const response = await childService.add(newChild._id,newChild);
+      const response = await childService.add(newChild._id, newChild);
       snackRef.current.handleSnack(response);
-      if (response.variant === "success") {
+      if (response.variant === 'success') {
         handleClose();
         handleGetAllChildren();
       }
     } catch (error) {
-      console.error("Error submitting data:", error);
-      snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
+      console.error('Error submitting data:', error);
+      snackRef.current.handleSnack({ message: 'Failed to submit data.', variant: 'error' });
     }
   };
 
@@ -123,6 +139,11 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
             />
           )}
           <Typography variant="body1">{child.childName}</Typography>
+          {selectedChild === child && (
+            <CheckIconContainer>
+              <CheckCircleIcon style={{ color: '#fff' }} />
+            </CheckIconContainer>
+          )}
         </ChildContainer>
       ))}
 
@@ -138,7 +159,6 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
           <Box component="form" sx={{ mt: 2 }}>
-           
             <TextField
               autoFocus
               margin="dense"
@@ -152,16 +172,15 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               required
             />
             <TextField
-            style={{ marginTop: 16 }}
-                  label={`Date Of Birth`}
-                  variant="outlined"
-                  value={newChild.childDob}
-                  type='date'
-                  focused
-                  fullWidth
-                  onChange={handleInputChange}
-                />
-    
+              style={{ marginTop: 16 }}
+              label="Date Of Birth"
+              variant="outlined"
+              name="childDob"
+              type="date"
+              fullWidth
+              value={newChild.childDob}
+              onChange={handleInputChange}
+            />
             <TextField
               select
               margin="dense"
