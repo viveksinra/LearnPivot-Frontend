@@ -47,6 +47,37 @@ export class AuthService {
         return err;
       });
   };
+  signUp = async (data) => {
+    return this.instance
+      .post(
+        `/api/v1/auth/passwordAuth/signup`,
+        qs.stringify(data),
+        {
+          headers: getHeaderUrlEncoded(),
+        }
+      )
+      .then((res) => {
+        return {
+          id: res.data.id,
+          name: res.data.name,
+          firstName: res.data.firstName,
+          lastName: res.data.lastName,
+          token: res.data.token,
+          success: res.data.success,
+          message: res.data.message,
+          userImage: res.data.userImage,
+          designation: res.data.designation,
+          variant: res.data.variant,
+          roleData: res.data.roleData,
+        };
+      })
+      .catch((err) => {
+        return err;
+      });
+  };
+
+
+
   get = async (url) => {
     return this.instance
       .get(`/${url}`, {

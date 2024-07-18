@@ -1,23 +1,32 @@
 "use client";
-import { useState, useRef } from "react";
-import { Container, Grid, TextField, MenuItem, Fab, FormControl, InputLabel, Select } from '@mui/material/';
+import { useState, useRef, useContext } from "react";
+import { Container, Grid, TextField, MenuItem, Fab, FormControl, InputLabel, Select, InputAdornment, IconButton } from '@mui/material/';
 import { FcFeedback } from "react-icons/fc";
-import { myCourseService } from "@/app/services";
+import { authService, myCourseService } from "@/app/services";
+import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
+import MySnackbar from "../../MySnackbar/MySnackbar";
+import { useRouter } from "next/navigation";
+import MainContext from "../../Context/MainContext";
+import { LOGIN_USER } from "../../Context/types";
 
-const SignUpForm = ({ data, setSubmitted, setSubmittedId, setTotalAmount, snackRef }) => {
+
+const SignUpForm = ({ isRedirectToDashboard }) => {
   const [formData, setFormData] = useState({
     enquiryFor: "self",
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
-    age: "",
-    gender: "",
     address: "",
     marketing: "",
     message: "",
     selectedDates: [],
   });
+  const [showPassword, setShowPass] = useState(false);
+  const [password, setPass] = useState("");
+  const router = useRouter();
+  const snackRef = useRef();
+  const { dispatch } = useContext(MainContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,22 +35,33 @@ const SignUpForm = ({ data, setSubmitted, setSubmittedId, setTotalAmount, snackR
 
   const handleEnquiry = async (e) => {
     e.preventDefault();
-    const buyData = {
-      courseId: data._id,
+    const signUpData = {
       ...formData,
+      password: password,
     };
 
     try {
-      const response = await myCourseService.buyStepOne(buyData);
-      console.log('Buy data:', buyData);
-      console.log('Response:', response);
+      const res = await authService.signUp(signUpData);
+      console.log('SignUp data:', signUpData);
+      console.log('Response:', res);
 
-      if (response.variant === "success") {
-        setSubmitted(true);
-        setSubmittedId(response._id);
-        setTotalAmount(response.totalAmount);
+      if (res.success && res.token) {
+        dispatch({ type: LOGIN_USER, payload: res });
+        snackRef.current.handleSnack({
+          message: "Login Successful! Please Wait",
+          variant: "success",
+        });
+        if (isRedirectToDashboard) {
+          router.push("/dashboard");
+          window.location.reload();
+        }
+      } else {
+        snackRef.current.handleSnack({
+          message: "Invalid Login Credentials. Please enter correct credentials.",
+          variant: "error",
+        });
       }
-      snackRef.current.handleSnack(response);
+      snackRef.current.handleSnack(res);
     } catch (error) {
       console.error("Error submitting data:", error);
       snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
@@ -66,7 +86,6 @@ const SignUpForm = ({ data, setSubmitted, setSubmittedId, setTotalAmount, snackR
           { name: "lastName", label: "Last Name", type: "text", required: true },
           { name: "email", label: "Email", type: "email", required: true },
           { name: "mobile", label: "Phone", type: "number", required: true },
-          { name: "age", label: "Age", type: "number", required: false },
           { name: "address", label: "Address", type: "text", required: false },
         ].map(({ name, label, type, required }, index) => (
           <Grid item xs={12} md={6} key={index}>
@@ -83,26 +102,36 @@ const SignUpForm = ({ data, setSubmitted, setSubmittedId, setTotalAmount, snackR
             />
           </Grid>
         ))}
+
+<Grid item xs={12} md={6}>
+            <TextField
+              id="loginPass"
+              fullWidth
+              required
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPass(e.target.value)}
+              placeholder="Password"
+              label="Password"
+              variant="outlined"
+              inputProps={{ autoComplete: "on" }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() => setShowPass(!showPassword)}
+                      edge="start"
+                    >
+                      {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+       
         <Grid item xs={12} md={6}>
-          <FormControl fullWidth>
-            <InputLabel id="gender-select-label">Gender</InputLabel>
-            <Select
-              labelId="gender-select-label"
-              id="gender-select"
-              name="gender"
-              value={formData.gender}
-              label="Gender"
-              onChange={handleChange}
-            >
-              {["male", "female", "other"].map((gender) => (
-                <MenuItem key={gender} value={gender}>
-                  {gender.charAt(0).toUpperCase() + gender.slice(1)}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-        <Grid item xs={12}>
           <TextField
             fullWidth
             select
@@ -126,6 +155,8 @@ const SignUpForm = ({ data, setSubmitted, setSubmittedId, setTotalAmount, snackR
           </Fab>
         </Grid>
       </Grid>
+      <MySnackbar ref={snackRef} />
+
     </form>
   );
 };
