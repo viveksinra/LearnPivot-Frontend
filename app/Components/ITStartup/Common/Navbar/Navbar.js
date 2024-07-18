@@ -8,6 +8,7 @@ import { Avatar, Button } from "@mui/material";
 import { authService } from "@/app/services";
 import MainContext from "@/app/Components/Context/MainContext";
 import { FaUserCircle } from 'react-icons/fa';
+import Cookies from "js-cookie";
 
 const Navbar = () => {
   // State
@@ -15,6 +16,7 @@ const Navbar = () => {
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
   };
+  const currentUser = Cookies.get("currentUser");
 
   // Context
   const { state } = useContext(MainContext);
@@ -85,7 +87,7 @@ const Navbar = () => {
 
             {/* Other Options */}
             <div className="others-options">
-              {state?.isAuthenticated ? (
+              {(state?.isAuthenticated && currentUser) ? (
                 <Link href="/dashboard">
                   <Button color="secondary" startIcon={<Avatar alt={state.name} src={authService.getLoggedInUser()?.userImage ?? "https://res.cloudinary.com/oasismanors/image/upload/v1687519053/user_myqgmv.png"} />}>Dashboard</Button>
                 </Link>

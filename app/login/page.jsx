@@ -23,7 +23,7 @@ function Login() {
     className="center"
     style={{ flexDirection: "column", padding: "20px" }}
   >
-        <ComLogSigForm />
+        <ComLogSigForm isRedirectToDashboard={true} />
         </Grid>
           <Grid item xs={12} md={6} id="LoginImgSide">
             <img

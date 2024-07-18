@@ -6,7 +6,7 @@ import Link from "next/link";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 
-function ComLogSigForm() {
+function ComLogSigForm({ isRedirectToDashboard }) {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
@@ -30,9 +30,9 @@ function ComLogSigForm() {
         </Link>
       </Grid>
       {isLogin ? (
-        <LoginForm isRedirectToDashboard={true} />
+        <LoginForm isRedirectToDashboard={isRedirectToDashboard} />
       ) : (
-        <SignUpForm isRedirectToDashboard={true} />
+        <SignUpForm isRedirectToDashboard={isRedirectToDashboard} />
       )}
     </div>
   );

@@ -39,7 +39,7 @@ function LoginForm({ isRedirectToDashboard }) {
           message: "Login Successful! Please Wait",
           variant: "success",
         });
-        if (isRedirectToDashboard) {
+        if (isRedirectToDashboard == true) {
           router.push("/dashboard");
           window.location.reload();
         }

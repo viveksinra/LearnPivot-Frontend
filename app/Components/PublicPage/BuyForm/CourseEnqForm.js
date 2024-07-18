@@ -21,7 +21,7 @@ function CourseEnqForm() {
           {(state?.isAuthenticated && currentUser) ? (
                    <h1>Hello work</h1> 
               ) : (
-                <ComLogSigForm />
+                <ComLogSigForm isRedirectToDashboard={false}/>
               )}
 
       <MySnackbar ref={snackRef} />
