@@ -29,7 +29,9 @@ export class MockTestService {
 
   buyMockStepOne = async (data) => {
     return this.instance
-      .post(`/api/v1/publicMaster/buyMockTest/addBuyMock`, data)
+      .post(`/api/v1/publicMaster/buyMockTest/addBuyMock`, data, {
+        headers: getAuthorizationHeader(),
+      })
       .then((res) => res.data);
   };
   publicVerifyOneMockPayment = async (id ) => {
