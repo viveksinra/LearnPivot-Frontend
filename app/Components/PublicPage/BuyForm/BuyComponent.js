@@ -7,13 +7,14 @@ import MySnackbar from "../../MySnackbar/MySnackbar";
 import CourseEnqForm from "./CourseEnqForm";
 
 const BuyComponent = ({ data }) => {
-  const snackRef = useRef();
-  
+  const snackRef = useRef();  
   const [submitted, setSubmitted] = useState(false);
   const [selectedDates, setSelectedDates] = useState([]);
-  const [submittedId, setSubmittedId] = useState("");
   const [totalAmount, setTotalAmount] = useState("");
-  const [selectedChild, setSelectedChild] = useState('');
+
+
+  const [submittedId, setSubmittedId] = useState("");
+  const [selectedChild, setSelectedChild] = useState(null);
 
   return (
     <section style={{ backgroundColor: "#fff", marginBottom: "10px", paddingTop:"20px" }} id="enquiry">
@@ -27,7 +28,10 @@ const BuyComponent = ({ data }) => {
               <StripePay submittedId={submittedId} />
             ) : (
               <CourseEnqForm 
-                data={data}                 
+                data={data} 
+                setSubmitted={setSubmitted}
+                setSubmittedId={setSubmittedId}
+                setTotalAmount={setTotalAmount}                
                 totalAmount={totalAmount} 
                 selectedDates={selectedDates}
                  setSelectedDates={setSelectedDates}

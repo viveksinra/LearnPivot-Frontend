@@ -1,27 +1,22 @@
 // components/ProceedToPayButton.js
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
 import {  myCourseService } from '@/app/services';
 import AnimatedButton from '../../Common/AnimatedButton';
 
 
-const ProceedToPayButton = ({setSubmitted,setSubmittedId,setTotalAmount}) => {
+const ProceedToPayButton = ({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedDates,selectedChild}) => {
 
     const handleCoEnquiry = async (e) => {
-        e.preventDefault();
+  console.log({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedDates,selectedChild})
+
+        // e.preventDefault();
         const buyData = {
-          mockTestId: data._id,
-          selectedBatch,
-          enquiryFor,
-          firstName,
-          lastName,
-          email,
-          mobile,
-          address,
-          marketing,
-          message,
+          courseId: data._id,
+          selectedDates,
+          selectedChild,
         };
       
         try {
@@ -43,7 +38,7 @@ const ProceedToPayButton = ({setSubmitted,setSubmittedId,setTotalAmount}) => {
 
   return (
     <AnimatedButton variant="contained" onClick={() => handleCoEnquiry()}>
-      Proceed to Pay
+      Proceed to Pay {totalAmount&& (`Amount: € ${totalAmount}`)}
     </AnimatedButton>
   );
 };

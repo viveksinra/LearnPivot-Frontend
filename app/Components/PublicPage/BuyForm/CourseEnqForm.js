@@ -9,7 +9,7 @@ import DateSelector from "../Classes/DateSelector";
 import ChildSelector from "../LoginSignUp/ChildSelector";
 import { Typography } from "@mui/material"; // Assuming you are using Material-UI for Typography
 
-function CourseEnqForm({ data, totalAmount, selectedDates, setSelectedDates, selectedChild, setSelectedChild }) {
+function CourseEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, setSelectedDates, selectedChild, setSelectedChild }) {
   const snackRef = useRef();
   
   // Context
@@ -41,7 +41,9 @@ function CourseEnqForm({ data, totalAmount, selectedDates, setSelectedDates, sel
               Proceed to pay Amount: € {totalAmount}
             </Typography>
           ) : (
-            <DateSelector data={data} selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+            <DateSelector data={data} selectedDates={selectedDates} setSelectedDates={setSelectedDates}
+             setSubmitted={setSubmitted} setSubmittedId={setSubmittedId} setTotalAmount={setTotalAmount} selectedChild={selectedChild}
+             />
           )}
         </>
       )}

@@ -12,11 +12,10 @@ import {
 } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
 
-const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
+const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, setSelectedDates, selectedChild }) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
-
 
   // Get today's date
   const today = new Date();
@@ -36,6 +35,8 @@ const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
       }
     }
   }, []);
+
+
 
   const handleBatchSelect = (batchIndex) => {
     if (selectedBatches.includes(batchIndex)) {
@@ -81,7 +82,15 @@ const DateSelector = ({ data,selectedDates,setSelectedDates }) => {
    
       <Grid item xs={12}>
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
-        <ProceedToPayButton />
+        <ProceedToPayButton 
+        data={data}
+        setSubmitted={setSubmitted}
+        setSubmittedId={setSubmittedId}
+        setTotalAmount={setTotalAmount}
+        totalAmount={totalAmount}
+        selectedDates={selectedDates}
+        selectedChild={selectedChild}
+        />
         </div>
       </Grid>
       <Grid item xs={12}>

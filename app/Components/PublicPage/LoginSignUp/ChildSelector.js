@@ -204,9 +204,9 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
         </DialogActions>
       </Dialog>
 
-      {selectedChild && (
+      {(selectedChild && selectedChild._id) && (
         <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }} onClick={() => setStep(3)}>
-          Next
+         Proceed for {selectedChild.childName && `(${selectedChild.childName})`}
         </AnimatedButton>
       )}
       <MySnackbar ref={snackRef} />

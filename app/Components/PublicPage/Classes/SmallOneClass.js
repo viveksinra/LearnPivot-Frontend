@@ -83,10 +83,7 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
         >
       
         </Typography>
-        <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
-        <ProceedToPayButton />
-        </div>
+ 
         <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
         {totalAmount && (
           <Typography variant="h4" gutterBottom>
