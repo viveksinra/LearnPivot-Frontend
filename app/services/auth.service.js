@@ -38,7 +38,8 @@ export class AuthService {
           success: res.data.success,
           message: res.data.message,
           userImage: res.data.userImage,
-          designation: res.data.designation,
+          jobRoleLabel: res.data.jobRoleLabel,
+          jobRoleId: res.data.jobRoleId,
           variant: res.data.variant,
           roleData: res.data.roleData,
         };

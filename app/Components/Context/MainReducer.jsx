@@ -15,10 +15,12 @@ const MainReducer = (state, action)=>{
                 isAuthenticated: action.payload.success,
 				token: action.payload.token,
 				id: action.payload.id,
+                firstName: action.payload.firstName,
+                lastName:action.payload.lastName,
+				jobRoleLabel: action.payload.jobRoleLabel,
+				jobRoleId: action.payload.jobRoleId,
 				userImage: action.payload.userImage,
-				designation: action.payload.designation,
-				firstName: action.payload.firstName,
-                lastName:action.payload.lastName
+			
             };
         case SETSELECTED:
             return {

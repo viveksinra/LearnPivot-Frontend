@@ -22,7 +22,9 @@ const initialState = {
     id:"",
     firstName:"",
     lastName:"",
-    designation:"",
+    userImage:"",
+    jobRoleLabel:"",
+    jobRoleId:"",
     userImage:"",
     mobileDrawer:false,
 }
