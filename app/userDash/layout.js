@@ -60,9 +60,9 @@ const DrawerData = ({ open, setMobileOpen }) => {
   const [reports, setReports] = useState([
     { title: "Coming Soon", active: false, link: "#", icon: <FcPlanner /> },
   ]);
-  const [masterList, setMasterList] = useState([
-    { title: "Master", active: false, link: "#", icon: <FcDataRecovery /> },
-  ]);
+//   const [masterList, setMasterList] = useState([
+//     { title: "Master", active: false, link: "#", icon: <FcDataRecovery /> },
+//   ]);
 
   const handleLink = (item, index, listType) => {
     let newList;
@@ -138,37 +138,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
         </Collapse>
       </List>
       <Divider />
-      <List disablePadding>
-        <ListItemButton
-          onClick={() => setMasterOpen(!masterOpen)}
-          sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}
-        >
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", fontSize: 24 }}>
-            <FcDataRecovery />
-          </ListItemIcon>
-          <ListItemText primary="Master" sx={{ opacity: open ? 1 : 0 }} />
-          {masterOpen ? <FcCollapse /> : <FcExpand />}
-        </ListItemButton>
-        <Collapse in={masterOpen} timeout="auto" unmountOnExit>
-          <List component="div" dense disablePadding>
-            {masterList.map((item, index) => (
-              <ListItem
-                key={index}
-                onClick={() => handleLink(item, index, "masterList")}
-                disablePadding
-                className={item.active ? "activeLink" : ""}
-              >
-                <ListItemButton sx={{ pl: 3 }}>
-                  <ListItemIcon sx={{ minWidth: "40px", fontSize: 20 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Collapse>
-      </List>
+      
       <List sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>
         <ListItem
           onClick={() => {

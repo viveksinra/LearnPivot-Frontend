@@ -108,6 +108,13 @@ const DrawerData = ({ open, setMobileOpen }) => {
       link: "/dashboard/allBuyMock",
       icon: <FcContacts />,
     },
+    { 
+      title: "All Buy Course",
+       active: false,
+        link: "/dashboard/allBuyCourse",
+         icon: <FcRightUp />
+     },
+
         {
       title: "All Course",
       active: false,
