@@ -34,6 +34,14 @@ export class RegistrationService {
       })
       .then((res) => res.data);
   };
+
+  getBuyCourseWithFilter = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/otherApi/getCourse/withFilter`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
   
   
 

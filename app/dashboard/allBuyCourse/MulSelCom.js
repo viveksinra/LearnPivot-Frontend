@@ -1,3 +1,4 @@
+// MulSelCom Component
 import React, { useEffect, useState } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
@@ -8,7 +9,7 @@ import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { mockTestService } from '@/app/services';
+import { myCourseService } from '@/app/services';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -21,23 +22,23 @@ const MenuProps = {
   },
 };
 
-export default function MulSelCom({ selectedMockTests, setSelectedMockTests, selectedBatches, setSelectedBatches, successOnly, setSuccessOnly }) {
+export default function MulSelCom({ selectedCourses, setSelectedCourses, selectedBatches, setSelectedBatches, successOnly, setSuccessOnly }) {
   const [sortBy, setSort] = useState("newToOld");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(1000);
   const [searchText, setSearchText] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [mockTests, setMockTests] = useState([]);
+  const [courses, setCourses] = useState([]);
 
   useEffect(() => {
     async function fetchAllData() {
       setLoading(true);
-      let response = await mockTestService.publicGetAll({ sortBy, page, rowsPerPage, searchText, totalCount });
+      let response = await myCourseService.publicGetAll({ sortBy, page, rowsPerPage, searchText, totalCount });
       console.log(response);
       if (response.variant === "success") {
         setLoading(false);
-        setMockTests(response.data);
+        setCourses(response.data);
       } else {
         console.log(response);
         setLoading(false);
@@ -46,16 +47,16 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
     fetchAllData();
   }, [rowsPerPage, page, searchText, sortBy]);
 
-  const handleMockTestChange = (event) => {
+  const handleCourseChange = (event) => {
     const {
       target: { value },
     } = event;
-    const selectedMockTests = typeof value === 'string' ? value.split(',') : value;
-    const selectedMockTestObjects = selectedMockTests.map(title => {
-      const mockTest = mockTests.find(mt => mt.mockTestTitle === title);
-      return { title, id: mockTest._id };
+    const selectedCourses = typeof value === 'string' ? value.split(',') : value;
+    const selectedCourseObjects = selectedCourses.map(title => {
+      const course = courses.find(mt => mt.courseTitle === title);
+      return { title, id: course._id };
     });
-    setSelectedMockTests(selectedMockTestObjects);
+    setSelectedCourses(selectedCourseObjects);
     setSelectedBatches([]); // Clear the second dropdown selection
   };
 
@@ -68,9 +69,9 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
       const [date, time] = label.split(' ');
       const [startTime, endTime] = time.split('-');
       let batchId = '';
-      selectedMockTests.forEach(mockTest => {
-        const mockTestObj = mockTests.find(mt => mt.mockTestTitle === mockTest.title);
-        const batch = mockTestObj.batch.find(b => b.date === date && b.startTime === startTime && b.endTime === endTime);
+      selectedCourses.forEach(course => {
+        const courseObj = courses.find(mt => mt.courseTitle === course.title);
+        const batch = courseObj.batch.find(b => b.date === date && b.startTime === startTime && b.endTime === endTime);
         if (batch) batchId = batch._id;
       });
       return { label, id: batchId };
@@ -78,12 +79,12 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
     setSelectedBatches(selectedBatchObjects);
   };
 
-  const getBatchesForSelectedMockTests = () => {
+  const getBatchesForSelectedCourses = () => {
     const batches = [];
-    selectedMockTests.forEach(mockTest => {
-      const mockTestObj = mockTests.find(mt => mt.mockTestTitle === mockTest.title);
-      if (mockTestObj && mockTestObj.batch) {
-        mockTestObj.batch.forEach(batch => {
+    selectedCourses.forEach(course => {
+      const courseObj = courses.find(mt => mt.courseTitle === course.title);
+      if (courseObj && courseObj.batch) {
+        courseObj.batch.forEach(batch => {
           batches.push({
             label: `${batch.date} ${batch.startTime}-${batch.endTime}`,
             id: batch._id,
@@ -94,9 +95,9 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
     return batches;
   };
 
-  const batches = getBatchesForSelectedMockTests();
+  const batches = getBatchesForSelectedCourses();
 
-  const filteredMockTests = successOnly ? mockTests.filter(mt => mt.isPublished) : mockTests;
+  const filteredCourses = successOnly ? courses.filter(mt => mt.isPublished) : courses;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);
@@ -110,22 +111,22 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
           labelId="mocktest-multiple-checkbox-label"
           id="mocktest-multiple-checkbox"
           multiple
-          value={selectedMockTests.map(mockTest => mockTest.title)}
-          onChange={handleMockTestChange}
+          value={selectedCourses.map(course => course.title)}
+          onChange={handleCourseChange}
           input={<OutlinedInput label="Mock Tests" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >
-          {filteredMockTests.map((mockTest) => (
-            <MenuItem key={mockTest._id} value={mockTest.mockTestTitle}>
-              <Checkbox checked={selectedMockTests.some(mt => mt.title === mockTest.mockTestTitle)} />
-              <ListItemText primary={mockTest.mockTestTitle} />
+          {filteredCourses.map((course) => (
+            <MenuItem key={course._id} value={course.courseTitle}>
+              <Checkbox checked={selectedCourses.some(mt => mt.title === course.courseTitle)} />
+              <ListItemText primary={course.courseTitle} />
             </MenuItem>
           ))}
         </Select>
       </FormControl>
 
-      <FormControl sx={{ m: 1, width: 300 }} disabled={selectedMockTests.length === 0}>
+      <FormControl sx={{ m: 1, width: 300 }} disabled={selectedCourses.length === 0}>
         <InputLabel id="batch-multiple-checkbox-label">Batches</InputLabel>
         <Select
           labelId="batch-multiple-checkbox-label"

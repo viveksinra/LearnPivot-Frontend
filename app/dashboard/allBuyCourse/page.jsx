@@ -1,16 +1,16 @@
+// MyCourse Component
 'use client';
-import "./addMockTestStyle.css";
+import "./addCourseStyle.css";
 import React, { lazy, Suspense, useEffect } from 'react'
 import {Typography, Fab, styled, Avatar, CircularProgress, Rating, Badge, ToggleButtonGroup, ToggleButton, Tab, Grid, ButtonGroup, AppBar, Toolbar, Button, Tooltip, Chip, Table, TableRow, TableCell, TableBody, TableHead, IconButton, TablePagination, Checkbox} from '@mui/material/';
-import { useState, useRef} from 'react';
-import {TabContext, TabList } from '@mui/lab/';
+import { useState, useRef } from 'react';
+import { TabContext, TabList } from '@mui/lab/';
 import { FiCheck, FiFileMinus } from "react-icons/fi";
 import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline, FcExpand } from "react-icons/fc";
 import { MdModeEdit, MdSend, MdOutlineClose } from "react-icons/md";
 import NoResult from "@/app/Components/NoResult/NoResult";
 import Search from "../../Components/Search";
 import { FaUserPlus } from "react-icons/fa";
-import { MdOutlineMail } from "react-icons/md";
 import { BsTable } from "react-icons/bs";
 import Loading from "../../Components/Loading/Loading";
 import LiveAvatar from "@/app/Components/Common/LiveAvatar";
@@ -19,12 +19,12 @@ import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 import MulSelCom from "./MulSelCom";
 const SendEmailCom = lazy(() => import("./SendEmailCom"));
 
-function MyMockTest() {
+function MyCourse() {
   const [viewTabular, toggleView] = useState(true);
   const [id, setId] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
-
   const entryRef = useRef();
+  
   return (
     <main> 
       {viewTabular ? <Suspense fallback={<Loading/>}><SearchArea selectedItems={selectedItems} setSelectedItems={setSelectedItems} handleEdit={(id) => {toggleView(false); setId(id)}} />  </Suspense>  : <Suspense fallback={null}><SendEmailCom selectedItems={selectedItems} ref={entryRef} id={id} setId={id => setId(id)} /></Suspense>}
@@ -36,7 +36,7 @@ function MyMockTest() {
           </Button>}
           <span style={{flexGrow: 0.3}}/>
          {((selectedItems?.length) >= 1) && 
-         (<Tooltip arrow title={viewTabular ? "Add MyMockTest" : "Show All"}>
+         (<Tooltip arrow title={viewTabular ? "Add MyCourse" : "Show All"}>
             <ToggleFab onClick={() => toggleView(!viewTabular)} color="secondary" size="medium">
               {viewTabular ? <MdOutlineMail style={{fontSize: 24}}/> : <BsTable style={{fontSize: 24}}/>}
             </ToggleFab>
@@ -61,17 +61,17 @@ export const ToggleFab = styled(Fab)({
   margin: '0 auto',
 });
 
-export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
+export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [tabular, setView] = useState(false);
-  const sortOptions = [{label: "New First", value: "newToOld"}, {label: "Old First", value: "oldToNew"}];
+  const sortOptions = [{ label: "New First", value: "newToOld" }, { label: "Old First", value: "oldToNew" }];
   const [sortBy, setSort] = useState("newToOld");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchText, setSearchText] = useState("");
   const [totalCount, setTotalCount] = useState(0);
-  const [selectedMockTests, setSelectedMockTests] = useState([]);
+  const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(false);
 
@@ -88,7 +88,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
   useEffect(() => {
     async function fetchAllData() {
       setLoading(true);
-      let response = await registrationService.getMockWithFilter({sortBy, rowsPerPage, page, searchText, selectedMockTests, selectedBatches, successOnly});
+      let response = await registrationService.getBuyCourseWithFilter({ sortBy, rowsPerPage, page, searchText, selectedCourses, selectedBatches, successOnly });
       console.log(response);
       if (response.variant === "success") {
         setLoading(false);
@@ -100,21 +100,21 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
       }
     }
     fetchAllData();
-  }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
+  }, [rowsPerPage, page, searchText, sortBy, selectedCourses, selectedBatches, successOnly]);
 
   return (
-    <main style={{background: "#fff", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius: 8, padding: 10}}>
+    <main style={{ background: "#fff", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius: 8, padding: 10 }}>
       <Grid container>
-        <Grid item xs={0} md={5}/>
+        <Grid item xs={0} md={5} />
         <Grid item xs={12} md={2}>
-          <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>All Mock Test</Typography>
+          <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>All Buy Courses</Typography>
         </Grid>
-        <Grid item xs={12} md={5} sx={{display: "flex", justifyContent: "end", marginBottom: "20px"}}>
-          <Search onChange={e => setSearchText(e.target.value)} value={searchText} fullWidth endAdornment={<IconButton size="small" sx={{display: searchText ? "block" : "none"}} onClick={() => setSearchText("")}><MdOutlineClose /></IconButton>}/>
-          <ToggleButtonGroup aria-label="ViewMode" sx={{display: {xs: "none", md: "block"}, marginLeft: "10px", marginRight: "10px"}}>
+        <Grid item xs={12} md={5} sx={{ display: "flex", justifyContent: "end", marginBottom: "20px" }}>
+          <Search onChange={e => setSearchText(e.target.value)} value={searchText} fullWidth endAdornment={<IconButton size="small" sx={{ display: searchText ? "block" : "none" }} onClick={() => setSearchText("")}><MdOutlineClose /></IconButton>} />
+          <ToggleButtonGroup aria-label="ViewMode" sx={{ display: { xs: "none", md: "block" }, marginLeft: "10px", marginRight: "10px" }}>
             <Tooltip arrow title="Grid View">
               <ToggleButton value="grid" onClick={() => setView(!tabular)} aria-label="gridView">
-                <FcOrgUnit/>
+                <FcOrgUnit />
               </ToggleButton>
             </Tooltip>
             <Tooltip arrow title="List View">
@@ -124,18 +124,18 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
             </Tooltip>
           </ToggleButtonGroup>
         </Grid>
-        <Grid item xs={12} sx={{maxWidth: {xs: 350, sm: 480, md: 1000}, marginBottom: "10px"}}>
-          <MulSelCom selectedMockTests={selectedMockTests} setSelectedMockTests={setSelectedMockTests} selectedBatches={selectedBatches} setSelectedBatches={setSelectedBatches} successOnly={successOnly} setSuccessOnly={setSuccessOnly}/>
+        <Grid item xs={12} sx={{ maxWidth: { xs: 350, sm: 480, md: 1000 }, marginBottom: "10px" }}>
+          <MulSelCom selectedCourses={selectedCourses} setSelectedCourses={setSelectedCourses} selectedBatches={selectedBatches} setSelectedBatches={setSelectedBatches} successOnly={successOnly} setSuccessOnly={setSuccessOnly} />
         </Grid>
-        <Grid item xs={12} sx={{maxWidth: {xs: 350, sm: 480, md: 700}, marginBottom: "10px"}}>
+        <Grid item xs={12} sx={{ maxWidth: { xs: 350, sm: 480, md: 700 }, marginBottom: "10px" }}>
           <TabContext value={sortBy} variant="scrollable" allowScrollButtonsMobile scrollButtons>
             <TabList onChange={(e, v) => setSort(v)} aria-label="Sort Tabs" variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
               {sortOptions.map((t, i) => <Tab key={i} iconPosition="bottom" value={t?.value} label={t?.label} />)}
             </TabList>
           </TabContext>
-        </Grid> 
+        </Grid>
       </Grid>
-      {loading ? <div className="center" style={{flexDirection: "column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading MyMockTest...</Typography></div> : rows.length === 0 ? <NoResult label="No MyMockTest Available"/> : tabular ? <Table size="small" sx={{display: {xs: "none", md: "block"}}} aria-label="MyMockTest data Table"> 
+      {loading ? <div className="center" style={{ flexDirection: "column" }}><CircularProgress size={30} /> <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>Loading MyCourse...</Typography></div> : rows.length === 0 ? <NoResult label="No MyCourse Available" /> : tabular ? <Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MyCourse data Table">
         <TableHead>
           <TableRow>
             <TableCell padding="checkbox">
@@ -172,16 +172,16 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
               </TableCell>
               <TableCell align="left" padding="none">
                 <Badge color="primary" variant="dot" invisible={!Boolean(r.isPublished)}>
-                  <LiveAvatar isLive={r.isPublished} alt={r.mockTestId.mockTestTitle} src={r.mockTestId.url}/>
+                  <LiveAvatar isLive={r.isPublished} alt={r.courseId.courseTitle} src={r.courseId.url} />
                 </Badge>
               </TableCell>
-              <TableCell align="left">{`${r.mockTestId.mockTestTitle}`}</TableCell>
-              <TableCell align="left">{r.selectedBatch.map(batch => batch.date).join(", ")}</TableCell>
-              <TableCell align="left"><Chip label={r.selectedBatch.map(batch => batch.startTime).join(", ")} variant="outlined" size="small"/></TableCell>
-              <TableCell align="left">{r.firstName + " " + r.lastName}</TableCell>
+              <TableCell align="left">{`${r.courseId.courseTitle}`}</TableCell>
+              <TableCell align="left">{r.selectedDates.join(", ")}</TableCell>
+              <TableCell align="left"><Chip label={r.selectedDates.join(", ")} variant="outlined" size="small" /></TableCell>
+              <TableCell align="left">{r.user?.firstName + " " + r.user?.lastName}</TableCell>
               <TableCell align="left">{r.amount}</TableCell>
               <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
-              <TableCell align="left"><Chip label={r.status} variant="outlined" size="small"/></TableCell>      
+              <TableCell align="left"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
               <TableCell align="center">
                 <ButtonGroup variant="text" aria-label="">
                   <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
@@ -190,58 +190,57 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
             </TableRow>
           ))}
         </TableBody>
-      </Table> : 
-      <Grid container spacing={2}>
-        {rows.map((c, i) => (
-          <Grid item key={i} xs={12} md={4} className="center">
-            <div className="prospectCard" style={c.isPublished ? {backgroundColor: "#e3ffea"} : {backgroundColor: "#ffffe6"}}>    
-              <LiveAvatar isLive={c.isPublished} alt={c.mockTestId.mockTestTitle} src={c.mockTestId.url} sx={{width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px"}}/>
-              <Checkbox checked={selectedItems.includes(c._id)} onChange={() => handleSelectItem(c._id)} style={{position: "absolute", top: "10px", right: "10px"}}/>
-              <Typography color="teal" variant="h6" sx={{paddingLeft: "120px"}}>{c.mockTestId.mockTestTitle}</Typography>
-              <Grid container sx={{paddingLeft: "120px"}}>
-                <Grid item xs={10}> 
-                  <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => batch.date).join(", ")}</Typography>
-                  <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => batch.startTime).join(", ")}</Typography>
+      </Table> :
+        <Grid container spacing={2}>
+          {rows.map((c, i) => (
+            <Grid item key={i} xs={12} md={4} className="center">
+              <div className="prospectCard" style={c.isPublished ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
+                <LiveAvatar isLive={c.isPublished} alt={c.courseId.courseTitle} src={c.courseId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
+                <Checkbox checked={selectedItems.includes(c._id)} onChange={() => handleSelectItem(c._id)} style={{ position: "absolute", top: "10px", right: "10px" }} />
+                <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.courseId.courseTitle}</Typography>
+                <Grid container sx={{ paddingLeft: "120px" }}>
+                  <Grid item xs={10}>
+                    <Typography color="grey" variant="subtitle2">{c.selectedDates.join(", ")}</Typography>
+                  </Grid>
+                  <Grid item xs={2}>{c.isPublished ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
                 </Grid>
-                <Grid item xs={2}>{c.isPublished ? <FcOk sx={{ fontSize: 50 }}/> : <FcNoIdea sx={{ fontSize: 50 }}/>}</Grid>
-              </Grid>      
-              <Table size="small" sx={{minHeight: '180px'}} aria-label="MyMockTest data Table">
-                <TableBody>
-                  <TableRow>
-                    <TableCell align="left" sx={{width: "100px"}}>Full Name</TableCell>
-                    <TableCell align="right" sx={{width: "120px"}}>{c.firstName + " " + c.lastName}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">Total Amount</TableCell>
-                    <TableCell align="right">{c.amount}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">Payment Date</TableCell>
-                    <TableCell align="right"><Typography variant="caption">{formatDateToShortMonth(c.date)}</Typography></TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell align="left">Payment Status</TableCell>
-                    <TableCell align="right"><Typography variant="caption">{c.status}</Typography></TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-              <div style={{display: "flex", justifyContent: "space-evenly", marginTop: "20px"}}>
-                <Button size="small" onClick={() => handleEdit(c._id)} variant="outlined" startIcon={<MdModeEdit />}>
-                  Edit
-                </Button>
+                <Table size="small" sx={{ minHeight: '180px' }} aria-label="MyCourse data Table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="left" sx={{ width: "100px" }}>Full Name</TableCell>
+                      <TableCell align="right" sx={{ width: "120px" }}>{c.user?.firstName + " " + c.user?.lastName}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">Total Amount</TableCell>
+                      <TableCell align="right">{c.amount}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">Payment Date</TableCell>
+                      <TableCell align="right"><Typography variant="caption">{formatDateToShortMonth(c.date)}</Typography></TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell align="left">Payment Status</TableCell>
+                      <TableCell align="right"><Typography variant="caption">{c.status}</Typography></TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+                <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "20px" }}>
+                  <Button size="small" onClick={() => handleEdit(c._id)} variant="outlined" startIcon={<MdModeEdit />}>
+                    Edit
+                  </Button>
+                </div>
               </div>
-            </div>
+            </Grid>
+          ))}
+          <Grid item xs={12}>
           </Grid>
-        ))}
-        <Grid item xs={12}>   
-        </Grid>
-      </Grid>}
-      <br/>
+        </Grid>}
+      <br />
       <TablePagination
         rowsPerPageOptions={[5, 10, 15, 100]}
         component="div"
         count={totalCount}
-        sx={{overflowX: "hidden"}}
+        sx={{ overflowX: "hidden" }}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={(e, v) => setPage(v)}
@@ -250,9 +249,9 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
           setPage(0);
         }}
       />
-      <br/> <br/> <br/>
+      <br /> <br /> <br />
     </main>
   );
 }
 
-export default MyMockTest;
+export default MyCourse;
