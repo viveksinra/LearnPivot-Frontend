@@ -1,8 +1,9 @@
 import React, {lazy} from 'react'
-const TasksTab = lazy(() => import("../prospect/TasksTab"));
+// const TasksTab = lazy(() => import("../prospect/TasksTab"));
 function page() {
   return (
-    <TasksTab prospectId="general"/>
+    <h1>Task</h1>
+    // <TasksTab prospectId="general"/>
   )
 }
 

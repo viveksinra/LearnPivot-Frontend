@@ -1,15 +1,16 @@
 "use client";
-import Header from "../../Components/Header1/Header";
 import "../contactStyle.css";
 import { TopAbstract } from "../../MyApp";
 import { Container, } from "@mui/material";
 import {NewFooter} from "../../Components/Footer/Footer";
 import Enquiry from "../../Components/Enquiry/Enquiry";
+import Navbar from "@/app/Components/ITStartup/Common/Navbar/Navbar";
 
 function Careers() {
     return (
     <main style={{backgroundColor:"#fff"}}>
-      <Header/>
+            <Navbar />
+
       <TopAbstract/>
       <div className="topBg" id="careergBg">
       </div>

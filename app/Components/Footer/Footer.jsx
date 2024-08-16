@@ -124,7 +124,7 @@ export const NewFooter = () => {
             <div className="row align-items-center">
               <div className="col-lg-6 col-sm-6 col-md-6">
                 <p>
-                  Copyright &copy;{currentYear} Softechinfra. All rights reserved{" "}
+                  Copyright &copy;{2024} Softechinfra. All rights reserved{" "}
                   <a href="https://Softechinfra.com/" target="_blank">
                     Softechinfra
                   </a>

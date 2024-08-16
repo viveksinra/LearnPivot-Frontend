@@ -1,5 +1,4 @@
 'use client';
-import "../prospect/prospectStyle.css";
 import React, { lazy, Suspense, useEffect } from 'react'
 import {Typography, Fab,styled,Avatar,CircularProgress,Badge,ToggleButtonGroup,ToggleButton,Tab, Grid,ButtonGroup,AppBar,Toolbar, Button,Tooltip, Chip, Table,TableRow,TableCell,TableBody, TableHead, IconButton,TablePagination} from '@mui/material/';
 import { useState,useRef} from 'react';

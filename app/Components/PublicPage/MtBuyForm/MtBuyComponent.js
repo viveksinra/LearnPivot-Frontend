@@ -6,7 +6,6 @@ import StripePay from "../../courseStripePay/StripePay";
 import MySnackbar from "../../MySnackbar/MySnackbar";
 import { mockTestService } from "@/app/services";
 import SmallOneMockTest from "../MockTest/SmallOneMockTest";
-import { set } from "mongoose";
 import MockStripePay from "../../mockStripePay/MockStripePay";
 import MockEnqForm from "../BuyForm/MockEnqForm";
 

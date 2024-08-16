@@ -27,6 +27,7 @@ export const registrationService = new RegistrationService(API_ENDPOINT);
 export const childService = new ChildService(API_ENDPOINT);
 
 
+export const prospectService = new EmployeeService(API_ENDPOINT);
 export const employeeService = new EmployeeService(API_ENDPOINT);
 export const residentService = new ResidentService(API_ENDPOINT);
 export const medicationService = new MedicationService(API_ENDPOINT);
