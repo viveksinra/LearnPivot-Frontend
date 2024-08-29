@@ -34,8 +34,9 @@ const Banner = () => {
                       data-aos="fade-up"
                       data-aos-duration="800"
                       data-aos-delay="100"
+                       style="display: inline-block; min-width: 100%; min-height: 3em; line-height: 1.2; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;"
                     >
-                      Empowering Minds: Cultivating Future <TypeWriterCom />
+                      Empowering Minds: Cultivating Future   <TypeWriterCom />
                     </h1>
 
                     <p
