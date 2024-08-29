@@ -113,3 +113,30 @@ input[type=number]::-webkit-outer-spin-button {
     flex-direction: column;
 }
 }
+
+@keyframes colorChange {
+  0% {
+    color: #007bff; /* Primary Blue */
+    border-color: #007bff;
+  }
+  25% {
+    color: #28a745; /* Success Green */
+    border-color: #28a745;
+  }
+  50% {
+    color: #ffc107; /* Warning Yellow */
+    border-color: #ffc107;
+  }
+  75% {
+    color: #17a2b8; /* Info Blue */
+    border-color: #17a2b8;
+  }
+  100% {
+    color: #007bff; /* Primary Blue */
+    border-color: #007bff;
+  }
+}
+
+.animated-text {
+  animation: colorChange 5s infinite;
+}

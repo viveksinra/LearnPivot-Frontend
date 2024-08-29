@@ -34,6 +34,7 @@ const Banner = () => {
                       data-aos="fade-up"
                       data-aos-duration="800"
                       data-aos-delay="100"
+                      className="animated-text"
                     >
                       Empowering Minds: Tomorrow's  <TypeWriterCom />
                     </h1>
