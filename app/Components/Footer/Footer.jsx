@@ -15,7 +15,7 @@ const Footer = () => {
     "Inspiring Virtual Environment"
   ];
   
-  const links =[{label:"About Us",link:"about"},{label:"Amenities",link:"amenities"},{label:"Gallery",link:"gallery"},{label:"Pricing",link:"pricing"},{label:"Contact Us",link:"contact"},{label:"Privacy Policy",link:"privacy"}]
+  const links =[{label:"About Us",link:"about"},{label:"Pricing",link:"pricing"},{label:"Contact Us",link:"contact"},{label:"Privacy Policy",link:"privacy"}]
  
   return (
     <section className="footerBg">
@@ -43,7 +43,6 @@ const Footer = () => {
             </ul>   
             </Grid>
             <Grid item xs={12} md={3}>
-            <iframe id="gMap" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3581.9704340892345!2d87.45392117526717!3d26.13250697712083!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ef8eb5cc5a504b%3A0x896724491d04db5a!2sAraria%20Bus%20Stand!5e0!3m2!1sen!2sin!4v1706385663725!5m2!1sen!2sin" allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
             </Grid>
           </Grid>
         </Container>

@@ -5,6 +5,7 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 import "./stripePayStyle.css";
+import { FRONT_ENDPOINT } from "@/app/utils";
 export default function CheckoutForm({buyCourseId}) {
   const stripe = useStripe();
   const elements = useElements();
@@ -58,7 +59,7 @@ export default function CheckoutForm({buyCourseId}) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `http://localhost:3000/payment/verify/${buyCourseId}`,
+        return_url: `${FRONT_ENDPOINT}/payment/verify/${buyCourseId}`,
       },
     });
 

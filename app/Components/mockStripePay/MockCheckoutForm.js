@@ -5,6 +5,7 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 import "./mockStripePayStyle.css";
+import { FRONT_ENDPOINT } from "@/app/utils";
 export default function MockCheckoutForm({buyMockId}) {
   const stripe = useStripe();
   const elements = useElements();
@@ -58,7 +59,7 @@ export default function MockCheckoutForm({buyMockId}) {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: `http://localhost:3000/payment/verifyMock/${buyMockId}`,
+        return_url: `${FRONT_ENDPOINT}/payment/verifyMock/${buyMockId}`,
       },
     });
 
