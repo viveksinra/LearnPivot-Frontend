@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 const Typewriter = ({ textArray }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [currentText, setCurrentText] = useState('');
+  const [currentText, setCurrentText] = useState(' ');
 
   useEffect(() => {
     let intervalId;
