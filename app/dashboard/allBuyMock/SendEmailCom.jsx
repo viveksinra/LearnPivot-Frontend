@@ -1,7 +1,7 @@
 import React, { useState, useRef, forwardRef } from 'react';
 import {
     TextField, Grid, ButtonGroup, Button, Typography, Stack, CircularProgress, InputAdornment,
-    Avatar, Chip
+    Avatar, Chip, Box
 } from '@mui/material';
 import { BsSendPlus } from "react-icons/bs";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
@@ -10,10 +10,33 @@ import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
 
 const SendEmailCom = forwardRef((props, ref) => {
     const snackRef = useRef();
+    const subjectRef = useRef();
+    const bodyRef = useRef();
     const [emailSubject, setEmailSubject] = useState("");
     const [emailBody, setEmailBody] = useState("");
     const [attachmentUrl, setAttachmentUrl] = useState("");
     const [loadingAttachment, setLoadingAttachment] = useState(false);
+
+    const insertAtCursor = (field, ref) => {
+        const textarea = ref.current.querySelector('input, textarea');
+        if (textarea && textarea.setSelectionRange) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const before = text.substring(0, start);
+            const after = text.substring(end, text.length);
+            textarea.value = (before + field + after);
+            textarea.setSelectionRange(start + field.length, start + field.length);
+            textarea.focus();
+            
+            // Update state based on the ref used
+            if (ref === subjectRef) {
+                setEmailSubject(textarea.value);
+            } else if (ref === bodyRef) {
+                setEmailBody(textarea.value);
+            }
+        }
+    };
 
     const handleClear = () => {
         props.setId("");
@@ -36,29 +59,33 @@ const SendEmailCom = forwardRef((props, ref) => {
 
     const handleSendEmail = async () => {
         try {
-            // Prepare the array of recipients
-            const recipients = props.selectedItems.map(item => ({
-                email: item.email,
-                name: item.name || "",
-                id: item.id || null, // Assuming id is available in selectedItems, modify as needed
-            }));
-    
-            // Create the email data object
-            const emailData = {
-                to: recipients,
-                emailSubject,
-                emailBody,
-                attachmentUrl,
-            };
-    
-            // Send the email
-            const response = await mockTestService.sendMultiEmail(emailData);
-    
-            if (response.variant !== "success") {
-                snackRef.current.handleSnack(response);
-                return;
+            for (const item of props.selectedItems) {
+                const personalizedSubject = emailSubject
+                    .replace(/{name}/g, item.name)
+                    .replace(/{email}/g, item.email);
+                const personalizedBody = emailBody
+                    .replace(/{name}/g, item.name)
+                    .replace(/{email}/g, item.email);
+
+                const emailData = {
+                    to: [{
+                        email: item.email,
+                        name: item.name || "",
+                        id: item.id || null,
+                    }],
+                    emailSubject: personalizedSubject,
+                    emailBody: personalizedBody,
+                    attachmentUrl,
+                };
+
+                const response = await mockTestService.sendMultiEmail(emailData);
+
+                if (response.variant !== "success") {
+                    snackRef.current.handleSnack(response);
+                    return;
+                }
             }
-    
+
             snackRef.current.handleSnack({ message: "Emails sent successfully.", variant: "success" });
             handleClear();
         } catch (error) {
@@ -66,7 +93,6 @@ const SendEmailCom = forwardRef((props, ref) => {
             snackRef.current.handleSnack({ message: "Failed to send email.", variant: "error" });
         }
     };
-    
 
     const deleteAttachment = () => setAttachmentUrl("");
 
@@ -84,6 +110,13 @@ const SendEmailCom = forwardRef((props, ref) => {
                     <Button startIcon={<BsSendPlus />} onClick={handleSendEmail}>Send Email</Button>
                 </ButtonGroup>
             </Grid>
+            <Box my={2}>
+                <Typography variant="subtitle1">Insert Dynamic Fields for Subject:</Typography>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{name}', subjectRef)}>{'{name}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{email}', subjectRef)}>{'{email}'}</Button>
+                </Stack>
+            </Box>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     To:
@@ -95,6 +128,8 @@ const SendEmailCom = forwardRef((props, ref) => {
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        ref={subjectRef}
+                        id="email-subject"
                         fullWidth
                         label="Subject"
                         value={emailSubject}
@@ -106,10 +141,18 @@ const SendEmailCom = forwardRef((props, ref) => {
                     />
                 </Grid>
             </Grid>
-            <div style={{ margin: '45px' }}></div>
+            <Box my={2}>
+                <Typography variant="subtitle1">Insert Dynamic Fields for Body:</Typography>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{name}', bodyRef)}>{'{name}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{email}', bodyRef)}>{'{email}'}</Button>
+                </Stack>
+            </Box>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
+                        ref={bodyRef}
+                        id="email-body"
                         label="Body"
                         value={emailBody}
                         inputProps={{ maxLength: "4000" }}
