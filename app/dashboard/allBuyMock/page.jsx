@@ -31,21 +31,17 @@ function MyMockTest() {
       <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, background: "#d6f9f7" }}>
         <Toolbar variant="dense">
           <span style={{flexGrow: 0.2}}/>
-          {!viewTabular &&  <Button variant="contained" onClick={() => entryRef.current.handleClear()} startIcon={<FiFileMinus />} size='small' color="info">
-            Clear
-          </Button>}
+        
           <span style={{flexGrow: 0.3}}/>
          {((selectedItems?.length) >= 1) && 
-         (<Tooltip arrow title={viewTabular ? "Add MyMockTest" : "Show All"}>
+         (<Tooltip arrow title={viewTabular ? "Send Email to selected" : "Show List"}>
             <ToggleFab onClick={() => toggleView(!viewTabular)} color="secondary" size="medium">
               {viewTabular ? <MdOutlineMail style={{fontSize: 24}}/> : <BsTable style={{fontSize: 24}}/>}
             </ToggleFab>
           </Tooltip>)
           }
           <span style={{flexGrow: 0.3}}/>
-          {!viewTabular && <Button variant="contained" onClick={() => entryRef.current.handleSubmit()} startIcon={<FiCheck />} size='small' color="success">
-            {id ? "Update" : "Save"}
-          </Button>}
+       
         </Toolbar>         
       </AppBar>
     </main>
@@ -75,15 +71,24 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(false);
 
-  const handleSelectItem = (id) => {
+  const handleSelectItem = (row) => {
     setSelectedItems(prevState => {
-      if (prevState.includes(id)) {
-        return prevState.filter(item => item !== id);
+      const exists = prevState.find(item => item.id === row._id);
+      if (exists) {
+        return prevState.filter(item => item.id !== row._id);
       } else {
-        return [...prevState, id];
+        return [
+          ...prevState,
+          {
+            id: row._id,
+            email: row.email,
+            name: `${row.firstName} ${row.lastName}`,
+          }
+        ];
       }
     });
   };
+  
 
   useEffect(() => {
     async function fetchAllData() {
@@ -100,7 +105,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
       }
     }
     fetchAllData();
-  }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
+  }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches,successOnly ]);
 
   return (
     <main style={{background: "#fff", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius: 8, padding: 10}}>
@@ -136,66 +141,66 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
         </Grid> 
       </Grid>
       {loading ? <div className="center" style={{flexDirection: "column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading MyMockTest...</Typography></div> : rows.length === 0 ? <NoResult label="No MyMockTest Available"/> : tabular ? <Table size="small" sx={{display: {xs: "none", md: "block"}}} aria-label="MyMockTest data Table"> 
-        <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox">
-              <Checkbox
-                indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
-                checked={rows.length > 0 && selectedItems.length === rows.length}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedItems(rows.map((r) => r._id));
-                  } else {
-                    setSelectedItems([]);
-                  }
-                }}
-              />
-            </TableCell>
-            <TableCell align="left" padding="none"></TableCell>
-            <TableCell align="left">Mock Test Title</TableCell>
-            <TableCell align="left">Batch Date</TableCell>
-            <TableCell align="left">Batch Time</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Amount</TableCell>
-            <TableCell align="left">Date</TableCell>
-            <TableCell align="center">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((r, i) => (
-            <TableRow key={r._id} selected={selectedItems.includes(r._id)}>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  checked={selectedItems.includes(r._id)}
-                  onChange={() => handleSelectItem(r._id)}
-                />
-              </TableCell>
-              <TableCell align="left" padding="none">
-                <Badge color="primary" variant="dot" invisible={!Boolean(r.isPublished)}>
-                  <LiveAvatar isLive={r.isPublished} alt={r.mockTestId.mockTestTitle} src={r.mockTestId.url}/>
-                </Badge>
-              </TableCell>
-              <TableCell align="left">{`${r.mockTestId.mockTestTitle}`}</TableCell>
-              <TableCell align="left">{r.selectedBatch.map(batch => batch.date).join(", ")}</TableCell>
-              <TableCell align="left"><Chip label={r.selectedBatch.map(batch => batch.startTime).join(", ")} variant="outlined" size="small"/></TableCell>
-              <TableCell align="left">{r.firstName + " " + r.lastName}</TableCell>
-              <TableCell align="left">{r.amount}</TableCell>
-              <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
-              <TableCell align="left"><Chip label={r.status} variant="outlined" size="small"/></TableCell>      
-              <TableCell align="center">
-                <ButtonGroup variant="text" aria-label="">
-                  <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
-                </ButtonGroup>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+      <TableHead>
+    <TableRow>
+      <TableCell padding="checkbox">
+        <Checkbox
+          indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
+          checked={rows.length > 0 && selectedItems.length === rows.length}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedItems(rows.map(r => ({
+                id: r._id,
+                email: r.email,
+                name: `${r.firstName} ${r.lastName}`,
+              })));
+            } else {
+              setSelectedItems([]);
+            }
+          }}
+        />
+      </TableCell>
+      <TableCell align="left">Mock Test Title</TableCell>
+      <TableCell align="left">Batch Date</TableCell>
+      <TableCell align="left">Batch Time</TableCell>
+      <TableCell align="left">Name</TableCell>
+      <TableCell align="left">Email</TableCell>
+      <TableCell align="left">Amount</TableCell>
+      <TableCell align="left">Date</TableCell>
+      <TableCell align="center">Status</TableCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {rows.map((r, i) => (
+      <TableRow key={r._id} selected={selectedItems.some(item => item.id === r._id)}>
+        <TableCell padding="checkbox">
+          <Checkbox
+            checked={selectedItems.some(item => item.id === r._id)}
+            onChange={() => handleSelectItem(r)}
+          />
+        </TableCell>
+        <TableCell align="left">{r.mockTestId.mockTestTitle}</TableCell>
+        <TableCell align="left">{r.selectedBatch.map(batch => batch.date).join(", ")}</TableCell>
+        <TableCell align="left"><Chip label={r.selectedBatch.map(batch => batch.startTime).join(", ")} variant="outlined" size="small" /></TableCell>
+        <TableCell align="left">{r.firstName + " " + r.lastName}</TableCell>
+        <TableCell align="left">{r.email}</TableCell>
+        <TableCell align="left">{r.amount}</TableCell>
+        <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
+        <TableCell align="center"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
+        <TableCell align="center">
+          <ButtonGroup variant="text" aria-label="">
+            <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
+          </ButtonGroup>
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
       </Table> : 
       <Grid container spacing={2}>
         {rows.map((c, i) => (
           <Grid item key={i} xs={12} md={4} className="center">
-            <div className="prospectCard" style={c.isPublished ? {backgroundColor: "#e3ffea"} : {backgroundColor: "#ffffe6"}}>    
-              <LiveAvatar isLive={c.isPublished} alt={c.mockTestId.mockTestTitle} src={c.mockTestId.url} sx={{width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px"}}/>
+            <div className="prospectCard" style={(c.status == "succeeded") ? {backgroundColor: "#e3ffea"} : {backgroundColor: "#ffffe6"}}>    
+              <LiveAvatar isLive={(c.status == "succeeded")} alt={c.mockTestId.mockTestTitle} src={c.mockTestId.url} sx={{width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px"}}/>
               <Checkbox checked={selectedItems.includes(c._id)} onChange={() => handleSelectItem(c._id)} style={{position: "absolute", top: "10px", right: "10px"}}/>
               <Typography color="teal" variant="h6" sx={{paddingLeft: "120px"}}>{c.mockTestId.mockTestTitle}</Typography>
               <Grid container sx={{paddingLeft: "120px"}}>
@@ -203,7 +208,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems}) {
                   <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => batch.date).join(", ")}</Typography>
                   <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => batch.startTime).join(", ")}</Typography>
                 </Grid>
-                <Grid item xs={2}>{c.isPublished ? <FcOk sx={{ fontSize: 50 }}/> : <FcNoIdea sx={{ fontSize: 50 }}/>}</Grid>
+                <Grid item xs={2}>{(c.status == "succeeded") ? <FcOk sx={{ fontSize: 50 }}/> : <FcNoIdea sx={{ fontSize: 50 }}/>}</Grid>
               </Grid>      
               <Table size="small" sx={{minHeight: '180px'}} aria-label="MyMockTest data Table">
                 <TableBody>

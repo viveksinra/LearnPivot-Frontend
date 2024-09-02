@@ -1,7 +1,7 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import {
     TextField, Grid, ButtonGroup, Button, Typography, Stack, CircularProgress, InputAdornment,
-    Avatar, Chip, Paper
+    Avatar, Chip
 } from '@mui/material';
 import { BsSendPlus } from "react-icons/bs";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
@@ -15,57 +15,12 @@ const SendEmailCom = forwardRef((props, ref) => {
     const [attachmentUrl, setAttachmentUrl] = useState("");
     const [loadingAttachment, setLoadingAttachment] = useState(false);
 
-    useEffect(() => {
-        async function getEmailData() {
-            try {
-                const res = await mockTestService.getOne(props.id);
-                if (res.variant === "success") {
-                    const { mockTestTitle, fullDescription, url } = res.data;
-                    setEmailSubject(mockTestTitle);
-                    setEmailBody(fullDescription);
-                    setAttachmentUrl(url);
-                    snackRef.current.handleSnack(res);
-                } else {
-                    snackRef.current.handleSnack(res);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                snackRef.current.handleSnack({ message: "Failed to fetch data.", variant: "error" });
-            }
-        }
-
-        if (props.id) {
-            getEmailData();
-        }
-    }, [props.id]);
-
     const handleClear = () => {
         props.setId("");
         setEmailSubject("");
         setEmailBody("");
         setAttachmentUrl("");
     };
-
-    useImperativeHandle(ref, () => ({
-        handleSubmit: async () => {
-            try {
-                const emailData = {
-                    _id: props.id, emailSubject, emailBody, attachmentUrl
-                };
-                const response = await mockTestService.add(props.id, emailData);
-                if (response.variant === "success") {
-                    snackRef.current.handleSnack(response);
-                    handleClear();
-                } else {
-                    snackRef.current.handleSnack(response);
-                }
-            } catch (error) {
-                console.error("Error submitting data:", error);
-                snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
-            }
-        },
-        handleClear: () => handleClear()
-    }));
 
     const attachmentUpload = async (e) => {
         setLoadingAttachment(true);
@@ -81,12 +36,37 @@ const SendEmailCom = forwardRef((props, ref) => {
 
     const handleSendEmail = async () => {
         try {
-            console.log("Email Sent");
+            // Prepare the array of recipients
+            const recipients = props.selectedItems.map(item => ({
+                email: item.email,
+                name: item.name || "",
+                id: item.id || null, // Assuming id is available in selectedItems, modify as needed
+            }));
+    
+            // Create the email data object
+            const emailData = {
+                to: recipients,
+                emailSubject,
+                emailBody,
+                attachmentUrl,
+            };
+    
+            // Send the email
+            const response = await mockTestService.sendMultiEmail(emailData);
+    
+            if (response.variant !== "success") {
+                snackRef.current.handleSnack(response);
+                return;
+            }
+    
+            snackRef.current.handleSnack({ message: "Emails sent successfully.", variant: "success" });
+            handleClear();
         } catch (error) {
             console.error("Error sending email:", error);
             snackRef.current.handleSnack({ message: "Failed to send email.", variant: "error" });
         }
     };
+    
 
     const deleteAttachment = () => setAttachmentUrl("");
 
@@ -107,13 +87,10 @@ const SendEmailCom = forwardRef((props, ref) => {
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     To:
-                    <Stack direction="row" spacing={1}>
-                        <Chip avatar={<Avatar>M</Avatar>} label="Avatar" />
-                        <Chip
-                            avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
-                            label="Avatar"
-                            variant="outlined"
-                        />
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                        {props.selectedItems.map((item, index) => (
+                            <Chip key={index} avatar={<Avatar>{item.name.charAt(0)}</Avatar>} label={`${item.name} - ${item.email}`} />
+                        ))}
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
@@ -142,7 +119,6 @@ const SendEmailCom = forwardRef((props, ref) => {
                         multiline
                         rows={4}
                         variant="outlined"
-                        
                     />
                 </Grid>
                 <Grid item xs={12} md={4}>

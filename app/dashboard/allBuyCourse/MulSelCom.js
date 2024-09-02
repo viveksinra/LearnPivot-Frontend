@@ -97,7 +97,7 @@ export default function MulSelCom({ selectedCourses, setSelectedCourses, selecte
 
   const batches = getBatchesForSelectedCourses();
 
-  const filteredCourses = successOnly ? courses.filter(mt => mt.isPublished) : courses;
+  const filteredCourses = successOnly ? courses.filter(mt => mt.status == "succeeded") : courses;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);

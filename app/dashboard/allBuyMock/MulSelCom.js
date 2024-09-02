@@ -55,6 +55,7 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
       const mockTest = mockTests.find(mt => mt.mockTestTitle === title);
       return { title, id: mockTest._id };
     });
+    console.log(selectedMockTestObjects)
     setSelectedMockTests(selectedMockTestObjects);
     setSelectedBatches([]); // Clear the second dropdown selection
   };
@@ -96,7 +97,7 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
 
   const batches = getBatchesForSelectedMockTests();
 
-  const filteredMockTests = successOnly ? mockTests.filter(mt => mt.isPublished) : mockTests;
+  const filteredMockTests = successOnly ? mockTests.filter(mt => (mt.status == "succeeded")) : mockTests;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);
@@ -112,7 +113,7 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
           multiple
           value={selectedMockTests.map(mockTest => mockTest.title)}
           onChange={handleMockTestChange}
-          input={<OutlinedInput label="Mock Tests" />}
+          input={<OutlinedInput label="Mock Tests Student" />}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}
         >

@@ -7,7 +7,7 @@ import { useState, useRef } from 'react';
 import { TabContext, TabList } from '@mui/lab/';
 import { FiCheck, FiFileMinus } from "react-icons/fi";
 import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline, FcExpand } from "react-icons/fc";
-import { MdModeEdit, MdSend, MdOutlineClose } from "react-icons/md";
+import { MdModeEdit,MdOutlineMail, MdSend, MdOutlineClose } from "react-icons/md";
 import NoResult from "@/app/Components/NoResult/NoResult";
 import Search from "../../Components/Search";
 import { FaUserPlus } from "react-icons/fa";
@@ -171,8 +171,8 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                 />
               </TableCell>
               <TableCell align="left" padding="none">
-                <Badge color="primary" variant="dot" invisible={!Boolean(r.isPublished)}>
-                  <LiveAvatar isLive={r.isPublished} alt={r.courseId.courseTitle} src={r.courseId.url} />
+                <Badge color="primary" variant="dot" invisible={!Boolean(r.status == "succeeded")}>
+                  <LiveAvatar isLive={r.status == "succeeded"} alt={r.courseId.courseTitle} src={r.courseId.url} />
                 </Badge>
               </TableCell>
               <TableCell align="left">{`${r.courseId.courseTitle}`}</TableCell>
@@ -194,15 +194,15 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
         <Grid container spacing={2}>
           {rows.map((c, i) => (
             <Grid item key={i} xs={12} md={4} className="center">
-              <div className="prospectCard" style={c.isPublished ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
-                <LiveAvatar isLive={c.isPublished} alt={c.courseId.courseTitle} src={c.courseId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
+              <div className="prospectCard" style={(c.status == "succeeded") ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
+                <LiveAvatar isLive={c.status == "succeeded"} alt={c.courseId.courseTitle} src={c.courseId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
                 <Checkbox checked={selectedItems.includes(c._id)} onChange={() => handleSelectItem(c._id)} style={{ position: "absolute", top: "10px", right: "10px" }} />
                 <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.courseId.courseTitle}</Typography>
                 <Grid container sx={{ paddingLeft: "120px" }}>
                   <Grid item xs={10}>
                     <Typography color="grey" variant="subtitle2">{c.selectedDates.join(", ")}</Typography>
                   </Grid>
-                  <Grid item xs={2}>{c.isPublished ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
+                  <Grid item xs={2}>{(c.status == "succeeded") ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
                 </Grid>
                 <Table size="small" sx={{ minHeight: '180px' }} aria-label="MyCourse data Table">
                   <TableBody>

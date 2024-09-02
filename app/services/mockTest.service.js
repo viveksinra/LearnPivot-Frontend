@@ -47,6 +47,13 @@ export class MockTestService {
       })
       .then((res) => res.data);
   };
+  sendMultiEmail = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/otherApi/email/sendMultiEmail`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
 
 
 
