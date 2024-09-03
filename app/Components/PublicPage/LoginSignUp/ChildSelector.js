@@ -180,6 +180,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               fullWidth
               value={newChild.childDob}
               onChange={handleInputChange}
+              focused
             />
             <TextField
               select

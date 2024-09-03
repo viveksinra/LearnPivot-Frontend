@@ -11,6 +11,7 @@ import {
   MenuItem
 } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
+import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
 const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, setSelectedDates, selectedChild }) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
@@ -94,7 +95,7 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
         </div>
       </Grid>
       <Grid item xs={12}>
-        <FormControl fullWidth>
+        <FormControl variant="standard" fullWidth>
           <InputLabel id="start-date-label">Start Date</InputLabel>
           <Select
           focused
@@ -105,7 +106,7 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
           >
             {availableDates.map((date) => (
               <MenuItem key={date} value={date}>
-                {date}
+                {formatDateToShortMonth(date)}
               </MenuItem>
             ))}
           </Select>
@@ -133,7 +134,8 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
             <Grid container spacing={2}>
               {batch.map((date, dateIndex) => (
                 <Grid item xs={4} key={date}>
-                  <Typography variant="body1">{date}</Typography>
+                  <Typography variant="body1">{formatDateToShortMonth(date)}
+                  </Typography>
                 </Grid>
               ))}
             </Grid>

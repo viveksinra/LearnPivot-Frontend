@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Divider, Grid, Typography, Chip, Button } from "@mui/material";
 import Link from "next/link";
+import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 const OneMockTest = ({ data }) => {
 
   return (
@@ -34,7 +35,8 @@ const OneMockTest = ({ data }) => {
             fontFamily: "Adequate, Helvetica Neue, Helvetica, sans-serif",
           }}
         >
-         Test Dates: {data.batch.map((b) => b.date).join(", ")}, etc..
+
+         Test Dates: {data.batch.map((b) => formatDateToShortMonth(b.date)).join(", ")}, etc..
         </Typography>
         <Typography
           color="#333"
