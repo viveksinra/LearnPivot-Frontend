@@ -87,7 +87,7 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
         <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
         {totalAmount && (
           <Typography variant="h4" gutterBottom>
-            Proceed to pay Amount: € {totalAmount}
+            Proceed to pay Amount: £ {totalAmount}
           </Typography>
         )}
       </Grid>

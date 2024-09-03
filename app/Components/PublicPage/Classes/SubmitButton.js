@@ -38,7 +38,7 @@ const ProceedToPayButton = ({data,setSubmitted,setSubmittedId,setTotalAmount,tot
 
   return (
     <AnimatedButton variant="contained" onClick={() => handleCoEnquiry()}>
-      Proceed to Pay {totalAmount&& (`Amount: € ${totalAmount}`)}
+      Proceed to Pay {totalAmount&& (`Amount: £ ${totalAmount}`)}
     </AnimatedButton>
   );
 };

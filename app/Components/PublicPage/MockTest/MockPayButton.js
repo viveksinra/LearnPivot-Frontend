@@ -38,7 +38,7 @@ const MockPayButton = ({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmo
 
   return (
     <AnimatedButton variant="contained" onClick={() => handleCoEnquiry()}>
-      Proceed to Pay {totalAmount&& (`Amount: € ${totalAmount}`)}
+      Proceed to Pay {totalAmount&& (`Amount: £ ${totalAmount}`)}
     </AnimatedButton>
   );
 };

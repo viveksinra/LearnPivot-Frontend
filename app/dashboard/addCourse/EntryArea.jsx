@@ -261,7 +261,7 @@ const EntryArea = forwardRef((props, ref) => {
           <InputLabel htmlFor="outlined-adornment-amount">One Class Price</InputLabel>
           <OutlinedInput
             id="outlined-adornment-amount"
-            startAdornment={<InputAdornment position="start">€</InputAdornment>}
+            startAdornment={<InputAdornment position="start">£</InputAdornment>}
             label="oneClassPrice"
             type='number'
             value={oneClassPrice} 
@@ -277,7 +277,7 @@ const EntryArea = forwardRef((props, ref) => {
           <InputLabel htmlFor="filled-adornment-amount">Discount On Full Course</InputLabel>
           <FilledInput
             id="filled-adornment-amount"
-            startAdornment={<InputAdornment position="start">€</InputAdornment>}
+            startAdornment={<InputAdornment position="start">£</InputAdornment>}
             type='number'
             value={discountOnFullClass} 
                     onChange={(e) => setDiscountOnFullClass(e.target.value)} 

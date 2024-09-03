@@ -38,7 +38,7 @@ function CourseEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, tot
         <>
           {totalAmount ? (
             <Typography variant="h4" gutterBottom>
-              Proceed to pay Amount: € {totalAmount}
+              Proceed to pay Amount: £ {totalAmount}
             </Typography>
           ) : (
             <DateSelector data={data} selectedDates={selectedDates} setSelectedDates={setSelectedDates}
