@@ -1,7 +1,7 @@
-import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import {
     TextField, Grid, ButtonGroup, Button, Typography, Stack, CircularProgress, InputAdornment,
-    Avatar, Chip, Paper
+    Avatar, Chip, Box
 } from '@mui/material';
 import { BsSendPlus } from "react-icons/bs";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
@@ -10,34 +10,33 @@ import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
 
 const SendEmailCom = forwardRef((props, ref) => {
     const snackRef = useRef();
+    const subjectRef = useRef();
+    const bodyRef = useRef();
     const [emailSubject, setEmailSubject] = useState("");
     const [emailBody, setEmailBody] = useState("");
     const [attachmentUrl, setAttachmentUrl] = useState("");
     const [loadingAttachment, setLoadingAttachment] = useState(false);
 
-    useEffect(() => {
-        async function getEmailData() {
-            try {
-                const res = await mockTestService.getOne(props.id);
-                if (res.variant === "success") {
-                    const { mockTestTitle, fullDescription, url } = res.data;
-                    setEmailSubject(mockTestTitle);
-                    setEmailBody(fullDescription);
-                    setAttachmentUrl(url);
-                    snackRef.current.handleSnack(res);
-                } else {
-                    snackRef.current.handleSnack(res);
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                snackRef.current.handleSnack({ message: "Failed to fetch data.", variant: "error" });
+    const insertAtCursor = (field, ref) => {
+        const textarea = ref.current.querySelector('input, textarea');
+        if (textarea && textarea.setSelectionRange) {
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const text = textarea.value;
+            const before = text.substring(0, start);
+            const after = text.substring(end, text.length);
+            textarea.value = (before + field + after);
+            textarea.setSelectionRange(start + field.length, start + field.length);
+            textarea.focus();
+            
+            // Update state based on the ref used
+            if (ref === subjectRef) {
+                setEmailSubject(textarea.value);
+            } else if (ref === bodyRef) {
+                setEmailBody(textarea.value);
             }
         }
-
-        if (props.id) {
-            getEmailData();
-        }
-    }, [props.id]);
+    };
 
     const handleClear = () => {
         props.setId("");
@@ -45,27 +44,6 @@ const SendEmailCom = forwardRef((props, ref) => {
         setEmailBody("");
         setAttachmentUrl("");
     };
-
-    useImperativeHandle(ref, () => ({
-        handleSubmit: async () => {
-            try {
-                const emailData = {
-                    _id: props.id, emailSubject, emailBody, attachmentUrl
-                };
-                const response = await mockTestService.add(props.id, emailData);
-                if (response.variant === "success") {
-                    snackRef.current.handleSnack(response);
-                    handleClear();
-                } else {
-                    snackRef.current.handleSnack(response);
-                }
-            } catch (error) {
-                console.error("Error submitting data:", error);
-                snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
-            }
-        },
-        handleClear: () => handleClear()
-    }));
 
     const attachmentUpload = async (e) => {
         setLoadingAttachment(true);
@@ -81,7 +59,42 @@ const SendEmailCom = forwardRef((props, ref) => {
 
     const handleSendEmail = async () => {
         try {
-            console.log("Email Sent");
+            for (const item of props.selectedItems) {
+                const personalizedSubject = emailSubject
+                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
+                    .replace(/{email}/g, item.user.email)
+                    .replace(/{childName}/g, item.childId.childName)
+                    .replace(/{batchDates}/g, item.selectedDates.join(', '))
+                    .replace(/{courseTitle}/g, item.courseId.courseTitle);
+
+                const personalizedBody = emailBody
+                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
+                    .replace(/{email}/g, item.user.email)
+                    .replace(/{childName}/g, item.childId.childName)
+                    .replace(/{batchDates}/g, item.selectedDates.join(', '))
+                    .replace(/{courseTitle}/g, item.courseId.courseTitle);
+
+                const emailData = {
+                    to: [{
+                        email: item.user.email,
+                        name: `${item.user.firstName} ${item.user.lastName}`,
+                        id: item.user._id || null,
+                    }],
+                    emailSubject: personalizedSubject,
+                    emailBody: personalizedBody,
+                    attachmentUrl,
+                };
+
+                const response = await mockTestService.sendMultiEmail(emailData);
+
+                if (response.variant !== "success") {
+                    snackRef.current.handleSnack(response);
+                    return;
+                }
+            }
+
+            snackRef.current.handleSnack({ message: "Emails sent successfully.", variant: "success" });
+            handleClear();
         } catch (error) {
             console.error("Error sending email:", error);
             snackRef.current.handleSnack({ message: "Failed to send email.", variant: "error" });
@@ -104,20 +117,29 @@ const SendEmailCom = forwardRef((props, ref) => {
                     <Button startIcon={<BsSendPlus />} onClick={handleSendEmail}>Send Email</Button>
                 </ButtonGroup>
             </Grid>
+            <Box my={2}>
+                <Typography variant="subtitle1">Insert Dynamic Fields for Subject:</Typography>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{name}', subjectRef)}>{'{name}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{email}', subjectRef)}>{'{email}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', subjectRef)}>{'{childName}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', subjectRef)}>{'{batchDates}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{courseTitle}', subjectRef)}>{'{courseTitle}'}</Button>
+                </Stack>
+            </Box>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     To:
-                    <Stack direction="row" spacing={1}>
-                        <Chip avatar={<Avatar>M</Avatar>} label="Avatar" />
-                        <Chip
-                            avatar={<Avatar alt="Natacha" src="/static/images/avatar/1.jpg" />}
-                            label="Avatar"
-                            variant="outlined"
-                        />
+                    <Stack direction="row" spacing={1} flexWrap="wrap">
+                        {props.selectedItems.map((item, index) => (
+                            <Chip key={index} avatar={<Avatar>{item.user.firstName.charAt(0)}</Avatar>} label={`${item.user.firstName} ${item.user.lastName} - ${item.user.email}`} />
+                        ))}
                     </Stack>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
+                        ref={subjectRef}
+                        id="email-subject"
                         fullWidth
                         label="Subject"
                         value={emailSubject}
@@ -129,10 +151,21 @@ const SendEmailCom = forwardRef((props, ref) => {
                     />
                 </Grid>
             </Grid>
-            <div style={{ margin: '45px' }}></div>
+            <Box my={2}>
+                <Typography variant="subtitle1">Insert Dynamic Fields for Body:</Typography>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{name}', bodyRef)}>{'{name}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{email}', bodyRef)}>{'{email}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', bodyRef)}>{'{childName}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', bodyRef)}>{'{batchDates}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{courseTitle}', bodyRef)}>{'{courseTitle}'}</Button>
+                </Stack>
+            </Box>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField
+                        ref={bodyRef}
+                        id="email-body"
                         label="Body"
                         value={emailBody}
                         inputProps={{ maxLength: "4000" }}
@@ -142,7 +175,6 @@ const SendEmailCom = forwardRef((props, ref) => {
                         multiline
                         rows={4}
                         variant="outlined"
-                        
                     />
                 </Grid>
                 <Grid item xs={12} md={4}>

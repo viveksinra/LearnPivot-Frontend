@@ -1,22 +1,25 @@
-// MyCourse Component
 'use client';
 import "./addCourseStyle.css";
-import React, { lazy, Suspense, useEffect } from 'react'
-import {Typography, Fab, styled, Avatar, CircularProgress, Rating, Badge, ToggleButtonGroup, ToggleButton, Tab, Grid, ButtonGroup, AppBar, Toolbar, Button, Tooltip, Chip, Table, TableRow, TableCell, TableBody, TableHead, IconButton, TablePagination, Checkbox} from '@mui/material/';
-import { useState, useRef } from 'react';
-import { TabContext, TabList } from '@mui/lab/';
-import { FiCheck, FiFileMinus } from "react-icons/fi";
-import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline, FcExpand } from "react-icons/fc";
-import { MdModeEdit,MdOutlineMail, MdSend, MdOutlineClose } from "react-icons/md";
-import NoResult from "@/app/Components/NoResult/NoResult";
-import Search from "../../Components/Search";
-import { FaUserPlus } from "react-icons/fa";
+import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
+import {
+  Typography, Fab, styled, CircularProgress, Tab, Grid, ButtonGroup, AppBar, Toolbar,
+  Button, Tooltip, Chip, Table, TableRow, TableCell, TableBody, TableHead,
+  IconButton, TablePagination, Checkbox, Badge,
+  ToggleButtonGroup,
+  ToggleButton
+} from '@mui/material/';
+import { MdModeEdit, MdOutlineMail, MdOutlineClose } from "react-icons/md";
+import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline } from "react-icons/fc";
 import { BsTable } from "react-icons/bs";
 import Loading from "../../Components/Loading/Loading";
+import NoResult from "@/app/Components/NoResult/NoResult";
+import Search from "../../Components/Search";
 import LiveAvatar from "@/app/Components/Common/LiveAvatar";
 import { registrationService } from "@/app/services";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 import MulSelCom from "./MulSelCom";
+import { TabContext, TabList } from "@mui/lab";
+
 const SendEmailCom = lazy(() => import("./SendEmailCom"));
 
 function MyCourse() {
@@ -24,29 +27,41 @@ function MyCourse() {
   const [id, setId] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const entryRef = useRef();
-  
+
   return (
-    <main> 
-      {viewTabular ? <Suspense fallback={<Loading/>}><SearchArea selectedItems={selectedItems} setSelectedItems={setSelectedItems} handleEdit={(id) => {toggleView(false); setId(id)}} />  </Suspense>  : <Suspense fallback={null}><SendEmailCom selectedItems={selectedItems} ref={entryRef} id={id} setId={id => setId(id)} /></Suspense>}
+    <main>
+      {viewTabular ? (
+        <Suspense fallback={<Loading />}>
+          <SearchArea selectedItems={selectedItems} setSelectedItems={setSelectedItems} handleEdit={(id) => { toggleView(false); setId(id); }} />
+        </Suspense>
+      ) : (
+        <Suspense fallback={null}>
+          <SendEmailCom selectedItems={selectedItems} ref={entryRef} id={id} setId={setId} />
+        </Suspense>
+      )}
       <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, background: "#d6f9f7" }}>
         <Toolbar variant="dense">
-          <span style={{flexGrow: 0.2}}/>
-          {!viewTabular &&  <Button variant="contained" onClick={() => entryRef.current.handleClear()} startIcon={<FiFileMinus />} size='small' color="info">
-            Clear
-          </Button>}
-          <span style={{flexGrow: 0.3}}/>
-         {((selectedItems?.length) >= 1) && 
-         (<Tooltip arrow title={viewTabular ? "Add MyCourse" : "Show All"}>
-            <ToggleFab onClick={() => toggleView(!viewTabular)} color="secondary" size="medium">
-              {viewTabular ? <MdOutlineMail style={{fontSize: 24}}/> : <BsTable style={{fontSize: 24}}/>}
-            </ToggleFab>
-          </Tooltip>)
-          }
-          <span style={{flexGrow: 0.3}}/>
-          {!viewTabular && <Button variant="contained" onClick={() => entryRef.current.handleSubmit()} startIcon={<FiCheck />} size='small' color="success">
-            {id ? "Update" : "Save"}
-          </Button>}
-        </Toolbar>         
+          <span style={{ flexGrow: 0.2 }} />
+          {!viewTabular && (
+            <Button variant="contained" onClick={() => entryRef.current.handleClear()} startIcon={<MdOutlineClose />} size='small' color="info">
+              Clear
+            </Button>
+          )}
+          <span style={{ flexGrow: 0.3 }} />
+          {selectedItems.length >= 1 && (
+            <Tooltip arrow title={viewTabular ? "Send Email to selected" : "Show List"}>
+              <ToggleFab onClick={() => toggleView(!viewTabular)} color="secondary" size="medium">
+                {viewTabular ? <MdOutlineMail style={{ fontSize: 24 }} /> : <BsTable style={{ fontSize: 24 }} />}
+              </ToggleFab>
+            </Tooltip>
+          )}
+          <span style={{ flexGrow: 0.3 }} />
+          {!viewTabular && (
+            <Button variant="contained" onClick={() => entryRef.current.handleSubmit()} startIcon={<FcOk />} size='small' color="success">
+              {id ? "Update" : "Save"}
+            </Button>
+          )}
+        </Toolbar>
       </AppBar>
     </main>
   );
@@ -73,14 +88,15 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [totalCount, setTotalCount] = useState(0);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
-  const [successOnly, setSuccessOnly] = useState(false);
+  const [successOnly, setSuccessOnly] = useState(true);
 
-  const handleSelectItem = (id) => {
-    setSelectedItems(prevState => {
-      if (prevState.includes(id)) {
-        return prevState.filter(item => item !== id);
+  const handleSelectItem = (row) => {
+    setSelectedItems((prevState) => {
+      const exists = prevState.find(item => item._id === row._id);
+      if (exists) {
+        return prevState.filter(item => item._id !== row._id);
       } else {
-        return [...prevState, id];
+        return [...prevState, row];
       }
     });
   };
@@ -89,15 +105,11 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     async function fetchAllData() {
       setLoading(true);
       let response = await registrationService.getBuyCourseWithFilter({ sortBy, rowsPerPage, page, searchText, selectedCourses, selectedBatches, successOnly });
-      console.log(response);
       if (response.variant === "success") {
-        setLoading(false);
         setRows(response.data);
         setTotalCount(response.totalCount);
-      } else {
-        console.log(response);
-        setLoading(false);
       }
+      setLoading(false);
     }
     fetchAllData();
   }, [rowsPerPage, page, searchText, sortBy, selectedCourses, selectedBatches, successOnly]);
@@ -135,74 +147,85 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
           </TabContext>
         </Grid>
       </Grid>
-      {loading ? <div className="center" style={{ flexDirection: "column" }}><CircularProgress size={30} /> <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>Loading MyCourse...</Typography></div> : rows.length === 0 ? <NoResult label="No MyCourse Available" /> : tabular ? <Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MyCourse data Table">
-        <TableHead>
-          <TableRow>
-            <TableCell padding="checkbox">
-              <Checkbox
-                indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
-                checked={rows.length > 0 && selectedItems.length === rows.length}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSelectedItems(rows.map((r) => r._id));
-                  } else {
-                    setSelectedItems([]);
-                  }
-                }}
-              />
-            </TableCell>
-            <TableCell align="left" padding="none"></TableCell>
-            <TableCell align="left">Mock Test Title</TableCell>
-            <TableCell align="left">Batch Date</TableCell>
-            <TableCell align="left">Batch Time</TableCell>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Amount</TableCell>
-            <TableCell align="left">Date</TableCell>
-            <TableCell align="center">Status</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((r, i) => (
-            <TableRow key={r._id} selected={selectedItems.includes(r._id)}>
+      {loading ? (
+        <div className="center" style={{ flexDirection: "column" }}>
+          <CircularProgress size={30} />
+          <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>Loading MyCourse...</Typography>
+        </div>
+      ) : rows.length === 0 ? (
+        <NoResult label="No MyCourse Available" />
+      ) : tabular ? (
+        <Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MyCourse data Table">
+          <TableHead>
+            <TableRow>
               <TableCell padding="checkbox">
                 <Checkbox
-                  checked={selectedItems.includes(r._id)}
-                  onChange={() => handleSelectItem(r._id)}
+                  indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
+                  checked={rows.length > 0 && selectedItems.length === rows.length}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSelectedItems(rows);
+                    } else {
+                      setSelectedItems([]);
+                    }
+                  }}
                 />
               </TableCell>
-              <TableCell align="left" padding="none">
-                <Badge color="primary" variant="dot" invisible={!Boolean(r.status == "succeeded")}>
-                  <LiveAvatar isLive={r.status == "succeeded"} alt={r.courseId.courseTitle} src={r.courseId.url} />
-                </Badge>
-              </TableCell>
-              <TableCell align="left">{`${r.courseId.courseTitle}`}</TableCell>
-              <TableCell align="left">{r.selectedDates.join(", ")}</TableCell>
-              <TableCell align="left"><Chip label={r.selectedDates.join(", ")} variant="outlined" size="small" /></TableCell>
-              <TableCell align="left">{r.user?.firstName + " " + r.user?.lastName}</TableCell>
-              <TableCell align="left">{r.amount}</TableCell>
-              <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
-              <TableCell align="left"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
-              <TableCell align="center">
-                <ButtonGroup variant="text" aria-label="">
-                  <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
-                </ButtonGroup>
-              </TableCell>
+              <TableCell align="left">Course Title</TableCell>
+              <TableCell align="left">Name</TableCell>
+              <TableCell align="left">Email</TableCell>
+              <TableCell align="left">Child Name</TableCell>
+              <TableCell align="left">Amount</TableCell>
+              <TableCell align="left">Date</TableCell>
+              <TableCell align="center">Status</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table> :
+          </TableHead>
+          <TableBody>
+            {rows.map((r) => (
+              <TableRow key={r._id} selected={selectedItems.find(item => item._id === r._id)}>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={!!selectedItems.find(item => item._id === r._id)}
+                    onChange={() => handleSelectItem(r)}
+                  />
+                </TableCell>
+                <TableCell align="left">
+                  <Tooltip title={`Batch Dates - ${r.selectedDates.join(", ")} || Batch Times - ${r.selectedDates.join(", ")}`}>
+                    <Badge color="primary" variant="dot" invisible={r.status !== "succeeded"}>
+                      <LiveAvatar isLive={r.status === "succeeded"} alt={r.courseId.courseTitle} src={r.courseId.url} />
+                    </Badge>
+                    {r.courseId.courseTitle}
+                  </Tooltip>
+                </TableCell>
+                <TableCell align="left">{r.user?.firstName + " " + r.user?.lastName}</TableCell>
+                <TableCell align="left">{r.user.email}</TableCell>
+                <TableCell align="left">{r.childId.childName}</TableCell>
+                <TableCell align="left">{r.amount}</TableCell>
+                <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
+                <TableCell align="center"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
+                <TableCell align="center">
+                  <ButtonGroup variant="text">
+                    <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
+                  </ButtonGroup>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      ) : (
         <Grid container spacing={2}>
-          {rows.map((c, i) => (
-            <Grid item key={i} xs={12} md={4} className="center">
-              <div className="prospectCard" style={(c.status == "succeeded") ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
-                <LiveAvatar isLive={c.status == "succeeded"} alt={c.courseId.courseTitle} src={c.courseId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
-                <Checkbox checked={selectedItems.includes(c._id)} onChange={() => handleSelectItem(c._id)} style={{ position: "absolute", top: "10px", right: "10px" }} />
+          {rows.map((c) => (
+            <Grid item key={c._id} xs={12} md={4} className="center">
+              <div className="prospectCard" style={c.status === "succeeded" ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
+                <LiveAvatar isLive={c.status === "succeeded"} alt={c.courseId.courseTitle} src={c.courseId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
+                <Checkbox checked={!!selectedItems.find(item => item._id === c._id)} onChange={() => handleSelectItem(c)} style={{ position: "absolute", top: "10px", right: "10px" }} />
                 <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.courseId.courseTitle}</Typography>
                 <Grid container sx={{ paddingLeft: "120px" }}>
                   <Grid item xs={10}>
                     <Typography color="grey" variant="subtitle2">{c.selectedDates.join(", ")}</Typography>
                   </Grid>
-                  <Grid item xs={2}>{(c.status == "succeeded") ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
+                  <Grid item xs={2}>{c.status === "succeeded" ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
                 </Grid>
                 <Table size="small" sx={{ minHeight: '180px' }} aria-label="MyCourse data Table">
                   <TableBody>
@@ -232,10 +255,9 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
               </div>
             </Grid>
           ))}
-          <Grid item xs={12}>
-          </Grid>
-        </Grid>}
-      <br />
+          <Grid item xs={12}></Grid>
+        </Grid>
+      )}
       <TablePagination
         rowsPerPageOptions={[5, 10, 15, 100]}
         component="div"
@@ -249,7 +271,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
           setPage(0);
         }}
       />
-      <br /> <br /> <br />
+      <br /><br /><br />
     </main>
   );
 }

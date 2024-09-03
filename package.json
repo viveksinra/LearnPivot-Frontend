@@ -19,6 +19,8 @@
     "@next/third-parties": "^14.2.2",
     "@stripe/react-stripe-js": "^2.6.2",
     "@stripe/stripe-js": "^3.0.10",
+    "@tiptap/react": "^2.6.6",
+    "@tiptap/starter-kit": "^2.6.6",
     "apexcharts": "^3.42.0",
     "axios": "^1.4.0",
     "bcrypt": "^5.0.1",
