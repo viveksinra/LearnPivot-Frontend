@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FilterDialog() {
+export default function FilterDialog({filterData, selectedFilter, setSelectedFilter}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -56,7 +56,7 @@ export default function FilterDialog() {
           </Toolbar>
         </AppBar>
         <DialogContent style={{ padding: '16px' }}> {/* Add padding here */}
-              <FilterComponent />
+              <FilterComponent filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
             </DialogContent>
         <DialogActions>
               <Button variant="outlined" color="secondary" onClick={handleClose}>

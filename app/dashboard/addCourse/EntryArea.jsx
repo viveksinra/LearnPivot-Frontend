@@ -30,8 +30,8 @@ const EntryArea = forwardRef((props, ref) => {
 
     const [PAccordion, setPAccordion] = useState(false);
     const allClass = [
-        { label: "4", id: "4" },
-         { label: "5", id: "5" },
+        { label: "Class 4", id: "4" },
+         { label: "Class 5", id: "5" },
         ];
     const allCourseType = [
         { label: "Full Course", id: "fullCourse" },

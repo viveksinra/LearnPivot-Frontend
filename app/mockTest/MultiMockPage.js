@@ -9,11 +9,55 @@ import Slide from '@mui/material/Slide';
 import { mockTestService, myCourseService } from "../services";
 import Loading from "../Components/Loading/Loading";
 import NoResult from "../Components/NoResult/NoResult";
-import Navbar from "../Components/ITStartup/Common/Navbar/Navbar";
-import MtFilterDialog from "../Components/PublicPage/MockTest/MtFilterDialog";
-import MtFilterComponent from "../Components/PublicPage/MockTest/MtFilterComponent";
+
+import FilterDialog from "../Components/PublicPage/ClassMockComm/FilterDialog";
+import FilterComponent from "../Components/PublicPage/ClassMockComm/FilterComponent";
 
 function MultiMockPage() {
+  const [filterData, setFilterData] = useState([
+    {
+      title: "Class",
+      link:"courseClass",
+      tags: [
+        { label: "Class 4", id: "4" },
+        { label: "Class 5", id: "5" },
+        { label: "Class 6", id: "6" },
+      ]
+    },
+    {
+      title: "Type",
+      link:"courseType",
+
+      tags: [
+        { label: "Full Course", id: "fullCourse" },
+        { label: "Crash Course", id: "crashCourse" },
+      ]
+    },
+    {
+      title: "Duration",
+      link:"duration",
+      tags: [
+        { label: "3 Months", id: "3months" },
+        { label: "6 Months", id: "6months" },
+        { label: "1 Years", id: "1years" },
+      ]
+    },
+  ]);
+  const [selectedFilter, setSelectedFilter] = useState([
+    {
+      link:"courseClass",
+      ids:[]
+    },
+    {
+      link:"courseType",
+      ids:[]
+    },
+    {
+      link:"duration",
+      ids:[]
+    },
+
+  ]);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -29,7 +73,7 @@ function MultiMockPage() {
     async function fetchAllData() {
       setLoading(true)
       let response = await mockTestService.publicGetAll(
-        {sortBy,page,rowsPerPage,searchText,totalCount}
+        {sortBy,page,rowsPerPage,searchText,totalCount,selectedFilter}
         );
      console.log(response)
       if(response.variant === "success"){
@@ -39,20 +83,20 @@ function MultiMockPage() {
       }else {console.log(response); setLoading(false)}
     }
     fetchAllData()
-  }, [rowsPerPage,page,searchText,sortBy])
+  }, [rowsPerPage,page,searchText,sortBy,selectedFilter])
 
   return (
     <>
             <Grid container spacing={3}>
-        {fullScreen? (
+            {fullScreen? (
        
-        <MtFilterDialog  />
-
-      ):(
-        <Grid item xs={2}>
-        <MtFilterComponent />
-      </Grid>
-      )}
+       <FilterDialog filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
+    
+     ):(
+       <Grid item xs={2}>
+       <FilterComponent filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
+     </Grid>
+     )}
           <Grid item xs={fullScreen ? 12 : 10}>
       
         {/* <Typography style={{marginBottom:"10px"}} variant="h3" component="h5" color="#000945">
