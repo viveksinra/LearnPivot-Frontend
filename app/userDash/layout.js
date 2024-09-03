@@ -58,9 +58,9 @@ const DrawerData = ({ open, setMobileOpen }) => {
     { title: "All Payment", active: false, link: "/userDash/allPayment", icon: <FcContacts /> },
 
   ]);
-  const [reports, setReports] = useState([
-    { title: "Coming Soon", active: false, link: "#", icon: <FcPlanner /> },
-  ]);
+  // const [reports, setReports] = useState([
+  //   { title: "Coming Soon", active: false, link: "#", icon: <FcPlanner /> },
+  // ]);
 //   const [masterList, setMasterList] = useState([
 //     { title: "Master", active: false, link: "#", icon: <FcDataRecovery /> },
 //   ]);
@@ -70,12 +70,13 @@ const DrawerData = ({ open, setMobileOpen }) => {
     if (listType === "dashList") {
       newList = dashList.map((obj, i) => ({ ...obj, active: i === index }));
       setDashList(newList);
-    } else if (listType === "reports") {
-      newList = reports.map((obj, i) => ({ ...obj, active: i === index }));
+    } 
+    else if (listType === "reports") {
+      newList = reports?.map((obj, i) => ({ ...obj, active: i === index }));
       setReports(newList);
       setDashList(dashList.map((obj) => ({ ...obj, active: false })));
     } else if (listType === "masterList") {
-      newList = masterList.map((obj, i) => ({ ...obj, active: i === index }));
+      newList = masterList?.map((obj, i) => ({ ...obj, active: i === index }));
       setMasterList(newList);
       setDashList(dashList.map((obj) => ({ ...obj, active: false })));
       setReports(reports.map((obj) => ({ ...obj, active: false })));
@@ -107,38 +108,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
         ))}
       </List>
       <Divider />
-      <List disablePadding>
-        <ListItemButton
-          onClick={() => setReportOpen(!reportOpen)}
-          sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}
-        >
-          <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", fontSize: 24 }}>
-            <FcStatistics />
-          </ListItemIcon>
-          <ListItemText primary="Reports" sx={{ opacity: open ? 1 : 0 }} />
-          {reportOpen ? <FcCollapse /> : <FcExpand />}
-        </ListItemButton>
-        <Collapse in={reportOpen} timeout="auto" unmountOnExit>
-          <List component="div" dense disablePadding>
-            {reports.map((item, index) => (
-              <ListItem
-                key={index}
-                onClick={() => handleLink(item, index, "reports")}
-                disablePadding
-                className={item.active ? "activeLink" : ""}
-              >
-                <ListItemButton sx={{ pl: 3 }}>
-                  <ListItemIcon sx={{ minWidth: "40px", fontSize: 20 }}>
-                    {item.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Collapse>
-      </List>
-      <Divider />
+
       
       <List sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>
         <ListItem
