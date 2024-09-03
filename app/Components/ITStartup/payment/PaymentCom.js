@@ -10,7 +10,8 @@ const PaymentCom = ({data}) => {
     amount: data.amount,
     refNo: data.refNo,
     paymentDate: formatDateToShortMonth(data.paymentDate),
-    reason: isSuccess ? "All Good." : "data.status"
+    status: data.status,
+    testUrl: data.testUrl,
   };
 
   return (
@@ -58,13 +59,13 @@ const PaymentCom = ({data}) => {
                     </li>
                     <li>
                       <span>
-                        <i className="bx bxs-badge-check"></i> Reason: {paymentDetails.reason}
+                        <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
                       </span>
                     </li>
                   </ul>
                   <div className="rm-btn">
-                    <Link href={`/course/`} className="default-btn">
-                      Go To Course <span></span>
+                    <Link href={`${paymentDetails.testUrl}`} className="default-btn">
+                    Buy Again <span></span>
                     </Link>
                   </div>
                 </div>
@@ -94,12 +95,13 @@ const PaymentCom = ({data}) => {
                     </li>
                     <li>
                       <span>
-                        <i className="bx bxs-badge-check"></i> Reason: {paymentDetails.reason}
+                      <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
+
                       </span>
                     </li>
                   </ul>
                   <div className="rm-btn">
-                    <Link href={`/course/`} className="default-btn">
+                  <Link href={`${paymentDetails.testUrl}`} className="default-btn">
                       Buy Again <span></span>
                     </Link>
                   </div>

@@ -16,6 +16,7 @@ const SendEmailCom = forwardRef((props, ref) => {
     const [emailBody, setEmailBody] = useState("");
     const [attachmentUrl, setAttachmentUrl] = useState("");
     const [loadingAttachment, setLoadingAttachment] = useState(false);
+    const [loading, setLoading] = useState(false); // New loading state
 
     const insertAtCursor = (field, ref) => {
         const textarea = ref.current.querySelector('input, textarea');
@@ -57,21 +58,30 @@ const SendEmailCom = forwardRef((props, ref) => {
         }
     };
 
+    const formatBatchDates = (selectedBatch) => {
+        return selectedBatch.map(batch => 
+            `${batch.date} (${batch.startTime} - ${batch.endTime})`
+        ).join(', ');
+    };
+
     const handleSendEmail = async () => {
+        setLoading(true); // Set loading to true when email sending starts
         try {
             for (const item of props.selectedItems) {
+                const batchDates = formatBatchDates(item.selectedBatch);
+                
                 const personalizedSubject = emailSubject
                     .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
                     .replace(/{email}/g, item.user.email)
                     .replace(/{childName}/g, item.childId.childName)
-                    .replace(/{batchDates}/g, item.selectedBatch.join(', '))
+                    .replace(/{batchDates}/g, batchDates)
                     .replace(/{mockTitle}/g, item.mockTestId.mockTestTitle);
 
                 const personalizedBody = emailBody
                     .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
                     .replace(/{email}/g, item.user.email)
                     .replace(/{childName}/g, item.childId.childName)
-                    .replace(/{batchDates}/g, item.selectedBatch.join(', '))
+                    .replace(/{batchDates}/g, batchDates)
                     .replace(/{mockTitle}/g, item.mockTestId.mockTestTitle);
 
                 const emailData = {
@@ -89,6 +99,7 @@ const SendEmailCom = forwardRef((props, ref) => {
 
                 if (response.variant !== "success") {
                     snackRef.current.handleSnack(response);
+                    setLoading(false); // Set loading to false if an error occurs
                     return;
                 }
             }
@@ -98,6 +109,8 @@ const SendEmailCom = forwardRef((props, ref) => {
         } catch (error) {
             console.error("Error sending email:", error);
             snackRef.current.handleSnack({ message: "Failed to send email.", variant: "error" });
+        } finally {
+            setLoading(false); // Set loading to false after emails are sent
         }
     };
 
@@ -114,7 +127,13 @@ const SendEmailCom = forwardRef((props, ref) => {
             <Grid sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between" }}>
                 <Typography color="secondary" style={{ fontFamily: 'Courgette' }} align='center' variant='h6'>Send Email</Typography>
                 <ButtonGroup variant="text" aria-label="text button group">
-                    <Button startIcon={<BsSendPlus />} onClick={handleSendEmail}>Send Email</Button>
+                    <Button 
+                        startIcon={loading ? <CircularProgress size={20} /> : <BsSendPlus />} 
+                        onClick={handleSendEmail} 
+                        disabled={loading} // Disable button when loading
+                    >
+                        {loading ? "Sending..." : "Send Email"}
+                    </Button>
                 </ButtonGroup>
             </Grid>
             <Box my={2}>
@@ -183,7 +202,7 @@ const SendEmailCom = forwardRef((props, ref) => {
                             label="Add Attachment"
                             size="small"
                             required
-                            disabled={loadingAttachment}
+                            disabled={loadingAttachment || loading} // Disable when loading attachment or sending email
                             helperText="Upload attachment file here."
                             inputProps={{ accept: "image/*,pdf/*" }}
                             InputProps={{
