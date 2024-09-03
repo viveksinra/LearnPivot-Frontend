@@ -61,17 +61,24 @@ const SendEmailCom = forwardRef((props, ref) => {
         try {
             for (const item of props.selectedItems) {
                 const personalizedSubject = emailSubject
-                    .replace(/{name}/g, item.name)
-                    .replace(/{email}/g, item.email);
+                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
+                    .replace(/{email}/g, item.user.email)
+                    .replace(/{childName}/g, item.childId.childName)
+                    .replace(/{batchDates}/g, item.selectedBatch.join(', '))
+                    .replace(/{mockTitle}/g, item.mockTestId.mockTestTitle);
+
                 const personalizedBody = emailBody
-                    .replace(/{name}/g, item.name)
-                    .replace(/{email}/g, item.email);
+                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
+                    .replace(/{email}/g, item.user.email)
+                    .replace(/{childName}/g, item.childId.childName)
+                    .replace(/{batchDates}/g, item.selectedBatch.join(', '))
+                    .replace(/{mockTitle}/g, item.mockTestId.mockTestTitle);
 
                 const emailData = {
                     to: [{
-                        email: item.email,
-                        name: item.name || "",
-                        id: item.id || null,
+                        email: item.user.email,
+                        name: `${item.user.firstName} ${item.user.lastName}`,
+                        id: item.user._id || null,
                     }],
                     emailSubject: personalizedSubject,
                     emailBody: personalizedBody,
@@ -115,6 +122,9 @@ const SendEmailCom = forwardRef((props, ref) => {
                 <Stack direction="row" spacing={2}>
                     <Button variant="outlined" onClick={() => insertAtCursor('{name}', subjectRef)}>{'{name}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{email}', subjectRef)}>{'{email}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', subjectRef)}>{'{childName}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', subjectRef)}>{'{batchDates}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{mockTitle}', subjectRef)}>{'{mockTitle}'}</Button>
                 </Stack>
             </Box>
             <Grid container spacing={2}>
@@ -122,7 +132,7 @@ const SendEmailCom = forwardRef((props, ref) => {
                     To:
                     <Stack direction="row" spacing={1} flexWrap="wrap">
                         {props.selectedItems.map((item, index) => (
-                            <Chip key={index} avatar={<Avatar>{item.name.charAt(0)}</Avatar>} label={`${item.name} - ${item.email}`} />
+                            <Chip key={index} avatar={<Avatar>{item.user.firstName.charAt(0)}</Avatar>} label={`${item.user.firstName} ${item.user.lastName} - ${item.user.email}`} />
                         ))}
                     </Stack>
                 </Grid>
@@ -146,6 +156,9 @@ const SendEmailCom = forwardRef((props, ref) => {
                 <Stack direction="row" spacing={2}>
                     <Button variant="outlined" onClick={() => insertAtCursor('{name}', bodyRef)}>{'{name}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{email}', bodyRef)}>{'{email}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', bodyRef)}>{'{childName}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', bodyRef)}>{'{batchDates}'}</Button>
+                    <Button variant="outlined" onClick={() => insertAtCursor('{mockTitle}', bodyRef)}>{'{mockTitle}'}</Button>
                 </Stack>
             </Box>
             <Grid container spacing={2}>
