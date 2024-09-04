@@ -61,7 +61,7 @@ const Enquiry = () => {
                     <Grid item xs={12} md={4} lg={12} className="center">
                     <div className="enquiryCard">
                     <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190817/Customer_Service_v1maqp.png" alt="CustomerCall" />
-                    <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>24hr Customer Service</Typography>
+                    <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>9am to 9pm Support</Typography>
                     <Divider light sx={{maxWidth:"200px"}}/> <br/>
                     <Typography color="#333" sx={{fontSize:"14px"}}>Just call us on</Typography>
                     <Link href="tel:+447732762384"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
@@ -83,7 +83,7 @@ const Enquiry = () => {
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>WhatsApp Us</Typography>
                     <Divider light sx={{maxWidth:"200px"}}/> <br/>
                     <Typography color="#333" sx={{fontSize:"14px"}}>Say "Hi" from registered mobile number</Typography>
-                    <Link href="https://wa.me/+919846173905?text=Hi,%20I'm%20interested%20in%20Oasis%20Homes."><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
+                    <Link href="https://wa.me/+447732762384?text=Hi,%20I'm%20interested%20in%20Chelmsford"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
                     </div>
                     </Grid>
                   </Grid>

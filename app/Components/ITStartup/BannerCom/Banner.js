@@ -46,9 +46,7 @@ const Banner = () => {
                     >
                       Join our platform where I, as an experienced educator,
                       guide and inspire students on their
-                      journey of discovery. Together, we'll delve into the
-                      wonders of learning, nurturing a secure environment for
-                      growth and exploration.
+                      journey of discovery. Parents can book classes and mock tests to help their children succeed on their journey to academic success.
                     </p>
 
                     <div

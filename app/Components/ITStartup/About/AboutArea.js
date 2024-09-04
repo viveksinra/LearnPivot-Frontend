@@ -26,14 +26,14 @@ const AboutArea = () => {
                   height={750}
                 />
 
-                <div className="solution-video">
+                {/* <div className="solution-video">
                   <div
                     onClick={() => setToggler(!toggler)}
                     className="video-btn"
                   >
                     <i className="flaticon-play-button"></i>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
 

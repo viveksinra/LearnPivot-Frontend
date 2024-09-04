@@ -8,17 +8,15 @@ import Enquiry from "./Components/Enquiry/Enquiry";
 import Footer, {NewFooter} from "./Components/Footer/Footer";
 import {Grid, TextField, Typography,Box,Button,IconButton,InputAdornment, Container,Tabs,Tab} from '@mui/material';
 import Link from 'next/link';
-import { FcBusinessman,FcBusinesswoman,} from "react-icons/fc";
-import {authService} from "./services/index"
 import Loading from "./Components/Loading/Loading";
-import Hpage1 from './Components/PublicPage/HomePage/Hpage1';
-import HeroSec from './Components/PublicPage/HomePage/HeroSec';
+
 
 import Navbar from './Components/ITStartup/Common/Navbar/Navbar';
 import Banner from './Components/ITStartup/BannerCom/Banner';
 import ServiceCom from './Components/ITStartup/ServiceOverview/ServiceCom';
 import FeedBackCom from './Components/ITStartup/Feedback/FeedBackCom';
 import FaqCom from './Components/ITStartup/Faq/FaqCom';
+import TawkToChat from './Components/Common/TawkToChat';
 
 
 function MyApp() {  
@@ -57,6 +55,7 @@ function MyApp() {
             <Enquiry />
             <Suspense fallback={<Loading />}>
               <Footer />
+              <TawkToChat />
             </Suspense>
           </Suspense>
           </Suspense>

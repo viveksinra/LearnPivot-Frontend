@@ -72,7 +72,7 @@ function PaymentInvoice({params}) {
         <Typography variant="h6" color="primary" style={{fontFamily: 'Courgette'}} >Chelmsford</Typography>
         <Typography variant="caption">15116, Roxford St, Sylmar, CA - 91342</Typography><br/>
         <Typography variant="caption">✆ 984-617-3905</Typography><br/>
-        <Typography variant="caption">📧 contact@oasismanors.com</Typography><br/>
+        <Typography variant="caption">📧 contactchelmsford11plus.com</Typography><br/>
         <Typography variant="caption">🌐 OasisManors.com</Typography>
         </Grid>
         </Grid>
@@ -157,7 +157,7 @@ function PaymentInvoice({params}) {
           <Grid item xs={4}>
             <br/>
             <Typography variant="subtitle2">For any Enquiry, Email us on </Typography>
-            <Typography variant="subtitle2">Contact@Oasismanors.com</Typography>
+            <Typography variant="subtitle2">Contactchelmsford11plus.com</Typography>
             <Typography variant="subtitle2">+1 54561515415</Typography>
           </Grid>
           <Grid item xs={4} className='center' sx={{flexDirection:"column"}}>

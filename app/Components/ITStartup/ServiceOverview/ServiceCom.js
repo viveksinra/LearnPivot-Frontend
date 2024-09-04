@@ -101,11 +101,11 @@ const ServiceCom = () => {
                         ))}
                       </ul>
 
-                      <div className="rm-btn">
+                      {/* <div className="rm-btn">
                         <Link href={`/services/${index + 1}`} className="default-btn">
                           Read More <span></span>
                         </Link>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
                 </>
@@ -126,11 +126,11 @@ const ServiceCom = () => {
                         ))}
                       </ul>
 
-                      <div className="rm-btn">
+                      {/* <div className="rm-btn">
                         <Link href={`/services/${index + 1}`} className="default-btn">
                           Read More <span></span>
                         </Link>
-                      </div>
+                      </div> */}
                     </div>
                   </div>
 

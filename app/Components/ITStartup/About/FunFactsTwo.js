@@ -6,9 +6,9 @@ const FunFactsTwo = () => {
   // Define an array of objects representing fun facts
   const funFacts = [
     { icon: "bx bx-list-check", value: 124, text: "Completed Classes" },
-    { icon: "bx bx-smile", value: 5600, text: "Happy Clients" },
-    { icon: "bx bx-user-plus", value: 28, text: "Mock Test" },
-    { icon: "bx bx-trophy", value: 29, text: "Winning Awards" }
+    { icon: "bx bx-smile", value: 200, text: "Happy Parents" },
+    { icon: "bx bx-user-plus", value: 28, text: "Completed Mock Test" },
+    { icon: "bx bx-trophy", value: 4.8, text: "Satisfaction Rating" }
   ];
 
   return (
