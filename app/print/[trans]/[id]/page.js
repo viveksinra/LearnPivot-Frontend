@@ -2,6 +2,8 @@
 import React, {useState,useEffect} from 'react'
 import {Grid, Typography,Container,Table,TableHead,TableRow,TableCell,TableBody, CircularProgress } from '@mui/material/';
 import {authService} from "../../../services/index"
+import Image from 'next/image';
+import Link from 'next/link';
 
 const textDesign = {backgroundColor:"#f2faf6",borderLeft:"2px solid green",padding:"4px 6px",borderTopRightRadius:"5px",borderBottomRightRadius:"5px" };
 
@@ -59,7 +61,10 @@ function PaymentInvoice({params}) {
     <main style={{backgroundImage:"url(\"https://res.cloudinary.com/oasismanors/image/upload/v1693995987/a4-size_cnhzvz.png\")",display:"block", backgroundPosition: "center", backgroundRepeat:"no-repeat",backgroundSize: "cover",width:"100%", height:"100%", minHeight:"1118px",padding:"37.6562px 45.1875px 56.4844px", backgroundColor:"#fff", overflowY:"hidden"}}>
      <Grid container>
         <Grid item xs={8} className='center' sx={{flexDirection:"column"}}>
-        <img src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" style={{width:"200px", height:"80px"}} />
+        <Link href="/" className="navbar-brand">
+
+        <Image src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" style={{width:"200px", height:"80px"}} />
+        </Link>
         <Typography variant="subtitle1" color="darkgreen" style={{fontFamily: 'Courgette', border:"1px solid darkgreen", padding:"5px 10px", borderRadius:"25px"}} align='center'>{params?.trans==="payment" ? "Payment" : params?.trans==="receipt" ? "Receipt" : null} Acknowledgement</Typography>
         </Grid>
         <Grid item xs={4} style={{paddingTop:"20px"}}>

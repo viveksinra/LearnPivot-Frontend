@@ -12,7 +12,7 @@ const faqData = [
       id: "a",
       question: "What subjects and materials do you teach?",
       answer:
-        "As an educator teaching students from grades 3 to 8, I cover a wide range of subjects and materials including mathematics, science, language arts, social studies, and more. I provide comprehensive lessons tailored to each grade level, ensuring students receive a well-rounded education."
+        "As an educator teaching students, I cover a wide range of subjects and materials including mathematics, science, language arts, social studies, and more. I provide comprehensive lessons tailored to each grade level, ensuring students receive a well-rounded education."
     },
     {
       id: "b",

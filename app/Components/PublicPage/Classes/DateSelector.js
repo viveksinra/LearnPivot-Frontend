@@ -8,12 +8,21 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem
+  MenuItem,
 } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
-const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, setSelectedDates, selectedChild }) => {
+const DateSelector = ({
+  data,
+  setSubmitted,
+  setSubmittedId,
+  setTotalAmount,
+  totalAmount,
+  selectedDates,
+  setSelectedDates,
+  selectedChild,
+}) => {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
@@ -35,33 +44,41 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
         }
       }
     }
-  }, []);
-
-
+  }, [data]);
 
   const handleBatchSelect = (batchIndex) => {
+    let updatedBatches;
     if (selectedBatches.includes(batchIndex)) {
-      setSelectedBatches(selectedBatches.filter(index => index !== batchIndex));
+      updatedBatches = selectedBatches.filter((index) => index !== batchIndex);
     } else {
-      setSelectedBatches([...selectedBatches, batchIndex].sort());
+      updatedBatches = [...selectedBatches, batchIndex].sort();
+    }
+
+    setSelectedBatches(updatedBatches);
+
+    // Clear selected dates if no batches are selected
+    if (updatedBatches.length === 0) {
+      setSelectedDates([]);
+      setAvailableDates([]);
+      setStartDate("");
     }
   };
 
   useEffect(() => {
     if (selectedBatches.length > 0) {
-      const batchDates = data?.dates[selectedBatches[0]].filter(date => new Date(date) > today);
+      const batchDates = data?.dates[selectedBatches[0]].filter((date) => new Date(date) > today);
       setAvailableDates(batchDates);
       if (batchDates.length > 0) {
         setStartDate(batchDates[0]);
       }
-      const selBaDates = selectedBatches.flatMap(batchIndex => 
-        data?.dates[batchIndex].filter(date => new Date(date) > today)
-      );         
+      const selBaDates = selectedBatches.flatMap((batchIndex) =>
+        data?.dates[batchIndex].filter((date) => new Date(date) > today)
+      );
       if (selBaDates.length > 0) {
         setSelectedDates(selBaDates);
       }
     }
-  }, [selectedBatches]);
+  }, [selectedBatches, data]);
 
   const isBatchSelected = (batchIndex) => {
     return selectedBatches.includes(batchIndex);
@@ -69,36 +86,36 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
 
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
-    const selBaDates = selectedBatches.flatMap(batchIndex => 
-        data?.dates[batchIndex].filter(date => new Date(date) >= new Date(event.target.value))
-      );         
-      if (selBaDates.length > 0) {
-        setSelectedDates(selBaDates);
-      }
+    const selBaDates = selectedBatches.flatMap((batchIndex) =>
+      data?.dates[batchIndex].filter((date) => new Date(date) >= new Date(event.target.value))
+    );
+    if (selBaDates.length > 0) {
+      setSelectedDates(selBaDates);
+    }
   };
-
 
   return (
     <Grid container spacing={2}>
-   
       <Grid item xs={12}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '10vh' }}>
-        <ProceedToPayButton 
-        data={data}
-        setSubmitted={setSubmitted}
-        setSubmittedId={setSubmittedId}
-        setTotalAmount={setTotalAmount}
-        totalAmount={totalAmount}
-        selectedDates={selectedDates}
-        selectedChild={selectedChild}
-        />
+        <div
+          style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "10vh" }}
+        >
+          <ProceedToPayButton
+            data={data}
+            setSubmitted={setSubmitted}
+            setSubmittedId={setSubmittedId}
+            setTotalAmount={setTotalAmount}
+            totalAmount={totalAmount}
+            selectedDates={selectedDates}
+            selectedChild={selectedChild}
+          />
         </div>
       </Grid>
       <Grid item xs={12}>
         <FormControl variant="standard" fullWidth>
           <InputLabel id="start-date-label">Start Date</InputLabel>
           <Select
-          focused
+            focused
             labelId="start-date-label"
             id="start-date-select"
             value={startDate}
@@ -118,9 +135,7 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
             elevation={3}
             style={{
               padding: "16px",
-              backgroundColor: isBatchSelected(batchIndex)
-                ? "#f0f0f0"
-                : "inherit"
+              backgroundColor: isBatchSelected(batchIndex) ? "#f0f0f0" : "inherit",
             }}
           >
             <Grid container alignItems="center">
@@ -132,17 +147,15 @@ const DateSelector = ({ data, setSubmitted, setSubmittedId, setTotalAmount, tota
             </Grid>
             <Divider style={{ margin: "8px 0" }} />
             <Grid container spacing={2}>
-              {batch.map((date, dateIndex) => (
+              {batch.map((date) => (
                 <Grid item xs={4} key={date}>
-                  <Typography variant="body1">{formatDateToShortMonth(date)}
-                  </Typography>
+                  <Typography variant="body1">{formatDateToShortMonth(date)}</Typography>
                 </Grid>
               ))}
             </Grid>
           </Paper>
         </Grid>
       ))}
-  
     </Grid>
   );
 };

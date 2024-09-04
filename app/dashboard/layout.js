@@ -56,6 +56,7 @@ import { MdQrCodeScanner } from "react-icons/md";
 import { useLogout } from "../hooks/auth/uselogout";
 import { authService } from "../services";
 import { canAccess } from "../acs/common";
+import Link from "next/link";
 
 export const drawerWidth = 240;
 
@@ -284,7 +285,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
         ))}
       </List>
       <Divider />
-
+{/* 
       <List disablePadding>
         <ListItemButton
           onClick={() => setRO(!reportOpen)}
@@ -376,7 +377,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
             ))}
           </List>
         </Collapse>
-      </List>
+      </List> */}
      
       <List
         sx={{
@@ -481,6 +482,7 @@ function DashboardLayout({ children }) {
           >
             <FcMenu />
           </IconButton>
+          <Link href="/" className="navbar-brand">
           <Image
             priority
             width={160}
@@ -488,6 +490,7 @@ function DashboardLayout({ children }) {
             src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg"
             alt="Chelmsford"
           />
+          </Link>
           <span style={{ flexGrow: 1 }} />
           <Tooltip title="Scan Attendance" arrow>
             <IconButton

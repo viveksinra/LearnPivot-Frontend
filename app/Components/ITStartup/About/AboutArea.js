@@ -50,7 +50,7 @@ const AboutArea = () => {
                 <div className="about-text">
                   <h4>Who We Are</h4>
                   <p>
-                    We are passionate educators dedicated to providing quality education to students from grades 3 to 8.
+                    We are passionate educators dedicated to providing quality education to students.
                     Our goal is to inspire and empower young minds to reach their full potential.
                   </p>
                 </div>

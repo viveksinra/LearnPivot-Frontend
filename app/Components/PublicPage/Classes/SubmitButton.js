@@ -1,45 +1,71 @@
 // components/ProceedToPayButton.js
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState,useRef } from 'react';
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
-import {  myCourseService } from '@/app/services';
+import { myCourseService } from '@/app/services';
 import AnimatedButton from '../../Common/AnimatedButton';
+import { Typography } from '@mui/material';
+import MySnackbar from '../../MySnackbar/MySnackbar';
 
+const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, selectedChild }) => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const snackRef = useRef();  
 
-const ProceedToPayButton = ({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedDates,selectedChild}) => {
+  useEffect(()=>{
+    if (!selectedDates || selectedDates.length === 0) {
+      MySnackbar({message: 'Please select a batch',variant:"error"})
 
-    const handleCoEnquiry = async (e) => {
-  console.log({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedDates,selectedChild})
+      setErrorMessage('Kindly choose a batch to continue.')
+      return;
+    } else if (selectedDates && selectedDates.length >=1 ) {
+      setErrorMessage('');
+    }
+  },[selectedDates])
 
-        // e.preventDefault();
-        const buyData = {
-          courseId: data._id,
-          selectedDates,
-          selectedChild,
-        };
-      
-        try {
-          let response = await myCourseService.buyStepOne(buyData);
-      
-          if (response.variant === "success") {
-            setSubmitted(true);
-            setSubmittedId(response._id);
-            setTotalAmount(response.totalAmount);
-            // snackRef.current.handleSnack(response);
-          } else {
-            // snackRef.current.handleSnack(response);
-          }
-        } catch (error) {
-          console.error("Error submitting data:", error);
-          snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
-        }
-      };
+  const handleCoEnquiry = async () => {
+    if (!selectedDates || selectedDates.length === 0) {
+      setErrorMessage('Please select a batch to proceed.');
+      return;
+    }
+
+    const buyData = {
+      courseId: data._id,
+      selectedDates,
+      selectedChild,
+    };
+
+    try {
+      let response = await myCourseService.buyStepOne(buyData);
+
+      if (response.variant === 'success') {
+        setSubmitted(true);
+        setSubmittedId(response._id);
+        setTotalAmount(response.totalAmount);
+        setErrorMessage(''); // Clear the error message if the request is successful
+      } else {
+        MySnackbar(response)
+        setErrorMessage(response.message); // Clear the error message if the request is successful
+      }
+    } catch (error) {
+      console.error('Error submitting data:', error);
+      setErrorMessage('Failed to submit data.');
+    }
+  };
 
   return (
-    <AnimatedButton variant="contained" onClick={() => handleCoEnquiry()}>
-      Proceed to Pay {totalAmount&& (`Amount: £ ${totalAmount}`)}
-    </AnimatedButton>
+    <div style={{width:'100%'}}>
+      <AnimatedButton variant="contained" onClick={handleCoEnquiry}>
+        Proceed to Pay {totalAmount && `Amount: £ ${totalAmount}`}
+      </AnimatedButton>
+      {errorMessage && (
+        <Typography color="red" variant="body2" style={{ marginTop: '8px' }}>
+          {errorMessage}
+        </Typography>
+      )}
+      <MySnackbar ref={snackRef} />
+
+    </div>
   );
 };
 

@@ -64,7 +64,7 @@ const Enquiry = () => {
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>24hr Customer Service</Typography>
                     <Divider light sx={{maxWidth:"200px"}}/> <br/>
                     <Typography color="#333" sx={{fontSize:"14px"}}>Just call us on</Typography>
-                    <Link href="tel:9846173905"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+91) 9846173905</Typography></Link> 
+                    <Link href="tel:+447732762384"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
                     </div>
                     </Grid>
                     <Grid item xs={12} md={4} lg={12}>
@@ -73,8 +73,8 @@ const Enquiry = () => {
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>Reach us by E-mail</Typography>
                     <Divider light sx={{maxWidth:"200px",marginBottom:"10px"}}/> 
                     <Typography color="#333" sx={{fontSize:"14px"}}>Write to us at</Typography>
-                    <Link href="mailto:info@chelmsford.softechinfra.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford.softechinfra.com</Typography></Link> 
-                    <Link href="mailto:admin@chelmsford.softechinfra.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>admin@chelmsford.softechinfra.com</Typography></Link> 
+                    <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
+                    <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
                     </div>
                     </Grid> 
                     <Grid item xs={12} md={4} lg={12} className="center">
@@ -83,7 +83,7 @@ const Enquiry = () => {
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>WhatsApp Us</Typography>
                     <Divider light sx={{maxWidth:"200px"}}/> <br/>
                     <Typography color="#333" sx={{fontSize:"14px"}}>Say "Hi" from registered mobile number</Typography>
-                    <Link href="https://wa.me/+919846173905?text=Hi,%20I'm%20interested%20in%20Oasis%20Homes."><Typography color="#007bff" sx={{fontSize:"14px"}}>(+91) 9846173905</Typography></Link> 
+                    <Link href="https://wa.me/+919846173905?text=Hi,%20I'm%20interested%20in%20Oasis%20Homes."><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
                     </div>
                     </Grid>
                   </Grid>

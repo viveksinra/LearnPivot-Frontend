@@ -43,6 +43,7 @@ import Loading from "../Components/Loading/Loading";
 import { MdQrCodeScanner } from "react-icons/md";
 import { useLogout } from "../hooks/auth/uselogout";
 import { authService } from "../services";
+import Link from "next/link";
 
 const drawerWidth = 240;
 
@@ -230,6 +231,8 @@ function DashboardLayout({ children }) {
           >
             <FcMenu />
           </IconButton>
+          <Link href="/" className="navbar-brand">
+
           <Image
             priority
             width={160}
@@ -237,6 +240,7 @@ function DashboardLayout({ children }) {
             src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg"
             alt="Chelmsford"
           />
+          </Link>
           <span style={{ flexGrow: 1 }} />
           <Tooltip title="Scan Attendance" arrow>
             <IconButton onClick={() => router.push("/dashboard/attendance/scan")}>

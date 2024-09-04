@@ -7,7 +7,6 @@ const formatDateToShortMonth = (dates) => {
 };
 
 const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) => {
-  console.log({ data, totalAmount, selectedDates, setSelectedDates });
 
   const formattedDates = formatDateToShortMonth(selectedDates);
 
