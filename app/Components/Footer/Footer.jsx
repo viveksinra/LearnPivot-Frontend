@@ -27,7 +27,7 @@ const Footer = () => {
           <Grid container>
             <Grid item xs={12} md={3}>
             <Link href="/">
-            <Image priority width={160} height={60} src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" loading="lazy"/>
+            <Image width={160} height={60} src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" loading="lazy"/>
         </Link><br/><br/>
         <Typography color="black" variant="subtitle1">Embark on a journey of knowledge, innovation, and personal growth with our cutting-edge e-learning platform. Here, empowerment flourishes, and your educational aspirations take center stage.</Typography>
 <br />
