@@ -18,8 +18,6 @@ const Banner = () => {
 
   return (
     <>
-
-
       <div className="it-banner">
         {/* Render the particles effect */}
         {/* <Particles params={ParticleCom} className="particles" /> */}
@@ -36,7 +34,7 @@ const Banner = () => {
                       data-aos-delay="100"
                       className="animated-text"
                     >
-                      Empowering Minds: Tomorrow's  <TypeWriterCom />
+                      Empowering Minds: Tomorrow's <TypeWriterCom />
                     </h1>
 
                     <p
@@ -45,8 +43,9 @@ const Banner = () => {
                       data-aos-delay="200"
                     >
                       Join our platform where I, as an experienced educator,
-                      guide and inspire students on their
-                      journey of discovery. Parents can book classes and mock tests to help their children succeed on their journey to academic success.
+                      guide and inspire students on their journey of discovery.
+                      Parents can book classes and mock tests to help their
+                      children succeed on their journey to academic success.
                     </p>
 
                     <div
@@ -82,10 +81,13 @@ const Banner = () => {
                     <SwiperSlide>
                       <div className="animate-image">
                         <Image
-                          src="/images/it-banner/animate-img.jpg"
-                          alt="image"
+                          src="https://res.cloudinary.com/qualifier/image/upload/v1725734488/LearnPivot/animate-img_lca0b4.png"
+                          alt="animate image 1"
                           width={650}
                           height={650}
+                          priority // Mark above-the-fold images with priority
+                          quality={75} // Adjust quality if needed
+                          sizes="(max-width: 768px) 100vw, 50vw" // Responsive size hint
                         />
                       </div>
                     </SwiperSlide>
@@ -93,10 +95,13 @@ const Banner = () => {
                     <SwiperSlide>
                       <div className="animate-image">
                         <Image
-                          src="/images/it-banner/animate-img2.jpg"
-                          alt="image"
+                          src="https://res.cloudinary.com/qualifier/image/upload/v1725734488/LearnPivot/animate-img2_n11uku.jpg"
+                          alt="animate image 2"
                           width={650}
                           height={650}
+                          priority
+                          quality={75}
+                          sizes="(max-width: 768px) 100vw, 50vw"
                         />
                       </div>
                     </SwiperSlide>
@@ -114,6 +119,7 @@ const Banner = () => {
             alt="image"
             width={20}
             height={20}
+            loading="lazy"
           />
         </div>
         <div className="shape-img3">
@@ -122,6 +128,7 @@ const Banner = () => {
             alt="image"
             width={22}
             height={22}
+            loading="lazy"
           />
         </div>
         <div className="shape-img4">
@@ -130,6 +137,7 @@ const Banner = () => {
             alt="image"
             width={15}
             height={15}
+            loading="lazy"
           />
         </div>
         <div className="shape-img5">
@@ -138,6 +146,7 @@ const Banner = () => {
             alt="image"
             width={18}
             height={18}
+            loading="lazy"
           />
         </div>
         <div className="shape-img6">
@@ -146,6 +155,7 @@ const Banner = () => {
             alt="image"
             width={202}
             height={202}
+            loading="lazy"
           />
         </div>
         <div className="shape-img7">
@@ -154,6 +164,7 @@ const Banner = () => {
             alt="image"
             width={100}
             height={93}
+            loading="lazy"
           />
         </div>
         <div className="shape-img8">
@@ -162,6 +173,7 @@ const Banner = () => {
             alt="image"
             width={74}
             height={64}
+            loading="lazy"
           />
         </div>
         <div className="shape-img9">
@@ -170,6 +182,7 @@ const Banner = () => {
             alt="image"
             width={43}
             height={46}
+            loading="lazy"
           />
         </div>
         <div className="shape-img10">
@@ -178,6 +191,7 @@ const Banner = () => {
             alt="image"
             width={12}
             height={11}
+            loading="lazy"
           />
         </div>
         <div className="shape-img11">
@@ -186,6 +200,7 @@ const Banner = () => {
             alt="image"
             width={137}
             height={320}
+            loading="lazy"
           />
         </div>
         <div className="shape-img12">
@@ -194,6 +209,7 @@ const Banner = () => {
             alt="image"
             width={234}
             height={355}
+            loading="lazy"
           />
         </div>
       </div>
