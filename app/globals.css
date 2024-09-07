@@ -1,9 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
-@import url(https://db.onlinewebfonts.com/c/0d49fc455f4a8951a42daf952412a713?family=Helvetica+Neue+Regular);
-@import url('https://use.typekit.net/af/6d4bb2/00000000000000003b9acafc/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3');
-/* @import url(https://db.onlinewebfonts.com/c/72ed4d1ae54c6c3ab32b84b80fa0271e?family=Adequate+W01+Light); */
- @import url("https://use.typekit.net/jny4fhu.css");
-
+/* Preloading fonts through Next.js head instead of import */
 @font-face {
   font-family: 'roboto';
   font-weight: 300;
@@ -17,14 +12,16 @@
   font-style: normal;
   src: url("https://www.ecsforseniors.org/fonts/Adequate/font.woff2") format('woff2');
 }
+
 @font-face {
   font-family: 'AdequateLight';
   font-weight: 700;
   font-style: normal;
   src: url("https://www.ecsforseniors.org/fonts/AdequateLight/font.woff2") format('woff2');
 }
+
 #topHeader a {
-  color: #0828b5; /* Set the default color for links inside #topHeader */
+  color: #0828b5;
 }
 
 :root {
@@ -32,7 +29,7 @@
   --border-radius: 12px;
 
   --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-  Adequate, Helvetica Neue,Helvetica,"sans-serif", 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
+  Adequate, Helvetica Neue, Helvetica, "sans-serif", 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
     'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
 
   --foreground-rgb: 0, 0, 0;
@@ -46,7 +43,7 @@
     #0080ff33 120deg,
     #00aaff33 160deg,
     transparent 360deg
-);
+  );
 
   --secondary-glow: radial-gradient(
     rgba(255, 255, 255, 1),
@@ -124,15 +121,16 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  
 }
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin: 0; 
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
 }
+
 a {
   color: inherit;
   text-decoration: none;
@@ -144,36 +142,40 @@ a {
   }
 }
 
-.center{
+.center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.topBg{
-  background-size: cover;	
+
+.topBg {
+  background-size: cover;
   object-fit: cover;
   background-repeat: no-repeat;
-  object-position:center center;
+  object-position: center center;
   height: 500px;
   width: 100%;
   z-index: -1;
 }
-.topBg:after{
+
+.topBg:after {
   content: "";
   background-image: url("https://res.cloudinary.com/oasismanors/image/upload/v1704391434/Banner-texture_y57tn3.svg");
   height: 126px;
-  width:100vw;
+  width: 100vw;
   z-index: 2;
-  display:block;
+  display: block;
   position: relative;
   bottom: -90%;
   left: 0px;
-} 
-.sectionMargin{
-  padding-top:50px;
+}
+
+.sectionMargin {
+  padding-top: 50px;
   padding-bottom: 50px;
 }
-.heading{
+
+.heading {
   font-family: 'Courgette', cursive;
   text-align: center;
   color: #010ab5;
@@ -182,8 +184,7 @@ a {
   font-family: "Courgette";
 }
 
-/* Prospect CSS here */
-.profileBg{
+.profileBg {
   margin-top: 20px;
   height: 200px;
   width: 100%;
@@ -194,7 +195,8 @@ a {
   box-shadow: 0px 0px 37px -7px rgba(172, 169, 245, 0.84);
   margin-bottom: 20px;
 }
-.profileBgBtm{
+
+.profileBgBtm {
   padding-top: 150px;
   height: 50px;
   background-image: url("https://res.cloudinary.com/oasismanors/image/upload/v1685043818/blurry-gradient-haikei_hf8srn.svg");
@@ -203,7 +205,8 @@ a {
   background-size: cover;
   border-bottom-right-radius: 60px;
 }
-.userAvatar{
+
+.userAvatar {
   width: 112px;
   height: 112px;
   position: absolute;
@@ -211,7 +214,8 @@ a {
   margin-left: 40px;
   margin-top: 70px;
 }
-.userName{
+
+.userName {
   color: #fff;
   position: absolute;
   margin-left: 180px;
@@ -219,13 +223,14 @@ a {
   line-height: 1.2;
   font-weight: 100;
 }
-.userName h3{
+
+.userName h3 {
   font-size: 30px;
   font-family: Courgette;
   font-weight: lighter;
 }
 
-.recurringBox{
+.recurringBox {
   position: absolute;
   left: 65%;
   top: 19%;
@@ -234,13 +239,13 @@ a {
   max-width: 600px;
   padding: 10px;
   background: linear-gradient(313deg, rgba(218, 243, 230, 0.65) 0%, rgba(198, 221, 226, 0.6) 100%);
-  box-shadow :0 2px 4px #ddd
+  box-shadow: 0 2px 4px #ddd;
 }
 
 /* Mobile */
 @media (max-width: 700px) {
-  .sectionMargin{
-    margin-top:10px;
+  .sectionMargin {
+    margin-top: 10px;
     margin-bottom: 10px;
   }
 }
