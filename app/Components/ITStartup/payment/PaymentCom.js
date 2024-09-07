@@ -33,6 +33,7 @@ const PaymentCom = ({data}) => {
                     alt="success image"
                     width="852"
                     height="580"
+                    loading="lazy"
                   />
                 </div>
               </div>
@@ -121,6 +122,7 @@ const PaymentCom = ({data}) => {
                     alt="failure image"
                     width="770"
                     height="582"
+                    loading="lazy"
                   />
                 </div>
               </div>

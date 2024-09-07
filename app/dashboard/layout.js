@@ -489,6 +489,7 @@ function DashboardLayout({ children }) {
             height={60}
             src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg"
             alt="Chelmsford"
+            loading="lazy"
           />
           </Link>
           <span style={{ flexGrow: 1 }} />

@@ -108,6 +108,7 @@ const FeedBackCom = () => {
                       alt="image"
                       width={150}
                       height={150}
+                      loading="lazy"
                     />
                     <h3>{feedback.name}</h3>
                     <span>{feedback.role}</span>
@@ -118,6 +119,7 @@ const FeedBackCom = () => {
                       alt="image"
                       width={118}
                       height={86}
+                      loading="lazy"
                     />
                   </div>
                 </div>

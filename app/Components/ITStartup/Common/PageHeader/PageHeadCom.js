@@ -35,6 +35,7 @@ const PageHeadCom = ({
             alt="image"
             width={20}
             height={20}
+            loading="lazy"
           />
         </div>
         <div className="shape-img3">
@@ -43,6 +44,7 @@ const PageHeadCom = ({
             alt="image"
             width={22}
             height={22}
+            loading="lazy"
           />
         </div>
         <div className="shape-img4">
@@ -51,6 +53,7 @@ const PageHeadCom = ({
             alt="image"
             width={15}
             height={15}
+            loading="lazy"
           />
         </div>
         <div className="shape-img5">
@@ -59,6 +62,7 @@ const PageHeadCom = ({
             alt="image"
             width={18}
             height={18}
+            loading="lazy"
           />
         </div>
         <div className="shape-img7">
@@ -67,6 +71,7 @@ const PageHeadCom = ({
             alt="image"
             width={100}
             height={93}
+            loading="lazy"
           />
         </div>
         <div className="shape-img8">
@@ -75,6 +80,7 @@ const PageHeadCom = ({
             alt="image"
             width={74}
             height={64}
+            loading="lazy"
           />
         </div>
         <div className="shape-img9">
@@ -83,6 +89,7 @@ const PageHeadCom = ({
             alt="image"
             width={43}
             height={46}
+            loading="lazy"
           />
         </div>
         <div className="shape-img10">
@@ -91,6 +98,7 @@ const PageHeadCom = ({
             alt="image"
             width={12}
             height={11}
+            loading="lazy"
           />
         </div>
       </div>

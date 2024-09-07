@@ -24,6 +24,7 @@ const AboutArea = () => {
                   className="rounded-10"
                   width={500}
                   height={750}
+                  loading="lazy"
                 />
 
                 {/* <div className="solution-video">

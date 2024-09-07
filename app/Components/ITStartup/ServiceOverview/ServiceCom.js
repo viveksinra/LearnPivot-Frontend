@@ -82,6 +82,7 @@ const ServiceCom = () => {
                         alt={service.image.alt}
                         width={service.image.width}
                         height={service.image.height}
+                        loading="lazy"
                       />
                     </div>
                   </div>
@@ -147,6 +148,7 @@ const ServiceCom = () => {
                         alt={service.image.alt}
                         width={service.image.width}
                         height={service.image.height}
+                        loading="lazy"
                       />
                     </div>
                   </div>
