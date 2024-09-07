@@ -11,13 +11,19 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
   const formattedDates = formatDateToShortMonth(selectedDates);
 
   return (
-    <Grid container key={data._id} spacing={4} direction="column">
-      <Grid item xs={12}>
+    <Grid container key={data._id} spacing={2} direction="column" sx={{ marginTop:'10px',padding: '10px' }}>
+      <Grid item xs={12} lg={6} sx={{ display: { xs: 'none', lg: 'block' } }}>
         <img
           src={data.url}
           className="creativeImg"
           alt={data.courseTitle}
-          style={{ width: '100%', height: 'auto' }} 
+          style={{
+            width: '100%', 
+            height: 'auto', 
+            maxWidth: '100%', 
+            borderRadius: '8px', // To add a little styling to image
+            objectFit: 'contain', // Ensure the image fits within its container
+          }}
         />
       </Grid>
       <Grid item xs={12}>
@@ -25,35 +31,40 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
           color="#082952"
           gutterBottom
           sx={{
-            fontSize: { xs: "18px", md: "20px" },
+            fontSize: { xs: "16px", md: "20px" },
             fontWeight: 600,
-            lineHeight: "20px",
+            lineHeight: "24px",
             fontFamily: "Adequate, Helvetica Neue, Helvetica, sans-serif",
+            textAlign: { xs: "center", md: "left" }, // Center text on mobile for better alignment
           }}
         >
           {data.courseTitle}
         </Typography>
-        <div style={{ display: "flex", marginTop: "10px", marginBottom: "10px" }}>
-            <Chip
-              label={`Class: ${data.courseClass?.label}`}
-              color="primary"
-              variant="contained"
-              sx={{ marginRight: "8px" }}
-            />
-            <Chip
-              label={`Type: ${data.courseType?.label}`}
-              color="primary"
-              variant="contained"
-              sx={{ marginRight: "8px" }}
-            />
-            <Chip
-              label={`Duration: ${data.duration?.label}`}
-              color="primary"
-              variant="contained"
-              sx={{ marginRight: "8px" }}
-            />
-          </div>
+        </Grid>
 
+        <Grid item xs={12} lg={6} sx={{ display: { xs: 'none', lg: 'block' } }}>
+        <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", marginTop: "10px", marginBottom: "10px" }}>
+          <Chip
+            label={`Class: ${data.courseClass?.label}`}
+            color="primary"
+            variant="contained"
+            sx={{ marginRight: "8px", marginBottom: "8px" }}
+          />
+          <Chip
+            label={`Type: ${data.courseType?.label}`}
+            color="primary"
+            variant="contained"
+            sx={{ marginRight: "8px", marginBottom: "8px" }}
+          />
+          <Chip
+            label={`Duration: ${data.duration?.label}`}
+            color="primary"
+            variant="contained"
+            sx={{ marginRight: "8px", marginBottom: "8px" }}
+          />
+        </div>
+        </Grid>
+        <Grid item xs={12}>
         <Typography
           color="#082952"
           gutterBottom
@@ -64,28 +75,18 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
           }}
         >
           Selected Date: {selectedDates?.length ? (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center" }}>
               {formattedDates.map((date, index) => (
                 <Chip key={index} label={date} variant="outlined" />
               ))}
             </div>
           ) : 'No date selected'}
         </Typography>
-        <Typography
-          color="#333"
-          sx={{
-            fontFamily: "acumin-pro, sans-serif",
-            fontWeight: 100,
-            fontSize: { xs: "11px", md: "14px" },
-            lineHeight: "1.8rem",
-          }}
-        >
-      
-        </Typography>
- 
+
         <Divider sx={{ marginTop: "10px", marginBottom: "5px" }} />
+        
         {totalAmount && (
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h6" gutterBottom sx={{ textAlign: { xs: "center", md: "left" } }}>
             Proceed to pay Amount: £ {totalAmount}
           </Typography>
         )}
