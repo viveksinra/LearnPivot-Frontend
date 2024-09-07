@@ -140,3 +140,14 @@ input[type=number]::-webkit-outer-spin-button {
 .animated-text {
   animation: colorChange 5s infinite;
 }
+/* Custom styles for mobile view */
+@media (max-width: 768px) {
+  .banner-btn a {
+    display: block; /* Stack buttons vertically */
+    margin-bottom: 15px; /* Add space between buttons */
+  }
+
+  .banner-btn a:last-child {
+    margin-bottom: 0; /* Remove margin for the last button */
+  }
+}
