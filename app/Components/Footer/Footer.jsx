@@ -15,7 +15,11 @@ const Footer = () => {
     "Inspiring Virtual Environment"
   ];
   
-  const links =[{label:"About Us",link:"about"},{label:"Pricing",link:"pricing"},{label:"Contact Us",link:"contact"},{label:"Privacy Policy",link:"privacy"}]
+  const links =[{label:"About Us",link:"about"},
+    // {label:"Pricing",link:"pricing"},
+    {label:"Contact Us",link:"contact"},
+    // {label:"Privacy Policy",link:"privacy"}
+  ]
  
   return (
     <section className="footerBg">
