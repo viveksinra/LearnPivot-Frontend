@@ -58,6 +58,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
     childName: '',
     childDob: '',
     childGender: '',
+    childYear: '',
   });
 
   const handleSelectChild = (child) => {
@@ -102,7 +103,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
   }, [allChildren]);
 
   const handleAddChild = async () => {
-    if (!newChild.childName || !newChild.childGender) {
+    if (!newChild.childName || !newChild.childGender || !newChild.childYear) {
       snackRef.current.handleSnack({ message: 'Please fill all required fields.', variant: 'error' });
       return;
     }
@@ -196,6 +197,21 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               <MenuItem value="Boy">Boy</MenuItem>
               <MenuItem value="Girl">Girl</MenuItem>
               <MenuItem value="Prefer not to say">Prefer not to say</MenuItem>
+            </TextField>
+            <TextField
+              select
+              margin="dense"
+              name="childYear"
+              label="Year"
+              fullWidth
+              variant="outlined"
+              value={newChild.childYear}
+              onChange={handleInputChange}
+              required
+            >
+              <MenuItem value="Year 4">Year 4</MenuItem>
+              <MenuItem value="Year 5">Year 5</MenuItem>
+              <MenuItem value="Other">Other</MenuItem>
             </TextField>
           </Box>
         </DialogContent>
