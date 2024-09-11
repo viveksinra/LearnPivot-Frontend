@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { Divider, Grid, Typography, Chip, Button } from "@mui/material";
+import { Divider, Grid, Typography, Chip, Button, Dialog } from "@mui/material";
 import Link from "next/link";
+
 const OneClass = ({ data }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <Grid container key={data._id} spacing={4}>
@@ -10,8 +20,13 @@ const OneClass = ({ data }) => {
           src={data.url}
           className="creativeImg"
           alt={data.courseTitle}
+          onClick={handleClickOpen} // Open image modal on click
+          style={{ cursor: "pointer", transition: "transform 0.2s", maxWidth: "100%", height: "auto" }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")} // Zoom effect on hover
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         />
       </Grid>
+
       <Grid item xs={12} md={8}>
         <Typography
           color="#082952"
@@ -19,11 +34,11 @@ const OneClass = ({ data }) => {
           sx={{
             fontSize: { xs: "18px", md: "20px" },
             fontWeight: 600,
-            lineHeight: "20px", // reduced the line height
+            lineHeight: "20px", 
             fontFamily: "Adequate, Helvetica Neue, Helvetica, sans-serif",
           }}
         >
-         {data.courseTitle}
+          {data.courseTitle}
         </Typography>
         <Typography
           color="#082952"
@@ -45,39 +60,56 @@ const OneClass = ({ data }) => {
             lineHeight: "1.8rem",
           }}
         >
-        {data.shortDescription}
-          <div style={{ display: "flex", marginTop: "10px" }}>
-          <Chip
-                label={`Class: ${data.courseClass?.label}`}
-                color="primary"
-                variant="contained"
-                sx={{ marginRight: "8px" }}
-              />
-                <Chip
-                label={`Type: ${data.courseType?.label}`}
-                color="primary"
-                variant="contained"
-                sx={{ marginRight: "8px" }}
-              />
-                <Chip
-                label={`Duration: ${data.duration?.label}`}
-                color="primary"
-                variant="contained"
-                sx={{ marginRight: "8px" }}
-              />
-          </div>
+          {data.shortDescription}
+          <Grid container spacing={0} sx={{ marginTop: "10px" }}>
+          <Grid item xs={12} sm={2} >
+            <Chip
+              label={`Class: ${data.courseClass?.label}`}
+              color="primary"
+              variant="contained"
+              sx={{ marginRight: "8px" }}
+            />
+            </Grid>
+            <Grid item xs={12} sm={3} >
+            <Chip
+              label={`Type: ${data.courseType?.label}`}
+              color="primary"
+              variant="contained"
+              sx={{ marginRight: "8px" }}
+            />
+            </Grid>
+            <Grid item xs={12} sm={3} >
+            <Chip
+              label={`Duration: ${data.duration?.label}`}
+              color="primary"
+              variant="contained"
+              sx={{ marginRight: "8px" }}
+            />
+          </Grid> 
+          </Grid>
         </Typography>
         <br />
         <div style={{ display: "flex" }}>
-        <Link href={"/course/buy/" + data._id}>
-        <button className="viewBtn">Quick Buy</button></Link>
+          <Link href={"/course/buy/" + data._id}>
+            <button className="viewBtn">Quick Buy</button>
+          </Link>
           <span style={{ flexGrow: 0.1 }} />
-          
         </div>
       </Grid>
+
       <Grid item xs={12}>
-        <Divider sx={{ marginTop: "-20px", marginBottom:"15px" }} />
+        <Divider sx={{ marginTop: "-20px", marginBottom: "15px" }} />
       </Grid>
+
+      {/* Dialog for image enlargement */}
+      <Dialog open={open} onClose={handleClose} maxWidth="lg">
+        <img
+          src={data.url}
+          alt={data.courseTitle}
+          style={{ width: "100%", height: "auto" }}
+          
+        />
+      </Dialog>
     </Grid>
   );
 };

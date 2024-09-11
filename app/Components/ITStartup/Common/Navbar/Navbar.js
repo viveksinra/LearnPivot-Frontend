@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -7,7 +7,7 @@ import { menus } from "./menus";
 import { Avatar, Button } from "@mui/material";
 import { authService } from "@/app/services";
 import MainContext from "@/app/Components/Context/MainContext";
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 
 const Navbar = () => {
@@ -88,9 +88,22 @@ const Navbar = () => {
 
             {/* Other Options */}
             <div className="others-options">
-              {(state?.isAuthenticated && currentUser) ? (
+              {state?.isAuthenticated && currentUser ? (
                 <Link href="/dashboard">
-                  <Button color="secondary" startIcon={<Avatar alt={state.name} src={authService.getLoggedInUser()?.userImage ?? "https://res.cloudinary.com/oasismanors/image/upload/v1687519053/user_myqgmv.png"} />}>Dashboard</Button>
+                  <Button
+                    color="secondary"
+                    startIcon={
+                      <Avatar
+                        alt={state.name}
+                        src={
+                          authService.getLoggedInUser()?.userImage ??
+                          "https://res.cloudinary.com/oasismanors/image/upload/v1687519053/user_myqgmv.png"
+                        }
+                      />
+                    }
+                  >
+                    Dashboard
+                  </Button>
                 </Link>
               ) : (
                 <Link href="/login">
@@ -101,6 +114,8 @@ const Navbar = () => {
           </nav>
         </div>
       </div>
+      {/* Add a div to act as space when the navbar becomes sticky */}
+      <div className="navbar-space"></div>
     </div>
   );
 };
