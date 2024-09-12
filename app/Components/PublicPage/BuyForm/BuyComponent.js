@@ -17,12 +17,12 @@ const BuyComponent = ({ data }) => {
   return (
     <section style={{ backgroundColor: "#fff", marginBottom: "10px", paddingTop:"20px" }} id="enquiry">
       <Container maxWidth="xl">
-        <Grid container>
+        <Grid container >
      
-          <Grid item xs={12} lg={6} >
+          <Grid item xs={12} lg={6}  >
             <SmallOneClass data={data} totalAmount={totalAmount} selectedDates={selectedDates} />
           </Grid>
-          <Grid item xs={12} lg={6} style={{paddingLeft:"40px"}}>
+          <Grid item xs={12} lg={6}  >
             {submitted ? (
               <StripePay submittedId={submittedId} />
             ) : (

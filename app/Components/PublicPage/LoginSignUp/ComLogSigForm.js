@@ -12,7 +12,7 @@ function ComLogSigForm({ isRedirectToDashboard }) {
   const [isForget, setIsForget] = useState(false);
 
   return (
-    <div style={{marginTop:"20px"}}>
+    <div style={{marginTop:"20px",justifyContent:"center"}}>
       <Typography 
         align="center" 
         color="primary" 

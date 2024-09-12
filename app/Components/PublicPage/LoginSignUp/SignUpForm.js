@@ -125,7 +125,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   ];
 
   return (
-    <Container style={{ marginLeft: "40px" }}>
+    <Container >
       <Grid container spacing={2}>
       <Grid item xs={12} md={6}>
   <TextField
