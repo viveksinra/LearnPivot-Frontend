@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { Divider, Grid, Typography, Chip, Dialog } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
+import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
-const formatDateToShortMonth = (dates) => {
+const formateDateToMonth = (dates) => {
   return dates.map(date => new Date(date).toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' }));
 };
 
 const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) => {
   const [open, setOpen] = useState(false); // State to manage dialog open/close
 
-  const formattedDates = formatDateToShortMonth(selectedDates);
+  const formattedDates = formateDateToMonth(selectedDates);
 
   const handleOpenDialog = () => {
     setOpen(true); // Open the dialog
@@ -109,7 +110,7 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
           Selected Date: {selectedDates?.length ? (
             <div style={{ display: "flex", flexWrap: "wrap", gap: "8px", justifyContent: "center" }}>
               {formattedDates.map((date, index) => (
-                <Chip key={index} label={date} variant="outlined" />
+                <Chip key={index} label={formatDateToShortMonth(date)} variant="outlined" />
               ))}
             </div>
           ) : 'No date selected'}

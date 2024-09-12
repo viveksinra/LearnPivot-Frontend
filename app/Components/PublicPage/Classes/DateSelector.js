@@ -11,6 +11,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
+import { FcApproval } from "react-icons/fc"; // Import the approval icon
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
 const DateSelector = ({
@@ -94,6 +95,11 @@ const DateSelector = ({
     }
   };
 
+  // Check if a date is in the selected dates array
+  const isDateSelected = (date) => {
+    return selectedDates.includes(date);
+  };
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -147,11 +153,18 @@ const DateSelector = ({
             </Grid>
             <Divider style={{ margin: "8px 0" }} />
             <Grid container spacing={2}>
-              {batch.map((date) => (
-                <Grid item xs={4} key={date}>
-                  <Typography variant="body1">{formatDateToShortMonth(date)}</Typography>
-                </Grid>
-              ))}
+            {batch.map((date) => (
+  <Grid item xs={4} key={date} style={{ display: "flex", alignItems: "center" }}>
+    <Typography 
+      variant="body1" 
+      style={{ fontWeight: isDateSelected(date) ? "bold" : "normal" }}
+    >
+      {formatDateToShortMonth(date)}
+    </Typography>
+    {isDateSelected(date) && <FcApproval style={{ marginLeft: "8px" }} />} {/* Conditionally render the icon */}
+  </Grid>
+))}
+
             </Grid>
           </Paper>
         </Grid>
