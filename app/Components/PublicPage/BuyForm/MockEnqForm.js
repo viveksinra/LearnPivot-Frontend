@@ -38,7 +38,7 @@ function MockEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, total
         <>
           {totalAmount ? (
             <Typography variant="h4" gutterBottom>
-              Proceed to pay Amount: £ {totalAmount}
+              Proceed to pay amount: £ {totalAmount}
             </Typography>
           ) : (
     

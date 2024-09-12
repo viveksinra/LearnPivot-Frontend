@@ -120,7 +120,7 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
         
         {totalAmount && (
           <Typography variant="h6" gutterBottom sx={{ textAlign: { xs: "center", md: "left" } }}>
-            Proceed to pay Amount: £ {totalAmount}
+            Proceed to pay amount: £ {totalAmount}
           </Typography>
         )}
       </Grid>
