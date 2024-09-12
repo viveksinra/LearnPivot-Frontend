@@ -66,7 +66,7 @@ const OneClass = ({ data }) => {
           >
             {data.shortDescription}
             <Grid container spacing={0} sx={{ marginTop: "10px" }}>
-              <Grid item xs={12} sm={2}>
+              <Grid item xs={12} sm={2.3} sx={{ marginTop: "10px" }}>
                 <Chip
                   label={`Class: ${data.courseClass?.label}`}
                   color="primary"
@@ -74,7 +74,7 @@ const OneClass = ({ data }) => {
                   sx={{ marginRight: "8px" }}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3} sx={{ marginTop: "10px" }}>
                 <Chip
                   label={`Type: ${data.courseType?.label}`}
                   color="primary"
@@ -82,7 +82,7 @@ const OneClass = ({ data }) => {
                   sx={{ marginRight: "8px" }}
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
+              <Grid item xs={12} sm={3.5} sx={{ marginTop: "10px" }}>
                 <Chip
                   label={`Duration: ${data.duration?.label}`}
                   color="primary"

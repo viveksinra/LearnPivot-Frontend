@@ -1,6 +1,4 @@
-// components/ProceedToPayButton.js
-
-import React, { useEffect, useState,useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
 import { myCourseService } from '@/app/services';
@@ -11,16 +9,21 @@ import MySnackbar from '../../MySnackbar/MySnackbar';
 const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, selectedChild }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const snackRef = useRef();  
+  const [isFirstRender, setIsFirstRender] = useState(true); // Track first render
 
-  useEffect(()=>{
+  useEffect(() => {
+    if (isFirstRender) {
+      setIsFirstRender(false); // Set first render flag to false after initial render
+      return; // Skip the first render check
+    }
+    
     if (!selectedDates || selectedDates.length === 0) {
-      snackRef.current.handleSnack({message: 'Please select a batch',variant:"error"});
-      setErrorMessage('Kindly choose a batch to continue.')
-      return;
-    } else if (selectedDates && selectedDates.length >=1 ) {
+      setErrorMessage('Kindly choose a batch to continue.');
+      snackRef.current.handleSnack({ message: 'Please Select Your batch', variant: 'info' });
+    } else if (selectedDates.length >= 1) {
       setErrorMessage('');
     }
-  },[selectedDates])
+  }, [selectedDates, isFirstRender]);
 
   const handleCoEnquiry = async () => {
     if (!selectedDates || selectedDates.length === 0) {
@@ -43,8 +46,8 @@ const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount
         setTotalAmount(response.totalAmount);
         setErrorMessage(''); // Clear the error message if the request is successful
       } else {
-        MySnackbar(response)
-        setErrorMessage(response.message); // Clear the error message if the request is successful
+        snackRef.current.handleSnack({ message: response.message, variant: response.variant });
+        setErrorMessage(response.message);
       }
     } catch (error) {
       console.error('Error submitting data:', error);
@@ -53,7 +56,7 @@ const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount
   };
 
   return (
-    <div style={{width:'100%'}}>
+    <div style={{ width: '100%' }}>
       <AnimatedButton variant="contained" onClick={handleCoEnquiry}>
         Proceed to Pay {totalAmount && `Amount: £ ${totalAmount}`}
       </AnimatedButton>
@@ -63,7 +66,6 @@ const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount
         </Typography>
       )}
       <MySnackbar ref={snackRef} />
-
     </div>
   );
 };
