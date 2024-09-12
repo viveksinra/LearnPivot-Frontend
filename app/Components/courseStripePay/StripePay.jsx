@@ -49,7 +49,7 @@ export default function StripePay({submittedId}) {
   };
 
   return (
-    <div className="App" style={{marginLeft:"40px"}}>
+    <div className="App" >
       {clientSecret && (
         <Elements options={options} stripe={stripePromise}>
           <CheckoutForm buyCourseId={buyCourseId}/>

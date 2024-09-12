@@ -102,7 +102,7 @@ const Navbar = () => {
                       />
                     }
                   >
-                    Dashboard
+                    
                   </Button>
                 </Link>
               ) : (
