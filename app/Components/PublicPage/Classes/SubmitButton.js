@@ -14,8 +14,7 @@ const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount
 
   useEffect(()=>{
     if (!selectedDates || selectedDates.length === 0) {
-      MySnackbar({message: 'Please select a batch',variant:"error"})
-
+      snackRef.current.handleSnack({message: 'Please select a batch',variant:"error"});
       setErrorMessage('Kindly choose a batch to continue.')
       return;
     } else if (selectedDates && selectedDates.length >=1 ) {

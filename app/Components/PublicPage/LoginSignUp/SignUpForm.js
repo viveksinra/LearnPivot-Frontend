@@ -1,14 +1,24 @@
 "use client";
 import { useState, useRef, useContext } from "react";
-import { Container, Grid, TextField, MenuItem, Fab, FormControl, InputLabel, Select, InputAdornment, IconButton } from '@mui/material/';
+import {
+  Container,
+  Grid,
+  TextField,
+  MenuItem,
+  Fab,
+  FormControl,
+  InputLabel,
+  Select,
+  InputAdornment,
+  IconButton,
+} from "@mui/material/";
 import { FcFeedback } from "react-icons/fc";
-import { authService, myCourseService } from "@/app/services";
+import { authService } from "@/app/services";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import MySnackbar from "../../MySnackbar/MySnackbar";
 import { useRouter } from "next/navigation";
 import MainContext from "../../Context/MainContext";
 import { LOGIN_USER } from "../../Context/types";
-
 
 const SignUpForm = ({ isRedirectToDashboard }) => {
   const [formData, setFormData] = useState({
@@ -22,115 +32,200 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     message: "",
     selectedDates: [],
   });
-  const [showPassword, setShowPass] = useState(false);
-  const [password, setPass] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState("");
+
   const router = useRouter();
   const snackRef = useRef();
   const { dispatch } = useContext(MainContext);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prevState => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleEnquiry = async (e) => {
-    e.preventDefault();
+  const handleSignUpClick = async () => {
     const signUpData = {
       ...formData,
-      password: password,
+      password,
+      otp
     };
 
     try {
       const res = await authService.signUp(signUpData);
-      console.log('SignUp data:', signUpData);
-      console.log('Response:', res);
 
       if (res.success && res.token) {
         dispatch({ type: LOGIN_USER, payload: res });
         snackRef.current.handleSnack({
-          message: "Login Successful! Please Wait",
+          message: "Login Successful! Redirecting...",
           variant: "success",
         });
-        if (isRedirectToDashboard == true) {
+        if (isRedirectToDashboard) {
           router.push("/dashboard");
           window.location.reload();
+        } else {
+          router.refresh();
         }
       } else {
         snackRef.current.handleSnack({
-          message: "Invalid Login Credentials. Please enter correct credentials.",
+          message: res.message || "Invalid Login Credentials.",
           variant: "error",
         });
       }
-      snackRef.current.handleSnack(res);
     } catch (error) {
       console.error("Error submitting data:", error);
-      snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
+      snackRef.current.handleSnack({
+        message: "Failed to submit data.",
+        variant: "error",
+      });
+    }
+  };
+
+  const handleSendOtpClick = async () => {
+    const emailOtpData = {
+      ...formData,
+      password,
+      email: formData.email,
+      purpose: "signup",
+    };
+
+    try {
+      const res = await authService.sendOtp(emailOtpData);
+      if (res.variant == "success") {
+        setOtpSent(true);
+        snackRef.current.handleSnack({
+          message: "OTP Sent Successfully!",
+          variant: "success",
+        });
+      } else {
+        snackRef.current.handleSnack({
+          message: "Failed to send OTP. Try again later.",
+          variant: "error",
+        });
+      }
+    } catch (error) {
+      console.error("Error sending OTP:", error);
+      snackRef.current.handleSnack({
+        message: "Failed to send OTP.",
+        variant: "error",
+      });
     }
   };
 
   const allMarketing = [
-    "Web Search / Google", 
-    "Friend or colleague Recommendation", 
-    "Social Media", 
-    "Direct Mailer", 
-    "Family Member", 
-    "Email", 
-    "Blog or Publication"
+    "Web Search / Google",
+    "Friend or colleague Recommendation",
+    "Social Media",
+    "Direct Mailer",
+    "Family Member",
+    "Email",
+    "Blog or Publication",
   ];
 
   return (
-    <form onSubmit={handleEnquiry} id="enquiryForm" style={{ marginLeft: "40px" }}>
+    <Container style={{ marginLeft: "40px" }}>
       <Grid container spacing={2}>
-        {[
-          { name: "firstName", label: "First Name", type: "text", required: true },
-          { name: "lastName", label: "Last Name", type: "text", required: true },
-          { name: "email", label: "Email", type: "email", required: true },
-          { name: "mobile", label: "Phone", type: "number", required: true },
-          { name: "address", label: "Address", type: "text", required: false },
-        ].map(({ name, label, type, required }, index) => (
-          <Grid item xs={12} md={6} key={index}>
-            <TextField
-              fullWidth
-              name={name}
-              value={formData[name]}
-              required={required}
-              onChange={handleChange}
-              label={label}
-              type={type}
-              placeholder={`Enter your ${label}`}
-              variant="outlined"
-            />
-          </Grid>
-        ))}
+      <Grid item xs={12} md={6}>
+  <TextField
+    fullWidth
+    name="firstName"
+    value={formData.firstName}
+    required
+    onChange={handleChange}
+    label="First Name"
+    type="text"
+    placeholder="Enter your First Name"
+    variant="outlined"
+  />
+</Grid>
 
 <Grid item xs={12} md={6}>
-            <TextField
-              id="loginPass"
-              fullWidth
-              required
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPass(e.target.value)}
-              placeholder="Password"
-              label="Password"
-              variant="outlined"
-              inputProps={{ autoComplete: "on" }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPass(!showPassword)}
-                      edge="start"
-                    >
-                      {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Grid>
-       
+  <TextField
+    fullWidth
+    name="lastName"
+    value={formData.lastName}
+    required
+    onChange={handleChange}
+    label="Last Name"
+    type="text"
+    placeholder="Enter your Last Name"
+    variant="outlined"
+  />
+</Grid>
+
+<Grid item xs={12} md={6}>
+  <TextField
+    fullWidth
+    name="email"
+    value={formData.email}
+    required
+    onChange={handleChange}
+    label="Email"
+    type="email"
+    placeholder="Enter your Email"
+    variant="outlined"
+    disabled={otpSent}  // Disable field when OTP is sent
+  />
+</Grid>
+
+<Grid item xs={12} md={6}>
+  <TextField
+    fullWidth
+    name="mobile"
+    value={formData.mobile}
+    required
+    onChange={handleChange}
+    label="Phone"
+    type="number"
+    placeholder="Enter your Phone"
+    variant="outlined"
+  />
+</Grid>
+
+<Grid item xs={12} md={12}>
+  <TextField
+    fullWidth
+    name="address"
+    value={formData.address}
+    onChange={handleChange}
+    label="Address"
+    type="text"
+    placeholder="Enter your Address"
+    variant="outlined"
+  />
+</Grid>
+
+
+        <Grid item xs={12} md={6}>
+          <TextField
+            id="loginPass"
+            fullWidth
+            required
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            label="Password"
+            variant="outlined"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge="start"
+                  >
+                    {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+
+
         <Grid item xs={12} md={6}>
           <TextField
             fullWidth
@@ -148,16 +243,39 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             ))}
           </TextField>
         </Grid>
-        <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
-          <Fab variant="extended" size="medium" color="primary" aria-label="add" type="submit">
+
+        {  otpSent &&      <Grid item xs={12} md={6}>
+          <TextField
+            id="loginPass"
+            fullWidth
+            required
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            placeholder="Enter Email Otp"
+            label="Email Otp"
+            variant="outlined"
+          
+          />
+        </Grid>}
+
+    {!otpSent &&    <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
+          <Fab variant="extended" size="medium" color="primary" aria-label="send-otp" onClick={handleSendOtpClick}>
             <FcFeedback style={{ fontSize: 24, marginRight: 10 }} />
-            Register Now
+            Send OTP
           </Fab>
-        </Grid>
+        </Grid>}
+
+        {otpSent && (
+          <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
+            <Fab variant="extended" size="medium" color="primary" aria-label="sign-up" onClick={handleSignUpClick}>
+              <FcFeedback style={{ fontSize: 24, marginRight: 10 }} />
+              Register Now
+            </Fab>
+          </Grid>
+        )}
       </Grid>
       <MySnackbar ref={snackRef} />
-
-    </form>
+    </Container>
   );
 };
 
