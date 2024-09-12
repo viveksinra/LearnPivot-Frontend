@@ -75,14 +75,14 @@ function ForgetPassword({ setIsForget }) {
         });
       } else {
         snackRef.current.handleSnack({
-          message: "Failed to send OTP. Try again later.",
+          message: "Failed to send OTP to Email. Try again later.",
           variant: "error",
         });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
       snackRef.current.handleSnack({
-        message: "Failed to send OTP.",
+        message: "Failed to send OTP to Email.",
         variant: "error",
       });
     }
@@ -170,7 +170,7 @@ function ForgetPassword({ setIsForget }) {
                 ) : (
                   <>
                     <FcFeedback style={{ fontSize: 24, marginRight: 10 }} />
-                    Send OTP
+                    Send OTP to Email
                   </>
                 )}
               </Fab>

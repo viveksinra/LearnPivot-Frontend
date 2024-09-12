@@ -101,14 +101,14 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
         });
       } else {
         snackRef.current.handleSnack({
-          message: "Failed to send OTP. Try again later.",
+          message: "Failed to send OTP to Email. Try again later.",
           variant: "error",
         });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
       snackRef.current.handleSnack({
-        message: "Failed to send OTP.",
+        message: "Failed to send OTP to Email.",
         variant: "error",
       });
     }
@@ -261,7 +261,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     {!otpSent &&    <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
           <Fab variant="extended" size="medium" color="primary" aria-label="send-otp" onClick={handleSendOtpClick}>
             <FcFeedback style={{ fontSize: 24, marginRight: 10 }} />
-            Send OTP
+            Send Email OTP
           </Fab>
         </Grid>}
 
