@@ -27,10 +27,26 @@ const DateSelector = ({
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [startDate, setStartDate] = useState("");
   const [availableDates, setAvailableDates] = useState([]);
-
+  const [frontEndTotal, setFrontEndTotal] = useState(null);
   // Get today's date
   const today = new Date();
 
+  useEffect(() => {
+    // Update frontEndTotal with selected dates
+
+    const selectedDatesCount = selectedDates.length;
+    let total = 0;
+    let oneDatePrice = data?.oneClassPrice;
+    if (oneDatePrice) {
+      total = selectedDatesCount * oneDatePrice;
+    }
+    if(total> 0){
+      setFrontEndTotal(total);
+    } else {
+      setFrontEndTotal(null);
+    }
+
+  }, [selectedDates]);
   useEffect(() => {
     // Find the first date that is after today
     for (let batchIndex = 0; batchIndex < data?.dates.length; batchIndex++) {
@@ -112,6 +128,7 @@ const DateSelector = ({
             setSubmittedId={setSubmittedId}
             setTotalAmount={setTotalAmount}
             totalAmount={totalAmount}
+            frontEndTotal={frontEndTotal}
             selectedDates={selectedDates}
             selectedChild={selectedChild}
           />

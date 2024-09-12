@@ -6,7 +6,7 @@ import AnimatedButton from '../../Common/AnimatedButton';
 import { Typography } from '@mui/material';
 import MySnackbar from '../../MySnackbar/MySnackbar';
 
-const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedDates, selectedChild }) => {
+const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId,frontEndTotal, setTotalAmount, totalAmount, selectedDates, selectedChild }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const snackRef = useRef();  
   const [isFirstRender, setIsFirstRender] = useState(true); // Track first render
@@ -58,7 +58,7 @@ const ProceedToPayButton = ({ data, setSubmitted, setSubmittedId, setTotalAmount
   return (
     <div style={{ width: '100%' }}>
       <AnimatedButton variant="contained" onClick={handleCoEnquiry}>
-        Proceed to Pay {totalAmount && `Amount: £ ${totalAmount}`}
+        Proceed to Pay {frontEndTotal && `Amount: £ ${frontEndTotal}`}
       </AnimatedButton>
       {errorMessage && (
         <Typography color="red" variant="body2" style={{ marginTop: '8px' }}>
