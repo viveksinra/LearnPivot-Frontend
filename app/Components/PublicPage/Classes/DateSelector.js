@@ -39,6 +39,7 @@ const DateSelector = ({
     let oneDatePrice = data?.oneClassPrice;
     if (oneDatePrice) {
       total = selectedDatesCount * oneDatePrice;
+     total = total.toFixed(2)
     }
     if(total> 0){
       setFrontEndTotal(total);
