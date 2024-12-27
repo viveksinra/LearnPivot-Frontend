@@ -1,18 +1,19 @@
 import React from "react";
 import { Divider, Grid, Typography, Chip } from "@mui/material";
 import MtBatchSelector from "./MtBatchSelector";
+import ImageCarousel from "../../Common/ImageCarousel";
 
 const SmallOneMockTest = ({ data, totalAmount, selectedBatch }) => {
   console.log({ data, totalAmount, selectedBatch });
 
   return (
     <Grid container key={data._id} spacing={4} direction="column">
-      <Grid item xs={12}>
-        <img
-          src={data.url}
-          className="creativeImg"
-          alt={data.mockTestTitle}
-          style={{ width: '100%', height: 'auto' }} 
+      <Grid item xs={12} style={{maxWidth:"500px"}}>
+      <ImageCarousel
+          images={data.imageUrls}
+          title={data.mockTestTitle}
+          height="300px"
+          autoplayDelay={6000}
         />
       </Grid>
       <Grid item xs={12}>
