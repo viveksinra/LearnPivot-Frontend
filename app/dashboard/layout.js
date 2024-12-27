@@ -103,18 +103,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
     //   link: "/dashboard/task",
     //   icon: <FcTodoList />,
     // },
-        {
-      title: "All Buy Mock",
-      active: false,
-      link: "/dashboard/allBuyMock",
-      icon: <FcContacts />,
-    },
-    { 
-      title: "All Buy Course",
-       active: false,
-        link: "/dashboard/allBuyCourse",
-         icon: <FcRightUp />
-     },
+
 
         {
       title: "All Course",
@@ -134,6 +123,18 @@ const DrawerData = ({ open, setMobileOpen }) => {
       link: "/dashboard/notes",
       icon: <FcInspection />,
     },
+    {
+      title: "Purchased Mock",
+      active: false,
+      link: "/dashboard/allBuyMock",
+      icon: <FcContacts />,
+    },
+    { 
+      title: "Purchased Course",
+       active: false,
+        link: "/dashboard/allBuyCourse",
+         icon: <FcRightUp />
+     },
     // {
     //   title: "Employee",
     //   active: false,
