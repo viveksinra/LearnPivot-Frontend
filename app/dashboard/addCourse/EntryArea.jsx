@@ -7,6 +7,7 @@ import MySnackbar from "../../Components/MySnackbar/MySnackbar";
 import { myCourseService } from "../../services";
 import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
 import DateSelector from './dateSelector';
+import MultiImageUpload from '@/app/Components/Common/MultiImageUpload';
 
 const EntryArea = forwardRef((props, ref) => {
     const snackRef = useRef();
@@ -26,7 +27,7 @@ const EntryArea = forwardRef((props, ref) => {
     const [totalSeat, setTotalSeat] = useState("");
     const [filledSeat, setFilledSeats] = useState("");
     const [showRemaining, setShowRemaining] = useState(false);
-    const [url, setUrl] = useState("");
+    const [imageUrls, setImageUrls] = useState([""]); // Start with one empty slot
 
     const [PAccordion, setPAccordion] = useState(false);
     const allClass = [
@@ -60,7 +61,7 @@ const EntryArea = forwardRef((props, ref) => {
                 if (res.variant === "success") {
                     const { _id, isPublished,dates,startTime,
                         endTime,courseTitle,courseLink,shortDescription,oneClassPrice,discountOnFullClass,
-                        courseClass,courseType,duration,url,fullDescription,totalSeat,filledSeat,showRemaining,
+                        courseClass,courseType,duration,imageUrls,fullDescription,totalSeat,filledSeat,showRemaining,
                          } = res.data;
                     props.setId(_id);
                     setIsPublished(isPublished);
@@ -75,7 +76,7 @@ const EntryArea = forwardRef((props, ref) => {
                     setCourseClass(courseClass);
                     setCourseType(courseType);
                     setDuration(duration);
-                    setUrl(url);
+                    setImageUrls(imageUrls?.length ? imageUrls : [""]);
                     setFullDescription(fullDescription);
                     setTotalSeat(totalSeat);
                     setFilledSeats(filledSeat);
@@ -113,7 +114,7 @@ const EntryArea = forwardRef((props, ref) => {
         setTotalSeat("");
         setFilledSeats("");
         setShowRemaining(false);
-        setUrl("");
+        setImageUrls([""]);
         setPAccordion(true);
     };
     
@@ -136,7 +137,7 @@ const EntryArea = forwardRef((props, ref) => {
                     duration,
                     fullDescription,
                     totalSeat,filledSeat,showRemaining,
-                    url,
+                    imageUrls,
                     isPublished
                 };
                 let response = await myCourseService.add(props.id, myCourseData);
@@ -159,7 +160,7 @@ const EntryArea = forwardRef((props, ref) => {
         setLoadingDoc(true);
         let url = await useImgUpload(e);
         if (url) {
-          setUrl(url);
+          setImageUrls(url);
           setLoadingDoc(false);
         } else {
           snackRef.current.handleSnack({
@@ -191,12 +192,12 @@ const EntryArea = forwardRef((props, ref) => {
 
     const deleteImage = () => {
         // Your delete image logic here
-        setUrl(""); // Clear the URL to remove the image from display
+        setImageUrls([""]); // Clear the URL to remove the image from display
     };
 
     const showImage = () => {
-        if (url) {
-            window.open(url, '_blank'); // Open the image URL in a new tab
+        if (imageUrls) {
+            window.open(imageUrls, '_blank'); // Open the image URL in a new tab
         }
     };
 
@@ -217,36 +218,17 @@ const EntryArea = forwardRef((props, ref) => {
       </Typography>                    
                 </Grid>
       
-                <Grid item xs={12} md={4} >
-                
-                {  !url?   (<TextField
-                label="Thumbnail Image"
-                size="small"
-                disabled={loadingDoc}
-                helperText="Only Image Files are allowed"
-                inputProps={{ accept: "image/*" }}
-                InputProps={{
-                    endAdornment: (
-                        <InputAdornment position="start">
-                            {loadingDoc && <CircularProgress size={25} />}{" "}
-                        </InputAdornment>
-                    ),
-                }}
-                onChange={(e) => imgUpload(e.target.files[0])}
-                type="file"
-                focused
-                fullWidth
-            />):
-             (
-                <Stack direction="row" spacing={2}>
-                <Button variant="contained" color="success"onClick={showImage}>Show Thumbnail Image
-                </Button>
-                <Button variant="outlined" color="error"onClick={deleteImage}>Delete Thumbnail Image
-                </Button>
-              </Stack>
-               
-            )}
-        </Grid>
+                <Grid item xs={12} md={12}>
+                    <MultiImageUpload
+                        images={imageUrls}
+                        onImagesChange={setImageUrls}
+                        uploadFunction={useImgUpload}
+                        maxImages={5}
+                        required={true}
+                        title="Thumbnail Images"
+                        helperText="Drag images to reorder. First image will be used as cover."
+                    />
+                </Grid>
         <Grid item xs={12} md={2}>
                     <TextField focused type='time' value={startTime} onChange={(e) => setStartTime(e.target.value)} fullWidth label="Start Time :" variant="standard" />
                 </Grid>

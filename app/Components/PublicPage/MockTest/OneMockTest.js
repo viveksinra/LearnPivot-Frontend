@@ -1,18 +1,21 @@
-import React, { useState } from "react";
-import { Divider, Grid, Typography, Chip, Button } from "@mui/material";
+import React from "react";
+import { Divider, Grid, Typography, Chip } from "@mui/material";
 import Link from "next/link";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
-const OneMockTest = ({ data }) => {
+import ImageCarousel from "../../Common/ImageCarousel";
 
+const OneMockTest = ({ data }) => {
   return (
     <Grid container key={data._id} spacing={4}>
       <Grid item xs={12} md={4}>
-        <img
-          src={data.url}
-          className="creativeImg"
-          alt={data.mockTestTitle}
+        <ImageCarousel
+          images={data.imageUrls}
+          title={data.mockTestTitle}
+          height="200px"
+          autoplayDelay={6000}
         />
       </Grid>
+
       <Grid item xs={12} md={8}>
         <Typography
           color="#082952"
@@ -20,11 +23,11 @@ const OneMockTest = ({ data }) => {
           sx={{
             fontSize: { xs: "18px", md: "20px" },
             fontWeight: 600,
-            lineHeight: "20px", // reduced the line height
+            lineHeight: "20px",
             fontFamily: "Adequate, Helvetica Neue, Helvetica, sans-serif",
           }}
         >
-         {data.mockTestTitle}
+          {data.mockTestTitle}
         </Typography>
         <Typography
           color="#082952"
@@ -35,8 +38,7 @@ const OneMockTest = ({ data }) => {
             fontFamily: "Adequate, Helvetica Neue, Helvetica, sans-serif",
           }}
         >
-
-         Test Dates: {data.batch.map((b) => formatDateToShortMonth(b.date)).join(", ")}, etc..
+          Test Dates: {data.batch.map((b) => formatDateToShortMonth(b.date)).join(", ")}, etc..
         </Typography>
         <Typography
           color="#333"
@@ -47,38 +49,41 @@ const OneMockTest = ({ data }) => {
             lineHeight: "1.8rem",
           }}
         >
-        {data.shortDescription}
-          <div style={{ display: "flex", marginTop: "10px" }}>
-          <Chip
-                label={`Class: ${data.testClass?.label}`}
+          {data.shortDescription}
+          <div style={{ display: "flex", marginTop: "10px", flexWrap: "wrap", gap: "8px" }}>
+            {data.testClass?.label && (
+              <Chip
+                label={`Class: ${data.testClass.label}`}
                 color="primary"
                 variant="contained"
-                sx={{ marginRight: "8px" }}
               />
-                <Chip
-                label={`Type: ${data.testType?.label}`}
+            )}
+            {data.testType?.label && (
+              <Chip
+                label={`Type: ${data.testType.label}`}
                 color="primary"
                 variant="contained"
-                sx={{ marginRight: "8px" }}
               />
-                <Chip
-                label={`Duration: ${data.duration?.label}`}
+            )}
+            {data.duration?.label && (
+              <Chip
+                label={`Duration: ${data.duration.label}`}
                 color="primary"
                 variant="contained"
-                sx={{ marginRight: "8px" }}
               />
+            )}
           </div>
         </Typography>
         <br />
         <div style={{ display: "flex" }}>
-        <Link href={"/mockTest/buy/" + data._id}>
-        <button className="viewBtn">Quick Book</button></Link>
+          <Link href={"/mockTest/buy/" + data._id}>
+            <button className="viewBtn">Quick Book</button>
+          </Link>
           <span style={{ flexGrow: 0.1 }} />
-          
         </div>
       </Grid>
       <Grid item xs={12}>
-        <Divider sx={{ marginTop: "-20px", marginBottom:"15px" }} />
+        <Divider sx={{ marginTop: "-20px", marginBottom: "15px" }} />
       </Grid>
     </Grid>
   );
