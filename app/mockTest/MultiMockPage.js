@@ -15,47 +15,24 @@ import FilterComponent from "../Components/PublicPage/ClassMockComm/FilterCompon
 
 function MultiMockPage() {
   const [filterData, setFilterData] = useState([
+
     {
-      title: "Class",
-      link:"courseClass",
-      tags: [
-        { label: "Class 4", id: "4" },
-        { label: "Class 5", id: "5" },
-        { label: "Class 6", id: "6" },
-      ]
-    },
-    {
-      title: "Type",
-      link:"courseType",
+      title: "Mock Type",
+      link:"testType",
 
       tags: [
-        { label: "Full Course", id: "fullCourse" },
-        { label: "Crash Course", id: "crashCourse" },
+        { label: "FSCE", id: "fsce" },
+        { label: "CSSE", id: "csse" },
       ]
     },
-    {
-      title: "Duration",
-      link:"duration",
-      tags: [
-        { label: "3 Months", id: "3months" },
-        { label: "6 Months", id: "6months" },
-        { label: "1 Years", id: "1years" },
-      ]
-    },
+
   ]);
   const [selectedFilter, setSelectedFilter] = useState([
     {
-      link:"courseClass",
+      link:"testType",
       ids:[]
     },
-    {
-      link:"courseType",
-      ids:[]
-    },
-    {
-      link:"duration",
-      ids:[]
-    },
+  
 
   ]);
 
