@@ -18,9 +18,11 @@ const AddMockEntryArea = forwardRef((props, ref) => {
     const [mockTestTitle, setMockTestTitle] = useState("");
     const [mockTestLink, setMockTestLink] = useState("");
     const [shortDescription, setShortDescription] = useState("");
-    const [testClass, setTestClass] = useState(null);
+    const [pincode, setPincode] = useState("");
+    const [highlightedText, setHighlightedText] = useState("");
+    const [blinkText, setBlinkText] = useState(null);
     const [testType, setTestType] = useState(null);
-    const [duration, setDuration] = useState(null);
+    const [location, setLocation] = useState(null);
     const [fullDescription, setFullDescription] = useState("");
     const [totalSeat, setTotalSeat] = useState("");
     const [imageUrls, setImageUrls] = useState([""]);
@@ -34,15 +36,10 @@ const AddMockEntryArea = forwardRef((props, ref) => {
     }]);
     const [PAccordion, setPAccordion] = useState(false);
 
-    const allClass = [{ label: "4", id: "4" }, { label: "5", id: "5" }];
+    const AllBlinkText = [{ label: "High Demand", id: "highDemand" }, { label: "Few Seat Left", id: "fewSeatLeft" }];
     const allTestType = [{ label: "FSCE", id: "fsce" }, { label: "CSSE", id: "csse" }];
-    const allDuration = [
-        { label: "30 Minutes", id: "30minutes" },
-        { label: "1 Hour", id: "1hour" },
-        { label: "1 Hour 30 Minutes", id: "1hour30minutes" },
-        { label: "2 Hours", id: "2hours" },
-        { label: "2 Hours 30 Minutes", id: "2hours30minutes" },
-        { label: "3 Hours", id: "3hours" }
+    const allLocation = [
+        { label: "Broomfield Village Hall 158 Main Rd, Broomfield, Chelmsford, CM1 7AH", id: "location1" },
     ];
 
     function convertToSlug(text) {
@@ -61,15 +58,17 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                 if (res.variant === "success") {
                     const {
                         isPublished, mockTestTitle, mockTestLink, shortDescription,
-                        testClass, testType, duration, imageUrls, fullDescription, totalSeat, batch
+                        blinkText, testType, location, imageUrls, fullDescription, totalSeat, batch
                     } = res.data;
                     setIsPublished(isPublished);
                     setMockTestTitle(mockTestTitle);
                     setMockTestLink(mockTestLink);
                     setShortDescription(shortDescription);
-                    setTestClass(testClass);
+                    setHighlightedText(highlightedText);
+                    setPincode(pincode);
+                    setBlinkText(blinkText);
                     setTestType(testType);
-                    setDuration(duration);
+                    setLocation(location);
                     setImageUrls(imageUrls?.length ? imageUrls : [""]);
                     setFullDescription(fullDescription);
                     setTotalSeat(totalSeat);
@@ -99,9 +98,11 @@ const AddMockEntryArea = forwardRef((props, ref) => {
         setMockTestTitle("");
         setMockTestLink("");
         setShortDescription("");
-        setTestClass(null);
+        setHighlightedText("");
+        setPincode("");
+        setBlinkText(null);
         setTestType(null);
-        setDuration(null);
+        setLocation(null);
         setFullDescription("");
         setTotalSeat("");
         setImageUrls([""]);
@@ -163,10 +164,12 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                     _id: props.id,
                     mockTestTitle,
                     mockTestLink,
+                    pincode,
+                    highlightedText,
                     shortDescription,
-                    testClass,
+                    blinkText,
                     testType,
-                    duration,
+                    location,
                     fullDescription,
                     totalSeat,
                     imageUrls,
@@ -213,7 +216,7 @@ const AddMockEntryArea = forwardRef((props, ref) => {
             </Grid>
 
             <Grid container spacing={2}>
-                <Grid item xs={12} md={6}>
+                <Grid item xs={12} md={4}>
                     <TextField
                         fullWidth
                         label="MockTest Title"
@@ -225,10 +228,32 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                         required={true}
                     />
                     <Typography variant="subtitle2" gutterBottom>Link- {mockTestLink}</Typography>
-                </Grid>
+                </Grid>          
 
  
 
+                <Grid item xs={12} md={4}>
+                    <TextField
+                        fullWidth
+                        label="Pin Code"
+                        value={pincode}
+                        onChange={(e) => setPincode(e.target.value)}
+                        inputProps={{ minLength: "2", maxLength: "100" }}
+                        placeholder='Pin Code'
+                        variant="standard"
+                    />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                    <TextField
+                        fullWidth
+                        label="highlighted Text"
+                        value={ highlightedText}
+                        onChange={(e) =>  setHighlightedText(e.target.value)}
+                        inputProps={{ minLength: "2", maxLength: "100" }}
+                        placeholder='Highlighted Text'
+                        variant="standard"
+                    />
+                </Grid>
                 <Grid item xs={12} md={12}>
                     <TextField
                         fullWidth
@@ -244,13 +269,13 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                 <Grid item xs={12} md={3}>
                     <Autocomplete
                         isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                        options={allClass}
-                        value={testClass}
-                        onChange={(e, v) => setTestClass(v)}
+                        options={AllBlinkText}
+                        value={blinkText}
+                        onChange={(e, v) => setBlinkText(v)}
                         renderOption={(props, option) => (
                             <li {...props} key={option.id}>{option.label}</li>
                         )}
-                        renderInput={(params) => <TextField {...params} label="Class" variant="standard" />}
+                        renderInput={(params) => <TextField {...params} label="Blink Text" variant="standard" />}
                     />
                 </Grid>
 
@@ -270,13 +295,13 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                 <Grid item xs={12} md={3}>
                     <Autocomplete
                         isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                        options={allDuration}
-                        value={duration}
-                        onChange={(e, v) => setDuration(v)}
+                        options={allLocation}
+                        value={location}
+                        onChange={(e, v) => setLocation(v)}
                         renderOption={(props, option) => (
                             <li {...props} key={option.id}>{option.label}</li>
                         )}
-                        renderInput={(params) => <TextField {...params} label="Duration" variant="standard" />}
+                        renderInput={(params) => <TextField {...params} label="Location" variant="standard" />}
                     />
                 </Grid>
                 <Grid item xs={12} md={12}>

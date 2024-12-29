@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Divider, Grid, Typography, Chip, Dialog } from "@mui/material";
 import ProceedToPayButton from "./SubmitButton";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
+import ImageCarousel from "../../Common/ImageCarousel";
 
 const formateDateToMonth = (dates) => {
   return dates.map(date => new Date(date).toLocaleString('default', { month: 'short', day: 'numeric', year: 'numeric' }));
@@ -21,22 +22,14 @@ const SmallOneClass = ({ data, totalAmount, selectedDates, setSelectedDates }) =
   };
 
   return (
-    <Grid container key={data._id} spacing={2} direction="column" sx={{ marginTop:'10px',padding: '10px' }}>
+    <Grid container key={data._id} spacing={2} direction="column" >
       {/* Image Section */}
-      <Grid item xs={12} lg={6} sx={{ display: { xs: 'none', lg: 'block' } }}>
-        <img
-          src={data.url}
-          className="creativeImg"
-          alt={data.courseTitle}
-          style={{
-            width: '100%', 
-            height: 'auto', 
-            maxWidth: '100%', 
-            borderRadius: '8px', 
-            objectFit: 'contain',
-            cursor: 'pointer', // Add a pointer cursor to indicate clickable image
-          }}
-          onClick={handleOpenDialog} // Handle image click to open dialog
+      <Grid item xs={12} lg={6} style={{maxWidth:"500px"}} sx={{ display: { xs: 'none', lg: 'block' } }}>
+      <ImageCarousel
+          images={data.imageUrls}
+          title={data.courseTitle}
+          height="300px"
+          autoplayDelay={6000}
         />
       </Grid>
 
