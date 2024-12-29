@@ -84,13 +84,14 @@ const OneMockTest = ({ data }) => {
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        mb: 3 
+        mb: 3 ,
+        marginTop:"10px"
       }}>
         <Grid item xs={12} md={4} sx={{ p: 0 }}>
           <ImageCarousel
             images={data.imageUrls}
             title={data.mockTestTitle}
-            height="300px"
+            height="250px"
             autoplayDelay={6000}
           />
         </Grid>
