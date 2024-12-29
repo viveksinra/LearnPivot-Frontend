@@ -82,7 +82,7 @@ const OneMockTest = ({ data }) => {
       <Grid container spacing={4} sx={{ 
         backgroundColor: 'white',
         borderRadius: '12px',
-        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+        boxShadow: '4px 4px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
         marginTop: "16px",
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
