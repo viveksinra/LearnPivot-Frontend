@@ -57,7 +57,7 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                 const res = await mockTestService.getOne(props.id);
                 if (res.variant === "success") {
                     const {
-                        isPublished, mockTestTitle, mockTestLink, shortDescription,
+                        isPublished, mockTestTitle, mockTestLink, shortDescription, pincode, highlightedText,
                         blinkText, testType, location, imageUrls, fullDescription, totalSeat, batch
                     } = res.data;
                     setIsPublished(isPublished);
