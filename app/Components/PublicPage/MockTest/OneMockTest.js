@@ -81,17 +81,21 @@ const OneMockTest = ({ data }) => {
     <>
       <Grid container spacing={4} sx={{ 
         backgroundColor: 'white',
-        borderRadius: '8px',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        borderRadius: '12px',
+        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        mb: 3 ,
-        marginTop:"10px"
+        marginTop: "16px",
+        transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
+        }
       }}>
-        <Grid item xs={12} md={4} sx={{ p: 0 }}>
+        <Grid item  xs={12} md={4} sx={{ p: 0 }}>
           <ImageCarousel
             images={data.imageUrls}
             title={data.mockTestTitle}
-            height="250px"
+            height="220px"
             autoplayDelay={6000}
           />
         </Grid>
