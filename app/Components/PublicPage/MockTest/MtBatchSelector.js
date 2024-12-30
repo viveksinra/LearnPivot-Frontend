@@ -11,7 +11,7 @@ import {
 import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import MockPayButton from "./MockPayButton";
@@ -145,7 +145,7 @@ const MtBatchSelector = ({
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <AttachMoneyIcon sx={{ color: '#64748B' }} />
+                            <CurrencyPoundIcon sx={{ color: '#64748B' }} />
                             <Typography 
                               sx={{ 
                                 color: '#059669',
@@ -153,7 +153,7 @@ const MtBatchSelector = ({
                                 fontSize: '0.875rem'
                               }}
                             >
-                              £{batch.oneBatchprice}
+                              {batch.oneBatchprice}
                             </Typography>
                           </Box>
                         </Box>
