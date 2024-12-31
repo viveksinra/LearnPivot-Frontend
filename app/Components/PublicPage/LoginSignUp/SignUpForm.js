@@ -127,6 +127,8 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   return (
     <Container >
       <Grid container spacing={2}>
+      {  !otpSent ?
+(<>
       <Grid item xs={12} md={6}>
   <TextField
     fullWidth
@@ -243,8 +245,11 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             ))}
           </TextField>
         </Grid>
-
-        {  otpSent &&      <Grid item xs={12} md={6}>
+        </>):
+    (
+     <> 
+     
+      <Grid item xs={12} md={6}>
           <TextField
             id="loginPass"
             fullWidth
@@ -256,7 +261,13 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             variant="outlined"
           
           />
-        </Grid>}
+        </Grid>
+        <Grid item xs={12}>
+          <p style={{ textAlign: "center", color: "gray" }}>
+            Check your email spam/junk folder if OTP is not received in inbox.
+          </p>
+        </Grid>
+        </>)}
 
     {!otpSent &&    <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
           <Fab variant="extended" size="medium" color="primary" aria-label="send-otp" onClick={handleSendOtpClick}>

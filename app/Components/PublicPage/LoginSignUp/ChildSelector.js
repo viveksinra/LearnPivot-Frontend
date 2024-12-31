@@ -196,7 +196,6 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
             >
               <MenuItem value="Boy">Boy</MenuItem>
               <MenuItem value="Girl">Girl</MenuItem>
-              <MenuItem value="Prefer not to say">Prefer not to say</MenuItem>
             </TextField>
             <TextField
               select
