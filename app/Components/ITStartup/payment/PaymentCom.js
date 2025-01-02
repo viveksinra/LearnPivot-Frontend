@@ -3,8 +3,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
-const PaymentCom = ({ data, isLoading = false }) => {
-  if (isLoading || !data) {
+const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
+  if (isLoading) {
     return (
       <div className="overview-area ptb-100">
         <div className="container">
@@ -26,6 +26,10 @@ const PaymentCom = ({ data, isLoading = false }) => {
         </div>
       </div>
     );
+  }
+
+  if (!data) {
+    return null;
   }
 
   // Helper function to determine payment state
@@ -59,7 +63,8 @@ const PaymentCom = ({ data, isLoading = false }) => {
       imageAlt: "success image",
       imageWidth: 852,
       imageHeight: 580,
-      buttonText: "Buy Again",
+      buttonText: "Go to Dashboard",
+      buttonUrl: "/userDash",
       showButton: true,
     },
     processing: {
@@ -69,8 +74,9 @@ const PaymentCom = ({ data, isLoading = false }) => {
       imageAlt: "processing image",
       imageWidth: 852,
       imageHeight: 580,
-      buttonText: "",
-      showButton: false,
+      buttonText: "Buy Again",
+      buttonUrl: paymentDetails.testUrl,
+      showButton: true,
     },
     pending: {
       title: "Payment Pending",
@@ -79,8 +85,9 @@ const PaymentCom = ({ data, isLoading = false }) => {
       imageAlt: "pending image",
       imageWidth: 852,
       imageHeight: 580,
-      buttonText: "",
-      showButton: false,
+      buttonText: "Buy Again",
+      buttonUrl: paymentDetails.testUrl,
+      showButton: true,
     },
     failed: {
       title: "Payment Failed",
@@ -90,6 +97,7 @@ const PaymentCom = ({ data, isLoading = false }) => {
       imageWidth: 770,
       imageHeight: 582,
       buttonText: "Try Again",
+      buttonUrl: paymentDetails.testUrl,
       showButton: true,
     },
   };
@@ -124,9 +132,14 @@ const PaymentCom = ({ data, isLoading = false }) => {
       </ul>
       {content.showButton && (
         <div className="rm-btn">
-          <Link href={paymentDetails.testUrl} className="default-btn">
+          <Link href={content.buttonUrl} className="default-btn gradient-btn">
             {content.buttonText} <span></span>
           </Link>
+          {paymentState === "success" && (
+            <button onClick={onRefresh} className="default-btn gradient-btn ml-2">
+              Refresh <span></span>
+            </button>
+          )}
         </div>
       )}
     </div>

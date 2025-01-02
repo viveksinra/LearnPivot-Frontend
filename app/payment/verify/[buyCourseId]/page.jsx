@@ -40,8 +40,7 @@ function MyPayment({params}) {
     <Fragment>
       <Navbar />
       <Suspense fallback={<Loading />}>
-      <PaymentCom data={data}/>
-
+      <PaymentCom data={data} isLoading={loading} onRefresh={getPaymentDetails} />
       <Footer />
 
       </Suspense>
