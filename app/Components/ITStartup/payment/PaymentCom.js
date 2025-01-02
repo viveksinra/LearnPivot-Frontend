@@ -3,128 +3,171 @@ import Link from "next/link";
 import Image from "next/image";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
-const PaymentCom = ({data}) => {
-  console.log(data)
-  const isSuccess = data.status=="succeeded"?true:false;
-  const paymentDetails = {
-    amount: data.amount,
-    refNo: data.refNo,
-    paymentDate: formatDateToShortMonth(data.paymentDate),
-    status: data.status,
-    testUrl: data.testUrl,
+const PaymentCom = ({ data, isLoading = false }) => {
+  if (isLoading || !data) {
+    return (
+      <div className="overview-area ptb-100">
+        <div className="container">
+          <div className="overview-box it-overview">
+            <div className="overview-content">
+              <div className="content">
+                <div className="animate-pulse">
+                  <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded w-2/3 mb-6"></div>
+                  <div className="space-y-3">
+                    {[1, 2, 3, 4].map((item) => (
+                      <div key={item} className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Helper function to determine payment state
+  const getPaymentState = (status) => {
+    if (!status) return "pending";
+    switch (status.toLowerCase()) {
+      case "succeeded":
+        return "success";
+      case "processing":
+        return "processing";
+      default:
+        return "failed";
+    }
   };
+
+  const paymentState = getPaymentState(data.status);
+
+  const paymentDetails = {
+    amount: data.amount || "N/A",
+    refNo: data.refNo || "N/A",
+    paymentDate: data.paymentDate ? formatDateToShortMonth(data.paymentDate) : "N/A",
+    status: data.status || "pending",
+    testUrl: data.testUrl || "#",
+  };
+
+  const stateConfig = {
+    success: {
+      title: "Payment Successful",
+      description: "Payment Successful description",
+      image: "/images/services/it-service1.png",
+      imageAlt: "success image",
+      imageWidth: 852,
+      imageHeight: 580,
+      buttonText: "Buy Again",
+      showButton: true,
+    },
+    processing: {
+      title: "Payment Processing",
+      description: "Your payment is currently being processed. Please wait.",
+      image: "/images/services/it-service1.png",
+      imageAlt: "processing image",
+      imageWidth: 852,
+      imageHeight: 580,
+      buttonText: "",
+      showButton: false,
+    },
+    pending: {
+      title: "Payment Pending",
+      description: "Your payment is pending confirmation.",
+      image: "/images/services/it-service1.png",
+      imageAlt: "pending image",
+      imageWidth: 852,
+      imageHeight: 580,
+      buttonText: "",
+      showButton: false,
+    },
+    failed: {
+      title: "Payment Failed",
+      description: "Payment failed description",
+      image: "/images/services/it-service2.png",
+      imageAlt: "failure image",
+      imageWidth: 770,
+      imageHeight: 582,
+      buttonText: "Try Again",
+      showButton: true,
+    },
+  };
+
+  const content = stateConfig[paymentState];
+
+  const PaymentInfo = () => (
+    <div className="content">
+      <h2>{content.title}</h2>
+      <p>{content.description}</p>
+      <ul className="features-list">
+        <li>
+          <span>
+            <i className="bx bxs-badge-check"></i> Amount: {paymentDetails.amount}
+          </span>
+        </li>
+        <li>
+          <span>
+            <i className="bx bxs-badge-check"></i> Ref No.: {paymentDetails.refNo}
+          </span>
+        </li>
+        <li>
+          <span>
+            <i className="bx bxs-badge-check"></i> Payment Date: {paymentDetails.paymentDate}
+          </span>
+        </li>
+        <li>
+          <span>
+            <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
+          </span>
+        </li>
+      </ul>
+      {content.showButton && (
+        <div className="rm-btn">
+          <Link href={paymentDetails.testUrl} className="default-btn">
+            {content.buttonText} <span></span>
+          </Link>
+        </div>
+      )}
+    </div>
+  );
+
+  const PaymentImage = () => (
+    <div
+      className="overview-image"
+      data-aos="fade-up"
+      data-aos-duration="800"
+      data-aos-delay="100"
+      data-aos-once="true"
+    >
+      <div className="image">
+        <Image
+          src={content.image}
+          alt={content.imageAlt}
+          width={content.imageWidth}
+          height={content.imageHeight}
+          loading="lazy"
+        />
+      </div>
+    </div>
+  );
 
   return (
     <div className="overview-area ptb-100">
       <div className="container">
         <div className="overview-box it-overview">
-          {isSuccess ? (
+          {paymentState === "failed" ? (
             <>
-              <div
-                className="overview-image"
-                data-aos="fade-up"
-                data-aos-duration="800"
-                data-aos-delay="100"
-                data-aos-once="true"
-              >
-                <div className="image">
-                  <Image
-                    src="/images/services/it-service1.png"
-                    alt="success image"
-                    width="852"
-                    height="580"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-
               <div className="overview-content">
-                <div className="content">
-                  <h2>Payment Successful</h2>
-                  <p>Payment Successful description</p>
-                  <ul className="features-list">
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Amount: {paymentDetails.amount}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Ref No.: {paymentDetails.refNo}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Payment Date: {paymentDetails.paymentDate}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
-                      </span>
-                    </li>
-                  </ul>
-                  <div className="rm-btn">
-                    <Link href={`${paymentDetails.testUrl}`} className="default-btn">
-                    Buy Again <span></span>
-                    </Link>
-                  </div>
-                </div>
+                <PaymentInfo />
               </div>
+              <PaymentImage />
             </>
           ) : (
             <>
+              <PaymentImage />
               <div className="overview-content">
-                <div className="content">
-                  <h2>Payment Failed</h2>
-                  <p>Payment failed description</p>
-                  <ul className="features-list">
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Amount: {paymentDetails.amount}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Ref No.: {paymentDetails.refNo}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                        <i className="bx bxs-badge-check"></i> Payment Date: {paymentDetails.paymentDate}
-                      </span>
-                    </li>
-                    <li>
-                      <span>
-                      <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
-
-                      </span>
-                    </li>
-                  </ul>
-                  <div className="rm-btn">
-                  <Link href={`${paymentDetails.testUrl}`} className="default-btn">
-                      Buy Again <span></span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="overview-image"
-                data-aos="fade-up"
-                data-aos-duration="800"
-                data-aos-delay="100"
-                data-aos-once="true"
-              >
-                <div className="image">
-                  <Image
-                    src="/images/services/it-service2.png"
-                    alt="failure image"
-                    width="770"
-                    height="582"
-                    loading="lazy"
-                  />
-                </div>
+                <PaymentInfo />
               </div>
             </>
           )}
