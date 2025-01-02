@@ -14,9 +14,9 @@ import {
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { styled } from "@mui/material/styles";
 
-import CheckoutForm from "./CheckoutForm";
 import "./stripePayStyle.css";
 import { myCourseService } from "../../services";
+import CheckoutForm from "./CheckoutForm";
 
 const stripePromise = loadStripe("pk_test_51OutBL02jxqBr0ev5h0jPo7PWCsg0z3dDaAtKPF3fm8flUipuFtX7GFTWO2eLwVe6JzsJOZJ0f2tQ392tCgDWwdt00iCW9Qo66");
 
@@ -35,35 +35,32 @@ export default function StripePay({ submittedId }) {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function fetchAllData() {
+  const handlePaymentInitialization = async () => {
+    try {
       setLoading(true);
       setButtonDisabled(true);
       setError("");
 
-      try {
-        const response = await myCourseService.getPaymentIntentApi({
-          items: [{ id: submittedId }],
-        });
+      const response = await myCourseService.getPaymentIntentApi({
+        items: [{ id: submittedId }],
+      });
 
-        if (response.variant === "success") {
-          setClientSecret(response.clientSecret);
-          setBuyCourseId(response.buyCourseId);
-        } else {
-          setError("Failed to initialize payment. Please try again.");
-          console.error("Payment initialization failed:", response);
-        }
-      } catch (err) {
-        setError("An unexpected error occurred. Please try again later.");
-        console.error("Payment error:", err);
-      } finally {
-        setLoading(false);
-        setButtonDisabled(false);
+      if (response.variant === "success") {
+        setClientSecret(response.clientSecret);
+        setBuyCourseId(response.buyCourseId);
+      } else {
+        setError("Failed to initialize payment. Please try again.");
+        console.error("Payment initialization failed:", response);
       }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again later.");
+      console.error("Payment error:", err);
+    } finally {
+      setLoading(false);
+      setButtonDisabled(false);
     }
+  };
 
-    fetchAllData();
-  }, [submittedId]);
 
   const appearance = {
     theme: "stripe",
@@ -97,6 +94,7 @@ export default function StripePay({ submittedId }) {
                 variant="contained"
                 color="primary"
                 startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <CreditCardIcon />}
+                onClick={handlePaymentInitialization}
                 disabled={buttonDisabled || loading}
                 sx={{
                   minWidth: 240,
