@@ -1,25 +1,22 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   Box,
   Tab,
   Tabs,
   Typography,
-  FormControl,
-  Select,
-  MenuItem,
   Card,
   CardContent,
   Grid,
   Chip,
-  IconButton,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import { styled } from '@mui/material/styles';
 import moment from 'moment';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import SchoolIcon from '@mui/icons-material/School';
 import QuizIcon from '@mui/icons-material/Quiz';
+import ChildSelectorDropDown from '../../Components/Common/ChildSelectorDropDown';
+import { reportService } from '@/app/services';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   marginBottom: theme.spacing(2),
@@ -28,22 +25,51 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }));
 
 const StatusChip = styled(Chip)(({ status }) => ({
-  backgroundColor: status === 'formFilled' ? '#e3f2fd' : '#fff3e0',
-  color: status === 'formFilled' ? '#1976d2' : '#ed6c02',
+  backgroundColor: status === 'succeeded' ? '#e3f2fd' : '#fff3e0',
+  color: status === 'succeeded' ? '#1976d2' : '#ed6c02',
   fontWeight: 600,
 }));
 
 export default function PaymentsPage() {
   const [tabValue, setTabValue] = useState('all');
   const [selectedChild, setSelectedChild] = useState('all');
+  const [payments, setPayments] = useState([]);
+  const snackRef = useRef();
+
+  useEffect(() => {
+    handleGetAllPayment();
+  }, [selectedChild]);
+
+  const handleGetAllPayment = async () => {
+    try {
+      const response = await reportService.getMyAllPayment({ childId: selectedChild });
+      if (response.data) {
+        const coursePayments = response.data.myData.myBuyCourse.map(payment => ({
+          ...payment,
+          id: payment._id,
+          type: 'course',
+        }));
+        const mockPayments = response.data.myData.myBuyMock.map(payment => ({
+          ...payment,
+          id: payment._id,
+          type: 'mock',
+        }));
+        setPayments([...coursePayments, ...mockPayments]);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      snackRef.current?.handleSnack({ message: 'Failed to fetch payments.', variant: 'error' });
+    }
+  };
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
 
-  const handleChildChange = (event) => {
-    setSelectedChild(event.target.value);
-  };
+  const filteredPayments = payments.filter(payment => {
+    if (tabValue === 'all') return true;
+    return tabValue === payment.paymentStatus.toLowerCase();
+  });
 
   const columns = [
     {
@@ -62,53 +88,65 @@ export default function PaymentsPage() {
       ),
     },
     {
-      field: 'date',
+      field: 'paymentDate',
       headerName: 'Date',
       width: 160,
       valueGetter: (params) => moment(params.value).format('DD MMM YYYY'),
     },
     {
-      field: 'amount',
+      field: 'amountPaid',
       headerName: 'Amount',
       width: 120,
       valueGetter: (params) => `£${params.value}`,
     },
     {
-      field: 'status',
+      field: 'paymentStatus',
       headerName: 'Status',
       width: 140,
       renderCell: (params) => (
         <StatusChip
-          label={params.value === 'formFilled' ? 'Success' : 'Pending'}
+          label={params.value}
           status={params.value}
           size="small"
         />
       ),
     },
     {
+      field: 'childName',
+      headerName: 'Child Name',
+      width: 150,
+    },
+    {
+      field: 'courseName',
+      headerName: 'Course/Test Name',
+      width: 200,
+      valueGetter: (params) => params.value || 'Mock Test',
+    },
+    {
+      field: 'year',
+      headerName: 'Year',
+      width: 100,
+    },
+    {
       field: 'paymentIntent',
       headerName: 'Payment ID',
       width: 220,
     },
-  ];
-
-  // Sample data - you'll need to transform your actual data to match this structure
-  const rows = [
     {
-      id: 1,
-      type: 'course',
-      date: '2024-10-29',
-      amount: 120,
-      status: 'formFilled',
-      paymentIntent: 'pi_3PuqWk2x6R10KRrh0W08K2By',
-    },
-    {
-      id: 2,
-      type: 'mock test',
-      date: '2024-11-13',
-      amount: 240,
-      status: 'pending',
-      paymentIntent: 'pi_3Puzb12x6R10KRrh172A71HB',
+      field: 'invoiceLink',
+      headerName: 'Invoice',
+      width: 120,
+      renderCell: (params) => (
+        <Typography
+          component="a"
+          href={params.value}
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{ color: 'primary.main', '&:hover': { color: 'primary.dark' } }}
+        >
+          View Invoice
+        </Typography>
+      ),
     },
   ];
 
@@ -124,18 +162,10 @@ export default function PaymentsPage() {
             </Grid>
             <Grid item xs={12} md={6}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-                <FormControl size="small" sx={{ minWidth: 200 }}>
-                  <Select
-                    value={selectedChild}
-                    onChange={handleChildChange}
-                    displayEmpty
-                    startAdornment={<FilterListIcon sx={{ mr: 1 }} />}
-                  >
-                    <MenuItem value="all">All Children</MenuItem>
-                    <MenuItem value="child1">Child 1</MenuItem>
-                    <MenuItem value="child2">Child 2</MenuItem>
-                  </Select>
-                </FormControl>
+                <ChildSelectorDropDown
+                  selectedChild={selectedChild}
+                  setSelectedChild={setSelectedChild}
+                />
               </Box>
             </Grid>
           </Grid>
@@ -146,16 +176,16 @@ export default function PaymentsPage() {
             sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}
           >
             <Tab label="All" value="all" />
-            <Tab label="Success" value="success" />
-            <Tab label="Pending" value="pending" />
+            <Tab label="Succeeded" value="succeeded" />
+            <Tab label="Pending" value="formFilled" />
           </Tabs>
 
-          <Box sx={{ height: 400 }}>
+          <Box sx={{ height: 600 }}>
             <DataGrid
-              rows={rows}
+              rows={filteredPayments}
               columns={columns}
-              pageSize={5}
-              rowsPerPageOptions={[5]}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
               disableSelectionOnClick
               sx={{
                 border: 'none',
