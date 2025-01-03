@@ -72,40 +72,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
       link: "/dashboard",
       icon: <FcComboChart />,
     },
-    // {
-    //   title: "Students",
-    //   active: false,
-    //   link: "/dashboard/prospect",
-    //   icon: <FcConferenceCall />,
-    // },
-    // {
-    //   title: "Filter Tags",
-    //   active: false,
-    //   link: "/dashboard/filtertag",
-    //   icon: <FcFlowChart />,
-    // },
-    // {
-    //   title: "Payment",
-    //   active: false,
-    //   link: "/dashboard/payment",
-    //   icon: <FcRightUp />,
-    //   hide: !canAccess("Payment", "view"),
-    // },
-    // {
-    //   title: "Receipt",
-    //   active: false,
-    //   link: "/dashboard/receipt",
-    //   icon: <FcLeftDown />,
-    // },
-    // {
-    //   title: "All Tasks",
-    //   active: false,
-    //   link: "/dashboard/task",
-    //   icon: <FcTodoList />,
-    // },
-
-
-        {
+         {
       title: "All Course",
       active: false,
       link: "/dashboard/addCourse",
