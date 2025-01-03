@@ -102,7 +102,7 @@ export default function MockStripePay({ submittedId }) {
                   fontSize: "1rem",
                 }}
               >
-                {loading ? "Processing..." : "Pay with Credit/Debit Card"}
+                {loading ? "Processing..." : "Pay with Debit Card"}
               </Button>
               {error && (
                 <Typography color="error" variant="body2">

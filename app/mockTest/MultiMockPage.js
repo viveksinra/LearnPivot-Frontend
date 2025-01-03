@@ -80,7 +80,7 @@ function MultiMockPage() {
         Mock Test
 </Typography> */}
         {loading ? 
-        <div className="center" style={{flexDirection:"column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading Classes...</Typography>  </div> : rows.length === 0 ? <NoResult label="No MyClass Available"/> :  
+        <div className="center" style={{flexDirection:"column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading Classes...</Typography>  </div> : rows.length === 0 ? <NoResult label="No Classes Available"/> :  
             rows &&
               rows.map((p, j) => (
                 <OneMockTest data={p} key={p._id} />
