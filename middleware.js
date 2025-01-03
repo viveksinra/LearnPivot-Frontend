@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authRoutes, protectedRoutes, userProtectedRoutes } from "./app/router/routes";
+import { authRoutes, protectedRoutes, userProtectedRoutes,publicRoutes } from "./app/router/routes";
 
 export function middleware(request) {
   const currentUser = request.cookies.get("currentUser")?.value;
@@ -19,6 +19,7 @@ export function middleware(request) {
   const isProtectedRoute = protectedRoutes.includes(request.nextUrl.pathname);
   const isUserProtectedRoute = userProtectedRoutes.includes(request.nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(request.nextUrl.pathname);
+  const isPublicRoutes = publicRoutes.includes(request.nextUrl.pathname);
 
   // Check for protected routes and userProtectedRoutes
   if ((isProtectedRoute || isUserProtectedRoute) && (!currentUser || Date.now() > user.expiredAt)) {
@@ -49,13 +50,15 @@ export function middleware(request) {
     return NextResponse.redirect(new URL("/login", request.url));
     }
   }
-  if (isAdmin && !isProtectedRoute) {
+  if (isPublicRoutes) {
     if(isAdmin){
       return NextResponse.redirect(new URL("/dashboard", request.url));
-    } else {
-    return NextResponse.redirect(new URL("/login", request.url));
-    }
+    } 
   }
+
+
+
+
   if (isProtectedRoute && !isAdmin) {
     if(isUser){
       return NextResponse.redirect(new URL("/userDash", request.url));
