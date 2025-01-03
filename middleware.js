@@ -29,12 +29,7 @@ export function middleware(request) {
     return response;
   }
 
-  if (isProtectedRoute && isUser) {
-    return NextResponse.redirect(new URL("/userDash", request.url));
-  }
-  if (isProtectedRoute && isAdmin) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
+
 
   if (isAuthRoute && currentUser) {
     if (isAdmin) {
@@ -47,7 +42,18 @@ export function middleware(request) {
   }
 
 
-  if (isProtectedRoute && !isAdmin && !isUser) {
+  if (isUserProtectedRoute && !isUser) {
+    if(isAdmin){
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
     return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
+  if (isProtectedRoute && !isAdmin) {
+    if(isUser){
+      return NextResponse.redirect(new URL("/userDash", request.url));
+    } else {
+    return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 }
