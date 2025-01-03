@@ -243,11 +243,7 @@ function DashboardLayout({ children }) {
           />
           </Link>
           <span style={{ flexGrow: 1 }} />
-          <Tooltip title="Scan Attendance" arrow>
-            <IconButton onClick={() => router.push("/dashboard/attendance/scan")}>
-              <MdQrCodeScanner />
-            </IconButton>
-          </Tooltip>
+  
           <Menu
             id="profile-menu"
             anchorEl={anchorElProfile}
