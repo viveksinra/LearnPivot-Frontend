@@ -63,7 +63,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
           variant: "success",
         });
         if (isRedirectToDashboard) {
-          router.push("/dashboard");
+          router.push("/userDash");
           window.location.reload();
         } else {
           router.refresh();

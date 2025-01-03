@@ -40,7 +40,7 @@ function LoginForm({ isRedirectToDashboard }) {
           variant: "success",
         });
         if (isRedirectToDashboard == true) {
-          router.push("/dashboard");
+          router.push("/userDash");
           window.location.reload();
         }
       } else {

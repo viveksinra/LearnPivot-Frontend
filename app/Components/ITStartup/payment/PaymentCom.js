@@ -135,7 +135,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
           <Link href={content.buttonUrl} className="default-btn gradient-btn">
             {content.buttonText} <span></span>
           </Link>
-          {paymentState === "success" && (
+          {paymentState === "processing" && (
             <button onClick={onRefresh} className="default-btn gradient-btn ml-2">
               Refresh <span></span>
             </button>

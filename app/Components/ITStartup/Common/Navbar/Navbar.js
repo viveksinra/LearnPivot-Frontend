@@ -89,7 +89,7 @@ const Navbar = () => {
             {/* Other Options */}
             <div className="others-options">
               {state?.isAuthenticated && currentUser ? (
-                <Link href="/dashboard">
+                <Link href="/userDash">
                   <Button
                     color="secondary"
                     startIcon={
