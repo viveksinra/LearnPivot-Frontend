@@ -49,6 +49,13 @@ export function middleware(request) {
     return NextResponse.redirect(new URL("/login", request.url));
     }
   }
+  if (isAdmin && !isProtectedRoute) {
+    if(isAdmin){
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    } else {
+    return NextResponse.redirect(new URL("/login", request.url));
+    }
+  }
   if (isProtectedRoute && !isAdmin) {
     if(isUser){
       return NextResponse.redirect(new URL("/userDash", request.url));
