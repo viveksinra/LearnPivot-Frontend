@@ -9,7 +9,7 @@ import { authService } from "../../services";
 const MyDrawer = ({handleDrawer}) => {
 
 const list1 = [
-  {title:"Home",icon:<FcHome/>, link:"/"},
+  {title:"Homes",icon:<FcHome/>, link:"/"},
   {title:"About Us",icon:<FcKindle/>, link:"/about"},
   {title:"Course",icon:<FcStackOfPhotos/>, link:"/course"},
   {title:"Mock Test",icon:<FcPicture/>, link:"/mockTest"},

@@ -78,7 +78,7 @@ const Navbar = () => {
             </button>
 
             {/* Menu Items */}
-            <div className={navbarClass} id="navbarSupportedContent">
+            <div className={navbarClass} id="navbarSupportedContent" style={{backgroundColor: "#fff"}}>
               <ul className="navbar-nav">
                 {menus.map((menuItem) => (
                   <MenuItem key={menuItem.label} {...menuItem} />
