@@ -18,6 +18,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
 import { styled } from '@mui/material/styles';
+import FaqCom from "../../ITStartup/Faq/FaqCom";
 
 // Styled button with animation
 const AnimatedButton = styled('button')(({ theme }) => ({
@@ -63,6 +64,7 @@ const BatchButton = styled(Button)({
 
 const OneMockTest = ({ data }) => {
   const [openBatchModal, setOpenBatchModal] = useState(false);
+  const [openFAQModal, setOpenFAQModal] = useState(false);
 
   // Format date for display
   const formatDateDisplay = (dateString) => {
@@ -189,15 +191,18 @@ const OneMockTest = ({ data }) => {
 
           {/* Action Buttons */}
           <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
-            <button style={{
-              backgroundColor: '#FCD34D',
-              color: '#1F2937',
-              padding: '8px 24px',
-              borderRadius: '4px',
-              fontWeight: 'bold',
-              border: 'none',
-              cursor: 'pointer'
-            }}>
+            <button 
+              style={{
+                backgroundColor: '#FCD34D',
+                color: '#1F2937',
+                padding: '8px 24px',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer'
+              }}
+              onClick={() => setOpenFAQModal(true)}
+            >
               FAQS
             </button>
             <BatchButton
@@ -266,6 +271,35 @@ const OneMockTest = ({ data }) => {
         <DialogActions sx={{ padding: '16px' }}>
           <Button 
             onClick={() => setOpenBatchModal(false)}
+            sx={{ color: '#4B5563' }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* FAQ Modal */}
+      <Dialog 
+        open={openFAQModal} 
+        onClose={() => setOpenFAQModal(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          backgroundColor: '#F3F4F6',
+          color: '#1F2937',
+          fontWeight: 'bold'
+        }}>
+          FAQs
+        </DialogTitle>
+        <DialogContent>
+          <div style={{ marginTop: '16px' }}>
+          <FaqCom dataType={"faqData"} />
+          </div>
+        </DialogContent>
+        <DialogActions sx={{ padding: '16px' }}>
+          <Button 
+            onClick={() => setOpenFAQModal(false)}
             sx={{ color: '#4B5563' }}
           >
             Close
