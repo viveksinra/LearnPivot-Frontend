@@ -49,7 +49,7 @@ const Navbar = () => {
     <div id="navbar" className="navbar-area">
       <div className="main-nav">
         <div className="container">
-          <nav className="navbar navbar-expand-md navbar-light">
+          <nav className="navbar navbar-expand-md navbar-light" style={{ alignItems: "center"}}>
             {/* Logo */}
             <Link href="/" className="navbar-brand">
               <Image
@@ -78,7 +78,7 @@ const Navbar = () => {
             </button>
 
             {/* Menu Items */}
-            <div className={navbarClass} id="navbarSupportedContent" style={{backgroundColor: "#fff"}}>
+            <div className={navbarClass} id="navbarSupportedContent" >
               <ul className="navbar-nav">
                 {menus.map((menuItem) => (
                   <MenuItem key={menuItem.label} {...menuItem} />
@@ -87,7 +87,7 @@ const Navbar = () => {
             </div>
 
             {/* Other Options */}
-            <div className="others-options">
+            <div className="others-options" style={{ marginTop: "-15px"}}>
               {state?.isAuthenticated && currentUser ? (
                 <Link href="/userDash">
                   <Button
