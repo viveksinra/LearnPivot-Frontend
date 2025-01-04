@@ -19,6 +19,13 @@ export class ReportService {
       })
       .then((res) => res.data);
   };
+  getUpcomingEvent = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/getUpComming/withFilter`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
 
 
  

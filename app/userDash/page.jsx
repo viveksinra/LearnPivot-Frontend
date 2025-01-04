@@ -112,8 +112,6 @@ const Dashboard = () => {
     }
   ];
 
-
-
   const getSubjectColor = (subject) => {
     const colors = {
       Mathematics: theme.palette.primary.main,
@@ -122,6 +120,8 @@ const Dashboard = () => {
     };
     return colors[subject] || theme.palette.grey[600];
   };
+
+
 
   return (
     <Box sx={{ 
@@ -157,9 +157,7 @@ const Dashboard = () => {
 
         {/* Upcoming Events */}
         <UpcomingEvents 
-          classes={upcomingClasses} 
-          tests={mockTests} 
-          getSubjectColor={getSubjectColor} 
+selectedChild={selectedChild}
         />
 
         {/* More Content */}

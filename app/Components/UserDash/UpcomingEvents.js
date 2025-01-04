@@ -3,6 +3,7 @@ import React from 'react';
 import { Grid, Card, Box, Chip, Typography, Stack } from '@mui/material';
 import { PersonOutline, CalendarToday, AccessTimeOutlined } from '@mui/icons-material';
 import moment from 'moment';
+import { reportService } from '@/app/services';
 
 const EventCard = ({ item, type, getSubjectColor }) => (
   <Card sx={{ 
@@ -66,8 +67,50 @@ const EventCard = ({ item, type, getSubjectColor }) => (
     </Box>
   </Card>
 );
+  const getSubjectColor = (subject) => {
+    const colors = {
+      Mathematics: theme.palette.primary.main,
+      Physics: theme.palette.success.main,
+      Science: theme.palette.error.main
+    };
+    return colors[subject] || theme.palette.grey[600];
+  };
+export const UpcomingEvents = ({ selectedChild }) =>{ 
+  
+    useEffect(() => {
+      handleGetAllPayment();
+    }, [selectedChild]);
+  
+    const handleGetAllPayment = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await reportService.getUpcomingEvent({ childId: selectedChild });
+        if (response?.myData) {
+          
+        if (response?.myData?.upcomingBookings) {
+          const { myBuyCourse, myBuyMock } = response?.myData?.upcomingBookings;
+          console.log('formattedPayments');
+  
+          const formattedPayments = await formatPaymentData(myBuyCourse, myBuyMock);
+          console.log('formattedPayments', formattedPayments);
+          setPayments(formattedPayments);
+        }
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setError('Failed to fetch payment history. Please try again later.');
+        snackRef.current?.handleSnack({ 
+          message: 'Failed to fetch payment history.', 
+          variant: 'error' 
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-export const UpcomingEvents = ({ classes, tests, getSubjectColor }) => (
+    
+  return (
   <>
     <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Upcoming Classes</Typography>
     <Grid container spacing={3} sx={{ mb: 5 }}>
@@ -87,4 +130,4 @@ export const UpcomingEvents = ({ classes, tests, getSubjectColor }) => (
       ))}
     </Grid>
   </>
-);
+)};

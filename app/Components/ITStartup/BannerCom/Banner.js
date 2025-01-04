@@ -6,11 +6,10 @@ import Image from "next/image";
 import TypeWriterCom from "./TypeWriterCom";
 
 const Banner = () => {
-  // To open the lightbox change the value of the "toggler" prop.
   const [toggler, setToggler] = useState(false);
 
   useEffect(() => {
-    setToggler(true); // Open the lightbox when the component mounts
+    setToggler(true);
   }, []);
 
   return (
@@ -29,9 +28,8 @@ const Banner = () => {
                       className="animated-text"
                       style={{textSize:"10px"}}
                     >
-                Empowering young Minds 
+                      Empowering young Minds 
                     </h1>
-                    {/* <TypeWriterCom /> */}
                     <p
                       data-aos="fade-up"
                       data-aos-duration="800"
@@ -50,7 +48,7 @@ const Banner = () => {
                       data-aos-delay="300"
                     >
                       <Link href="/course" className="default-btn-course mr-3">
-                      COURSES <span></span>
+                        COURSES <span></span>
                       </Link>
                       <Link
                         href="/mockTest"
@@ -63,7 +61,7 @@ const Banner = () => {
                   </div>
                 </div>
 
-                <div className="col-lg-6">
+                <div className="col-lg-6 swiper-container">
                   <Swiper
                     navigation={true}
                     modules={[Autoplay, Navigation]}
@@ -81,9 +79,9 @@ const Banner = () => {
                           alt="animate image 1"
                           width={650}
                           height={650}
-                          priority // Mark above-the-fold images with priority
-                          quality={75} // Adjust quality if needed
-                          sizes="(max-width: 768px) 100vw, 50vw" // Responsive size hint
+                          priority
+                          quality={75}
+                          sizes="(max-width: 768px) 100vw, 50vw"
                         />
                       </div>
                     </SwiperSlide>
@@ -107,13 +105,10 @@ const Banner = () => {
             </div>
           </div>
         </div>
-
-        {/* Shape Images */}
-        {/* (existing shape images code) */}
       </div>
 
-      {/* Include the custom mobile view CSS */}
       <style jsx>{`
+        /* Mobile styles */
         @media (max-width: 768px) {
           .banner-btn a {
             display: block;
@@ -122,6 +117,18 @@ const Banner = () => {
 
           .banner-btn a:last-child {
             margin-bottom: 0;
+          }
+
+          /* Hide the swiper container on mobile */
+          .swiper-container {
+            display: none !important;
+          }
+        }
+
+        /* Desktop styles */
+        @media (min-width: 769px) {
+          .swiper-container {
+            display: block;
           }
         }
       `}</style>
