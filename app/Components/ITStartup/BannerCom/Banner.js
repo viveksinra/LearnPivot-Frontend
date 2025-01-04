@@ -31,7 +31,7 @@ const Banner = () => {
                     >
                 Empowering young Minds 
                     </h1>
-
+                    {/* <TypeWriterCom /> */}
                     <p
                       data-aos="fade-up"
                       data-aos-duration="800"

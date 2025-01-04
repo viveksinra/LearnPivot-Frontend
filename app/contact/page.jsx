@@ -45,7 +45,7 @@ function MyContact() {
           
           <Suspense fallback={<Loading />}>
           <FaqCom />
-            <FeedBackCom />
+            {/* <FeedBackCom /> */}
             <Suspense fallback={<Loading />}>
               <Footer />
             </Suspense>

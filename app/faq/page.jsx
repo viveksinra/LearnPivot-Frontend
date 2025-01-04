@@ -38,7 +38,7 @@ function MyFaq() {
         <Box >
           <Suspense fallback={<Loading />}>
             <FaqCom />
-            <FeedBackCom />
+            {/* <FeedBackCom /> */}
           <Suspense fallback={<Loading />}>
 
             <Enquiry />
