@@ -1,15 +1,16 @@
 "use client";
 import { useState, useRef, useContext } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Container,
+  Grid,
+  TextField,
+  MenuItem,
+  Fab,
+  IconButton,
+  InputAdornment,
+  Box,
+  Alert,
+} from "@mui/material/";
 import { FcFeedback } from "react-icons/fc";
 import { authService } from "@/app/services";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
@@ -68,7 +69,10 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     if (otpSent) return; // Prevent changes after OTP is sent
     
     const { name, value } = e.target;
-    setFormData((prevState) => ({ ...prevState, [name]: value }));
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: name === "email" ? value.toLowerCase() : value,
+    }));
     // Clear error when field is modified
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
@@ -91,19 +95,19 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       const res = await authService.sendOtp(emailOtpData);
       if (res.variant === "success") {
         setOtpSent(true);
-        alert("OTP Sent Successfully!");
+        setAlert({ message: "OTP Sent Successfully!", severity: "success" });
       } else {
-        alert("Failed to send OTP. Please try again later.");
+        setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-      alert("Failed to send OTP. Please try again later.");
+      setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
     }
   };
 
   const handleSignUpClick = async () => {
     if (!otp.trim()) {
-      alert("Please enter the OTP");
+      setAlert({ message: "Please enter the OTP", severity: "error" });
       return;
     }
 
@@ -117,7 +121,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       const res = await authService.signUp(signUpData);
       if (res.success && res.token) {
         dispatch({ type: LOGIN_USER, payload: res });
-        alert("Registration successful!");
+        setAlert({ message: "Registration successful!", severity: "success" });
         if (isRedirectToDashboard) {
           router.push("/userDash");
           window.location.reload();
@@ -125,13 +129,15 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
           router.refresh();
         }
       } else {
-        alert(res.message || "Registration failed. Please try again.");
+        setAlert({ message: res.message || "Registration failed. Please try again.", severity: "error" });
       }
     } catch (error) {
       console.error("Error submitting data:", error);
-      alert("Registration failed. Please try again.");
+      setAlert({ message: "Registration failed. Please try again.", severity: "error" });
     }
   };
+
+  const [alert, setAlert] = useState(null);
 
   const allMarketing = [
     "Web Search / Google",
@@ -144,160 +150,173 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   ];
 
   return (
-    <Card className="w-full max-w-4xl mx-auto">
-      <CardContent className="grid gap-4">
+    <Container>
+      {alert && (
+        <Box mb={2}>
+          <Alert severity={alert.severity} onClose={() => setAlert(null)}>
+            {alert.message}
+          </Alert>
+        </Box>
+      )}
+      
+      <Grid container spacing={2}>
         {!otpSent ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Input
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="First Name"
-                  disabled={otpSent}
-                  className={errors.firstName ? "border-red-500" : ""}
-                />
-                {errors.firstName && (
-                  <p className="text-red-500 text-sm">{errors.firstName}</p>
-                )}
-              </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                label="First Name"
+                required
+                error={!!errors.firstName}
+                helperText={errors.firstName}
+                disabled={otpSent}
+              />
+            </Grid>
 
-              <div className="space-y-2">
-                <Input
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Last Name"
-                  disabled={otpSent}
-                  className={errors.lastName ? "border-red-500" : ""}
-                />
-                {errors.lastName && (
-                  <p className="text-red-500 text-sm">{errors.lastName}</p>
-                )}
-              </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                label="Last Name"
+                required
+                error={!!errors.lastName}
+                helperText={errors.lastName}
+                disabled={otpSent}
+              />
+            </Grid>
 
-              <div className="space-y-2">
-                <Input
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  disabled={otpSent}
-                  className={errors.email ? "border-red-500" : ""}
-                />
-                {errors.email && (
-                  <p className="text-red-500 text-sm">{errors.email}</p>
-                )}
-              </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                label="Email"
+                required
+                error={!!errors.email}
+                helperText={errors.email}
+                disabled={otpSent}
+              />
+            </Grid>
 
-              <div className="space-y-2">
-                <Input
-                  name="mobile"
-                  type="tel"
-                  value={formData.mobile}
-                  onChange={handleChange}
-                  placeholder="Phone Number"
-                  disabled={otpSent}
-                  className={errors.mobile ? "border-red-500" : ""}
-                />
-                {errors.mobile && (
-                  <p className="text-red-500 text-sm">{errors.mobile}</p>
-                )}
-              </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                name="mobile"
+                value={formData.mobile}
+                onChange={handleChange}
+                label="Phone"
+                required
+                error={!!errors.mobile}
+                helperText={errors.mobile}
+                disabled={otpSent}
+              />
+            </Grid>
 
-              <div className="md:col-span-2">
-                <Input
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Address"
-                  disabled={otpSent}
-                />
-              </div>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                label="Address"
+                disabled={otpSent}
+              />
+            </Grid>
 
-              <div className="space-y-2">
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Password"
-                    disabled={otpSent}
-                    className={errors.password ? "border-red-500" : ""}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2"
-                  >
-                    {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
-                  </button>
-                </div>
-                {errors.password && (
-                  <p className="text-red-500 text-sm">{errors.password}</p>
-                )}
-              </div>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                label="Password"
+                required
+                error={!!errors.password}
+                helperText={errors.password}
+                disabled={otpSent}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            </Grid>
 
-              <div>
-                <Select
-                  name="marketing"
-                  value={formData.marketing}
-                  onValueChange={(value) =>
-                    handleChange({ target: { name: "marketing", value } })
-                  }
-                  disabled={otpSent}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="How did you hear about us?" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {allMarketing.map((option) => (
-                      <SelectItem key={option} value={option}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
-            <div className="flex justify-center">
-              <Button
-                onClick={handleSendOtpClick}
-                className="gap-2"
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                select
+                name="marketing"
+                value={formData.marketing}
+                onChange={handleChange}
+                label="How did you hear about us?"
+                disabled={otpSent}
               >
-                <FcFeedback className="w-5 h-5" />
+                {allMarketing.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={handleSendOtpClick}
+              >
+                <FcFeedback style={{ marginRight: 8 }} />
                 Send Email OTP
-              </Button>
-            </div>
+              </Fab>
+            </Grid>
           </>
         ) : (
           <>
-            <div className="space-y-4">
-              <Input
+            <Grid item xs={12} md={6} sx={{ mx: 'auto' }}>
+              <TextField
+                fullWidth
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
-                placeholder="Enter Email OTP"
+                label="Enter Email OTP"
+                required
               />
-              <p className="text-center text-gray-500">
+            </Grid>
+
+            <Grid item xs={12}>
+              <Box sx={{ textAlign: 'center', color: 'text.secondary', mb: 2 }}>
                 Check your email spam/junk folder if OTP is not received in inbox.
-              </p>
-              <div className="flex justify-center">
-                <Button
-                  onClick={handleSignUpClick}
-                  className="gap-2"
-                >
-                  <FcFeedback className="w-5 h-5" />
-                  Register Now
-                </Button>
-              </div>
-            </div>
+              </Box>
+            </Grid>
+
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <Fab
+                variant="extended"
+                color="primary"
+                onClick={handleSignUpClick}
+              >
+                <FcFeedback style={{ marginRight: 8 }} />
+                Register Now
+              </Fab>
+            </Grid>
           </>
         )}
-      </CardContent>
-    </Card>
+      </Grid>
+    </Container>
   );
 };
 
