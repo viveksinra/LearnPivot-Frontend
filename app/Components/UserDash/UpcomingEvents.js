@@ -1,5 +1,5 @@
 // UpcomingEvents.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Card, Box, Chip, Typography, Stack } from '@mui/material';
 import { PersonOutline, CalendarToday, AccessTimeOutlined } from '@mui/icons-material';
 import moment from 'moment';
@@ -76,6 +76,10 @@ const EventCard = ({ item, type, getSubjectColor }) => (
     return colors[subject] || theme.palette.grey[600];
   };
 export const UpcomingEvents = ({ selectedChild }) =>{ 
+
+  const [loading, setLoading] = useState(false);
+  const [classes, setClasses] = useState([]);
+  const [mockTests, setMockTests] = useState([]);
   
     useEffect(() => {
       handleGetAllPayment();
@@ -123,7 +127,7 @@ export const UpcomingEvents = ({ selectedChild }) =>{
 
     <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Upcoming Mock Tests</Typography>
     <Grid container spacing={3} sx={{ mb: 5 }}>
-      {tests.map((test) => (
+      {mockTests.map((test) => (
         <Grid item xs={12} md={6} lg={4} key={test.id}>
           <EventCard item={test} type="test" getSubjectColor={getSubjectColor} />
         </Grid>
