@@ -1,5 +1,5 @@
 // UpcomingEvents.js
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Grid, Card, Box, Chip, Typography, Stack } from '@mui/material';
 import { PersonOutline, CalendarToday, AccessTimeOutlined } from '@mui/icons-material';
 import moment from 'moment';
@@ -87,7 +87,7 @@ export const UpcomingEvents = ({ selectedChild }) =>{
         setError(null);
         const response = await reportService.getUpcomingEvent({ childId: selectedChild });
         if (response?.myData) {
-          
+
         if (response?.myData?.upcomingBookings) {
           const { myBuyCourse, myBuyMock } = response?.myData?.upcomingBookings;
           console.log('formattedPayments');
