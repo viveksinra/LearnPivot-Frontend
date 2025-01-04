@@ -86,10 +86,7 @@ const OneMockTest = ({ data }) => {
         overflow: 'hidden',
         marginTop: "16px",
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 8px 16px rgba(0,0,0,0.2)',
-        }
+
       }}>
         <Grid item  xs={12} md={4} sx={{ p: 0 }}>
           <ImageCarousel
