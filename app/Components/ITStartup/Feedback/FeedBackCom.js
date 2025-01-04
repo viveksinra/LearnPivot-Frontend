@@ -63,8 +63,8 @@ const FeedBackCom = () => {
       <div className="unique-feedback-area pt-100">
         <div className="container">
           <div className="section-title with-linear-gradient-text">
-            <span className="sub-title">VALUABLE FEEDBACK</span>
-            <h2>These Wonderfull People have already Enrolled with us</h2>
+            <span className="sub-title" style={{ color: "deepblue" }}>VALUABLE FEEDBACK</span>
+            <h2 style={{ color: "deepblue" }}>These Wonderfull People have already Enrolled with us</h2>
           </div>
 
           <Swiper

@@ -8082,10 +8082,11 @@ Unique Feedback Area CSS
   overflow: hidden;
 }
 .unique-feedback-area .section-title .sub-title {
-  color: #ffffff;
+  color: "deepblue";
 }
 .unique-feedback-area .section-title h2 {
-  color: #ffffff;
+  color: "blue";
+
 }
 .unique-feedback-area::before {
   position: absolute;

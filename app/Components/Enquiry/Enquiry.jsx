@@ -74,7 +74,6 @@ const Enquiry = () => {
                     <Divider light sx={{maxWidth:"200px",marginBottom:"10px"}}/> 
                     <Typography color="#333" sx={{fontSize:"14px"}}>Write to us at</Typography>
                     <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
-                    <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
                     </div>
                     </Grid> 
                     <Grid item xs={12} md={4} lg={12} className="center">
