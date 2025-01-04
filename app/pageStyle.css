@@ -114,31 +114,34 @@ input[type=number]::-webkit-outer-spin-button {
 }
 }
 
-@keyframes colorChange {
+@keyframes modernColorChange {
   0% {
-    color: #007bff; /* Primary Blue */
-    border-color: #007bff;
+    color: #2196F3; /* Material Blue */
+    text-shadow: 0 0 20px rgba(33, 150, 243, 0.1);
   }
-  25% {
-    color: #28a745; /* Success Green */
-    border-color: #28a745;
+  33% {
+    color: #4CAF50; /* Material Green */
+    text-shadow: 0 0 20px rgba(76, 175, 80, 0.1);
   }
-  50% {
-    color: #ffc107; /* Warning Yellow */
-    border-color: #ffc107;
-  }
-  75% {
-    color: #17a2b8; /* Info Blue */
-    border-color: #17a2b8;
+  66% {
+    color: #3F51B5; /* Indigo */
+    text-shadow: 0 0 20px rgba(63, 81, 181, 0.1);
   }
   100% {
-    color: #007bff; /* Primary Blue */
-    border-color: #007bff;
+    color: #2196F3; /* Back to Material Blue */
+    text-shadow: 0 0 20px rgba(33, 150, 243, 0.1);
   }
 }
 
 .animated-text {
-  animation: colorChange 5s infinite;
+  animation: modernColorChange 8s ease-in-out infinite;
+  transition: color 0.5s ease;
+}
+
+/* Optional hover effect */
+.animated-text:hover {
+  animation-play-state: paused;
+  color: #1976D2; /* Darker Blue */
 }
 /* Custom styles for mobile view */
 @media (max-width: 768px) {

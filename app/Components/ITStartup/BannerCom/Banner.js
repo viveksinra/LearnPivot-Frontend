@@ -27,8 +27,10 @@ const Banner = () => {
                       data-aos-duration="800"
                       data-aos-delay="100"
                       className="animated-text"
+                      style={{textSize:"10px"}}
                     >
-                      Empowering Minds: Tomorrow's <TypeWriterCom />
+                Empowering young minds with confidence and intelligence through our guidance.
+                      {/* <TypeWriterCom /> */}
                     </h1>
 
                     <p
@@ -49,13 +51,14 @@ const Banner = () => {
                       data-aos-delay="300"
                     >
                       <Link href="/course" className="default-btn-course mr-3">
-                        Course <span></span>
+                      COURSES <span></span>
                       </Link>
                       <Link
                         href="/mockTest"
                         className="default-btn-mocktest mr-3"
                       >
-                        Mock Test <span></span>
+                        MOCK TESTS
+                        <span></span>
                       </Link>
                     </div>
                   </div>
