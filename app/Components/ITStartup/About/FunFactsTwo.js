@@ -5,9 +5,9 @@ import React from "react";
 const FunFactsTwo = () => {
   // Define an array of objects representing fun facts
   const funFacts = [
-    { icon: "bx bx-list-check", value: 124, text: "Completed Classes" },
-    { icon: "bx bx-smile", value: 200, text: "Happy Parents" },
-    { icon: "bx bx-user-plus", value: 28, text: "Completed Mock Test" },
+    { icon: "bx bx-list-check", value: 8, text: "Years Of Experience" },
+    { icon: "bx bx-smile", value: 150, text: "Completed Mock Tests" },
+    { icon: "bx bx-user-plus", value: 1000, text: "Happy Parents." },
     { icon: "bx bx-trophy", value: 4.8, text: "Satisfaction Rating" }
   ];
 

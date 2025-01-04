@@ -56,7 +56,7 @@ function MyAbout() {
             <FaqCom />
 {/* <SubscribeStyleThree /> */}
 
-            <FeedBackCom />
+            {/* <FeedBackCom /> */}
           <Suspense fallback={<Loading />}>
 
             <Enquiry />
