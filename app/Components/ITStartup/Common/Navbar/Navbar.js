@@ -11,17 +11,14 @@ import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 
 const Navbar = () => {
-  // State
   const [collapsed, setCollapsed] = useState(true);
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
   };
   const currentUser = Cookies.get("currentUser");
 
-  // Context
   const { state } = useContext(MainContext);
 
-  // Effects
   useEffect(() => {
     const handleScroll = () => {
       const elementId = document.getElementById("navbar");
@@ -37,7 +34,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // CSS Classes
   const navbarClass = collapsed
     ? "collapse navbar-collapse"
     : "collapse navbar-collapse show";
@@ -50,7 +46,6 @@ const Navbar = () => {
       <div className="main-nav">
         <div className="container">
           <nav className="navbar navbar-expand-md navbar-light" style={{ alignItems: "center"}}>
-            {/* Logo */}
             <Link href="/" className="navbar-brand">
               <Image
                 src="/images/logo.png"
@@ -61,7 +56,6 @@ const Navbar = () => {
               />
             </Link>
 
-            {/* Toggle Button */}
             <button
               onClick={toggleNavbar}
               className={togglerClass}
@@ -77,8 +71,10 @@ const Navbar = () => {
               <span className="icon-bar bottom-bar"></span>
             </button>
 
-            {/* Menu Items */}
-            <div className={navbarClass} id="navbarSupportedContent" >
+            <div 
+              className={`${navbarClass} max-md:bg-white md:bg-transparent absolute md:static w-full left-0 top-full`} 
+              id="navbarSupportedContent"
+            >
               <ul className="navbar-nav">
                 {menus.map((menuItem) => (
                   <MenuItem key={menuItem.label} {...menuItem} />
@@ -86,7 +82,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            {/* Other Options */}
             <div className="others-options" style={{ marginTop: "-15px"}}>
               {state?.isAuthenticated && currentUser ? (
                 <Link href="/userDash">
@@ -114,7 +109,6 @@ const Navbar = () => {
           </nav>
         </div>
       </div>
-      {/* Add a div to act as space when the navbar becomes sticky */}
       <div className="navbar-space"></div>
     </div>
   );
