@@ -29,8 +29,7 @@ const Banner = () => {
                       className="animated-text"
                       style={{textSize:"10px"}}
                     >
-                Empowering young minds 
-                      <TypeWriterCom />
+                Empowering young Minds 
                     </h1>
 
                     <p
