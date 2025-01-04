@@ -54,8 +54,8 @@ const DrawerData = ({ open, setMobileOpen }) => {
   const [reportOpen, setReportOpen] = useState(false);
   const [dashList, setDashList] = useState([
     { title: "Dashboard", active: true, link: "/userDash", icon: <FcComboChart /> },
-    { title: "Course", active: false, link: "/userDash/dashCourse", icon: <FcPlus /> },
-    { title: "Mock Test", active: false, link: "/userDash/dashMock", icon: <FcFlowChart /> },
+    { title: "Course", active: false, link: "/course", icon: <FcPlus /> },
+    { title: "Mock Test", active: false, link: "/mockTest", icon: <FcFlowChart /> },
     { title: "All Payment", active: false, link: "/userDash/allPayment", icon: <FcContacts /> },
 
   ]);

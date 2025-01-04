@@ -7,13 +7,13 @@ const quickLinks = [
     {
       id: 1,
       title: 'Classes',
-      link: "/userDash/dashCourse",
+      link: "/course",
       icon: <Book sx={{ fontSize: 40, color: 'primary.main' }} />
     },
     {
       id: 2,
       title: 'Mock Tests',
-      link: "/userDash/dashMock",
+      link: "/mockTest",
       icon: <AssignmentOutlined sx={{ fontSize: 40, color: 'success.main' }} />
     },
     {
