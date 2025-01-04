@@ -55,10 +55,10 @@ const Enquiry = () => {
                   <Grid container spacing={2} sx={{marginTop:{md:"50px"},width:"100%"}}>
                     <Grid item xs={12} sx={{display:"flex",alignItems:"center",flexDirection:"column"}}>
                     <Typography color="#082952" gutterBottom sx={{fontSize:{xs:"18px",md:"30px"}, borderLeft:"2px solid #FF5400", paddingLeft:"10px", lineHeight:"1.2", fontWeight:300, fontFamily: "Adequate,Helvetica,\"sans-serif\""}}>Request More Information</Typography> 
-                    <Typography sx={{fontSize:{xs:"14px"}}}>Have a doubt? Need some information? Choose an option to get in touch with us.</Typography>
+                    <Typography sx={{fontSize:{xs:"14px"}}}>Have a doubt? Need some information? Reach us by E-mail</Typography>
                     <br/> 
                     </Grid>
-                    <Grid item xs={12} md={4} lg={12} className="center">
+                    {/* <Grid item xs={12} md={4} lg={12} className="center">
                     <div className="enquiryCard">
                     <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190817/Customer_Service_v1maqp.png" alt="CustomerCall" />
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>9am to 9pm Support</Typography>
@@ -66,7 +66,7 @@ const Enquiry = () => {
                     <Typography color="#333" sx={{fontSize:"14px"}}>Just call us on</Typography>
                     <Link href="tel:+447732762384"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
                     </div>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} md={4} lg={12}>
                     <div className="enquiryCard">
                     <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190847/Email_z6afpk.png" alt="CustomerCall" />
@@ -76,7 +76,7 @@ const Enquiry = () => {
                     <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
                     </div>
                     </Grid> 
-                    <Grid item xs={12} md={4} lg={12} className="center">
+                    {/* <Grid item xs={12} md={4} lg={12} className="center">
                     <div className="enquiryCard">
                     <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190871/whatsapp_nkr7x7.png" alt="CustomerCall" />
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>WhatsApp Us</Typography>
@@ -84,7 +84,7 @@ const Enquiry = () => {
                     <Typography color="#333" sx={{fontSize:"14px"}}>Say "Hi" from registered mobile number</Typography>
                     <Link href="https://wa.me/+447732762384?text=Hi,%20I'm%20interested%20in%20Chelmsford"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
                     </div>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} lg={6}>
@@ -92,7 +92,7 @@ const Enquiry = () => {
                   <Grid container spacing={2}>
                         <Grid item xs={12}>
                       <Alert icon={<FcApproval fontSize="inherit" />} severity="info">
-                      Protecting your privacy: This website adheres to <a href="https://en.wikipedia.org/wiki/Health_Insurance_Portability_and_Accountability_Act" target="_blank"><strong>HIPAA compliance</strong> standards. </a>
+                      Protecting your privacy: Your Data is safe with us
                     </Alert>
                         </Grid>
                         {submitted ? <Grid item xs={12} className="center" sx={{flexDirection:"column"}}>
