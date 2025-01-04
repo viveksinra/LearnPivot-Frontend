@@ -20,11 +20,11 @@ export const menus = [
     },
     
      {
-      label: "Course",
+      label: "Courses",
       link: "/course/",
     },
      {
-      label: "Mock Test",
+      label: "Mock Tests",
       link: "/mockTest/",
     },
      {
