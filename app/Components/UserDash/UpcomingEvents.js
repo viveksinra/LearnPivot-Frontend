@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { 
-  Grid, Card, Box, Chip, Typography, Stack, Button, 
-  Skeleton, Container, useTheme 
+  Card, Box, Chip, Typography, Stack, Button, 
+  Skeleton, Container, useTheme, useMediaQuery 
 } from '@mui/material';
 import { 
   PersonOutline, CalendarToday, AccessTimeOutlined, 
@@ -10,35 +10,48 @@ import {
 import moment from 'moment';
 import { useRouter } from 'next/navigation';
 import { reportService } from '@/app/services';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
-const LoadingSkeleton = () => (
-  <Grid container spacing={3}>
-    {[1, 2, 3].map((item) => (
-      <Grid item xs={12} md={6} lg={4} key={item}>
-        <Card sx={{ p: 3, borderRadius: 3 }}>
-          <Stack spacing={2}>
-            <Skeleton variant="rectangular" width={80} height={24} />
-            <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} width="80%" />
-            <Skeleton variant="text" sx={{ fontSize: '1rem' }} width="60%" />
-            <Stack spacing={1}>
-              <Skeleton variant="rectangular" height={32} width="100%" />
-              <Skeleton variant="rectangular" height={32} width="100%" />
-              <Skeleton variant="rectangular" height={32} width="100%" />
+const LoadingSkeleton = () => {
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  
+  return (
+    <Swiper
+      slidesPerView={isMobile ? 1.2 : 3}
+      spaceBetween={24}
+      centeredSlides={isMobile}
+      initialSlide={0}
+    >
+      {[1, 2, 3].map((item) => (
+        <SwiperSlide key={item}>
+          <Card sx={{ p: 3, borderRadius: 3 }}>
+            <Stack spacing={2}>
+              <Skeleton variant="rectangular" width={80} height={24} />
+              <Skeleton variant="text" sx={{ fontSize: '1.5rem' }} width="80%" />
+              <Skeleton variant="text" sx={{ fontSize: '1rem' }} width="60%" />
+              <Stack spacing={1}>
+                <Skeleton variant="rectangular" height={32} width="100%" />
+                <Skeleton variant="rectangular" height={32} width="100%" />
+                <Skeleton variant="rectangular" height={32} width="100%" />
+              </Stack>
             </Stack>
-          </Stack>
-        </Card>
-      </Grid>
-    ))}
-  </Grid>
-);
+          </Card>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};
 
 const EmptyState = ({ type, onButtonClick }) => {
   const isClass = type === 'class';
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
   
   return (
     <Card 
       sx={{ 
-        p: 4, 
+        p: isMobile ? 3 : 4, 
         textAlign: 'center',
         borderRadius: 3,
         bgcolor: 'grey.50'
@@ -46,14 +59,18 @@ const EmptyState = ({ type, onButtonClick }) => {
     >
       <Box sx={{ mb: 3 }}>
         {isClass ? (
-          <School sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+          <School sx={{ fontSize: isMobile ? 36 : 48, color: 'primary.main', mb: 2 }} />
         ) : (
-          <QuizOutlined sx={{ fontSize: 48, color: 'secondary.main', mb: 2 }} />
+          <QuizOutlined sx={{ fontSize: isMobile ? 36 : 48, color: 'secondary.main', mb: 2 }} />
         )}
-        <Typography variant="h6" gutterBottom>
+        <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom>
           No Upcoming {isClass ? 'Classes' : 'Mock Tests'}
         </Typography>
-        <Typography color="text.secondary" sx={{ mb: 3 }}>
+        <Typography 
+          color="text.secondary" 
+          sx={{ mb: 3 }}
+          variant={isMobile ? "body2" : "body1"}
+        >
           {isClass 
             ? "Ready to start learning? Book your first class today!" 
             : "Practice makes perfect. Book a mock test to assess your progress!"}
@@ -62,10 +79,11 @@ const EmptyState = ({ type, onButtonClick }) => {
           variant="contained"
           color={isClass ? "primary" : "secondary"}
           onClick={() => onButtonClick(isClass ? '/course' : '/mockTest')}
+          size={isMobile ? "small" : "medium"}
           sx={{ 
             borderRadius: 2,
             textTransform: 'none',
-            px: 4
+            px: isMobile ? 3 : 4
           }}
         >
           Browse {isClass ? 'Courses' : 'Mock Tests'}
@@ -77,11 +95,12 @@ const EmptyState = ({ type, onButtonClick }) => {
 
 const EventCard = ({ item }) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isClass = item.type === 'class';
   
   return (
     <Card sx={{ 
-      p: 3,
+      p: isMobile ? 2 : 3,
       height: '100%',
       borderRadius: 3,
       position: 'relative',
@@ -102,7 +121,7 @@ const EventCard = ({ item }) => {
         boxShadow: theme.shadows[10]
       }
     }}>
-      <Stack spacing={2.5}>
+      <Stack spacing={2}>
         <Box>
           <Chip 
             label={isClass ? "Class" : "Mock Test"}
@@ -111,10 +130,18 @@ const EventCard = ({ item }) => {
               bgcolor: isClass ? 'primary.lighter' : 'secondary.lighter',
               color: isClass ? 'primary.dark' : 'secondary.dark',
               fontWeight: 600,
-              mb: 2
+              mb: 1.5
             }}
           />
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, lineHeight: 1.4 }}>
+          <Typography 
+            variant={isMobile ? "subtitle1" : "h6"} 
+            sx={{ 
+              fontWeight: 700, 
+              mb: 1, 
+              lineHeight: 1.4,
+              fontSize: isMobile ? '1rem' : 'inherit'
+            }}
+          >
             {isClass ? item.courseTitle : item.testTitle}
           </Typography>
         </Box>
@@ -125,39 +152,48 @@ const EventCard = ({ item }) => {
           gap: 1, 
           color: 'text.secondary' 
         }}>
-          <PersonOutline sx={{ fontSize: 20 }} />
-          <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <PersonOutline sx={{ fontSize: isMobile ? 16 : 20 }} />
+          <Typography 
+            variant={isMobile ? "caption" : "body2"} 
+            sx={{ fontWeight: 500 }}
+          >
             {item.studentName} ({item.studentYear})
           </Typography>
         </Box>
 
-        <Stack spacing={1.5}>
+        <Stack spacing={1}>
           <Chip 
-            icon={<CalendarToday />}
-            label={moment(item.date).format('dddd, MMM DD, YYYY')}
+            icon={<CalendarToday sx={{ fontSize: isMobile ? 14 : 16 }} />}
+            label={moment(item.date).format('ddd, MMM DD')}
             size="small"
             sx={{ 
               bgcolor: 'grey.50',
-              '& .MuiChip-icon': { fontSize: 16 }
+              '& .MuiChip-label': {
+                fontSize: isMobile ? '0.75rem' : '0.875rem'
+              }
             }}
           />
           <Chip 
-            icon={<AccessTimeOutlined />}
+            icon={<AccessTimeOutlined sx={{ fontSize: isMobile ? 14 : 16 }} />}
             label={`${item.startTime} - ${item.endTime}`}
             size="small"
             sx={{ 
               bgcolor: 'grey.50',
-              '& .MuiChip-icon': { fontSize: 16 }
+              '& .MuiChip-label': {
+                fontSize: isMobile ? '0.75rem' : '0.875rem'
+              }
             }}
           />
           {!isClass && item.location && (
             <Chip 
-              icon={<LocationOn />}
+              icon={<LocationOn sx={{ fontSize: isMobile ? 14 : 16 }} />}
               label={item.location}
               size="small"
               sx={{ 
                 bgcolor: 'grey.50',
-                '& .MuiChip-icon': { fontSize: 16 }
+                '& .MuiChip-label': {
+                  fontSize: isMobile ? '0.75rem' : '0.875rem'
+                }
               }}
             />
           )}
@@ -167,12 +203,33 @@ const EventCard = ({ item }) => {
   );
 };
 
+const EventList = ({ items, type }) => {
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
+  
+  return (
+    <Swiper
+      slidesPerView={isMobile ? 1.2 : 3}
+      spaceBetween={24}
+      centeredSlides={isMobile}
+      initialSlide={0}
+      style={{ paddingBottom: '24px' }}
+    >
+      {items.map((item) => (
+        <SwiperSlide key={item.bookingId}>
+          <EventCard item={{ ...item, type }} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  );
+};
+
 export const UpcomingEvents = ({ selectedChild }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [events, setEvents] = useState({ classes: [], mockTests: [] });
   const router = useRouter();
   const snackRef = useRef();
+  const isMobile = useMediaQuery((theme) => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     handleGetAllEvents();
@@ -205,8 +262,8 @@ export const UpcomingEvents = ({ selectedChild }) => {
 
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ py: 4 }}>
-        <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>
+      <Container maxWidth="lg" sx={{ py: isMobile ? 2 : 4 }}>
+        <Typography variant={isMobile ? "h6" : "h5"} sx={{ mb: 3, fontWeight: 700 }}>
           <Skeleton width={200} />
         </Typography>
         <LoadingSkeleton />
@@ -219,16 +276,21 @@ export const UpcomingEvents = ({ selectedChild }) => {
       <Box 
         sx={{ 
           textAlign: 'center', 
-          py: 8,
+          py: isMobile ? 4 : 8,
           px: 2
         }}
       >
-        <Typography color="error" variant="h6" gutterBottom>
+        <Typography 
+          color="error" 
+          variant={isMobile ? "subtitle1" : "h6"} 
+          gutterBottom
+        >
           {error}
         </Typography>
         <Button 
           variant="outlined" 
           onClick={handleGetAllEvents}
+          size={isMobile ? "small" : "medium"}
           sx={{ mt: 2 }}
         >
           Try Again
@@ -238,35 +300,45 @@ export const UpcomingEvents = ({ selectedChild }) => {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h5" sx={{ mb: 4, fontWeight: 700 }}>
+    <Container 
+      maxWidth="lg" 
+      sx={{ 
+        py: isMobile ? 2 : 4,
+        px: isMobile ? 1 : 3
+      }}
+    >
+      <Typography 
+        variant={isMobile ? "h6" : "h5"} 
+        sx={{ 
+          mb: 3, 
+          fontWeight: 700,
+          px: isMobile ? 2 : 0
+        }}
+      >
         Upcoming Classes
       </Typography>
       {events.classes.length > 0 ? (
-        <Grid container spacing={3} sx={{ mb: 6 }}>
-          {events.classes.map((class_) => (
-            <Grid item xs={12} md={6} lg={4} key={class_.bookingId}>
-              <EventCard item={class_} />
-            </Grid>
-          ))}
-        </Grid>
+        <Box sx={{ mb: 4 }}>
+          <EventList items={events.classes} type="class" />
+        </Box>
       ) : (
-        <Box sx={{ mb: 6 }}>
+        <Box sx={{ mb: 4 }}>
           <EmptyState type="class" onButtonClick={handleNavigate} />
         </Box>
       )}
 
-      <Typography variant="h5" sx={{ mb: 4, fontWeight: 700 }}>
+      <Typography 
+        variant={isMobile ? "h6" : "h5"} 
+        sx={{ 
+          mb: 3, 
+          fontWeight: 700,
+          px: isMobile ? 2 : 0
+        }}
+      >
         Upcoming Mock Tests
       </Typography>
       {events.mockTests.length > 0 ? (
-        <Grid container spacing={3}>
-          {events.mockTests.map((test) => (
-            <Grid item xs={12} md={6} lg={4} key={test.bookingId}>
-              <EventCard item={test} />
-            </Grid>
-          ))}
-        </Grid>
+        <EventList items={events.mockTests} type="mock" />
       ) : (
         <EmptyState type="mock" onButtonClick={handleNavigate} />
       )}
