@@ -29,17 +29,7 @@ const EventCard = ({ item, getSubjectColor }) => {
               fontWeight: 500
             }}
           />
-          {item.paymentStatus === 'succeeded' && (
-            <Chip 
-              label="Paid"
-              size="small"
-              sx={{ 
-                bgcolor: 'success.light',
-                color: 'success.main',
-                fontWeight: 500
-              }}
-            />
-          )}
+
         </Stack>
 
         <Typography variant="h6" sx={{ mb: 1, fontWeight: 600 }}>
@@ -74,11 +64,7 @@ const EventCard = ({ item, getSubjectColor }) => {
           )}
         </Stack>
         
-        {item.price > 0 && (
-          <Typography sx={{ mt: 2, color: 'text.secondary' }}>
-            Price: £{item.price.toFixed(2)}
-          </Typography>
-        )}
+
       </Box>
     </Card>
   );
