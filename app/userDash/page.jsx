@@ -161,11 +161,11 @@ selectedChild={selectedChild}
         />
 
         {/* More Content */}
-        <MoreContent 
+        {"sdf" == "SDyF" &&    <MoreContent 
           classes={moreClasses} 
           tests={moreMockTests} 
           getSubjectColor={getSubjectColor} 
-        />
+        />}
 
         {/* Quick Links */}
         <QuickLinks />
