@@ -36,7 +36,11 @@ const AddMockEntryArea = forwardRef((props, ref) => {
     }]);
     const [PAccordion, setPAccordion] = useState(false);
 
-    const AllBlinkText = [{ label: "High Demand", id: "highDemand" }, { label: "Few Seat Left", id: "fewSeatLeft" }];
+    const AllBlinkText = [
+        { label: "High Demand", id: "highDemand" },
+         { label: "Few Seat Left", id: "fewSeatLeft" },
+         { label: "Onsite Test", id: "onsiteTest" },
+        ];
     const allTestType = [{ label: "FSCE", id: "fsce" }, { label: "CSSE", id: "csse" }];
     const allLocation = [
         { label: "Broomfield Village Hall 158 Main Rd, Broomfield, Chelmsford, CM1 7AH", id: "location1" },

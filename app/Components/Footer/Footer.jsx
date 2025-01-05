@@ -41,7 +41,7 @@ const Footer = () => {
               </ul>
             </Grid>
             <Grid item xs={12} md={3}>
-            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> -:  Quick Links :- </Typography>
+            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> Quick Links :- </Typography>
             <ul id="quickUl">
               {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
             </ul>   

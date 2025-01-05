@@ -8,7 +8,6 @@ const FunFactsTwo = () => {
     { icon: "bx bx-list-check", value: 8, text: "Years Of Experience" },
     { icon: "bx bx-smile", value: 150, text: "Completed Mock Tests" },
     { icon: "bx bx-user-plus", value: 1000, text: "Happy Parents." },
-    { icon: "bx bx-trophy", value: 4.8, text: "Satisfaction Rating" }
   ];
 
   return (
