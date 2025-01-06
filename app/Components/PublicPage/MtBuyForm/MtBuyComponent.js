@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { Container, Grid, Typography, TextField, RadioGroup, FormControlLabel, Radio, MenuItem, Fab, Alert, FormControl, InputLabel, Select } from '@mui/material/';
+import { useMediaQuery,Container,useTheme, Grid, Typography, TextField, RadioGroup, FormControlLabel, Radio, MenuItem, Fab, Alert, FormControl, InputLabel, Select } from '@mui/material/';
 import { FcFeedback, FcApproval } from "react-icons/fc";
 import StripePay from "../../courseStripePay/StripePay";
 import MySnackbar from "../../MySnackbar/MySnackbar";
@@ -18,13 +18,15 @@ const MtBuyComponent = ({data}) => {
 
   const [submittedId, setSubmittedId] = useState("");
   const [selectedChild, setSelectedChild] = useState(null);
- 
+
+   const theme = useTheme();
+   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <section style={{ backgroundColor: "#fff", marginBottom: "10px", marginTop:"20px"  }} id="enquiry">
-      <Container maxWidth="xl" style={{ marginTop:"40px"  }}>
+    <section style={{ marginBottom: "10px", paddingTop:isMobile? "0px":"20px" }} id="enquiry">
+      <Container maxWidth="xl" style={{   marginTop:"40px"  }}>
         <Grid container>
-          <Grid style={{  paddingRight:"20px"}} item xs={12} lg={6}>
+          <Grid style={{  paddingRight: isMobile? "0px":"20px"}} item xs={12} lg={6}>
             <SmallOneMockTest data={data} totalAmount={totalAmount} selectedBatch={selectedBatch} />
           </Grid>
           <Grid  item xs={12} lg={6}>

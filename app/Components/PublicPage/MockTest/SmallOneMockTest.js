@@ -1,27 +1,43 @@
-import React from "react";
-import { Box, Card, CardMedia, Typography, Chip, useTheme, useMediaQuery } from "@mui/material";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, Pagination } from 'swiper/modules';
-import SchoolIcon from '@mui/icons-material/School';
-import EventIcon from '@mui/icons-material/Event';
+import React, { useState } from 'react';
+import { 
+  Box,
+  Card,
+  Typography,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  useTheme,
+  useMediaQuery,
+  styled
+} from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import { styled } from '@mui/material/styles';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import SchoolIcon from '@mui/icons-material/School';
+import moment from 'moment';
 
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/pagination';
-import 'swiper/css/autoplay';
+
+import ImageCarousel from '../../Common/ImageCarousel';
 
 const StyledCard = styled(Card)(({ theme }) => ({
   position: 'relative',
   borderRadius: '16px',
   overflow: 'hidden',
+  backgroundColor: 'white',
   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)',
   transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
   '&:hover': {
     transform: 'translateY(-4px)',
     boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)',
+  },
+  [theme.breakpoints.up('md')]: {
+  },
+  [theme.breakpoints.down('md')]: {
+    width: '100%',
+    margin: '16px 0',
   },
 }));
 
@@ -46,96 +62,174 @@ const StyledChip = styled(Chip)(({ theme }) => ({
   }
 }));
 
-const SmallOneMockTest = ({ data, totalAmount, selectedBatch }) => {
+const ActionButton = styled(Button)(({ variant }) => ({
+  padding: '8px 24px',
+  fontWeight: 'bold',
+  borderRadius: '8px',
+  textTransform: 'none',
+  ...(variant === 'primary' && {
+    backgroundColor: '#F97316',
+    color: 'white',
+    '&:hover': {
+      backgroundColor: '#EA580C',
+    },
+  }),
+  ...(variant === 'secondary' && {
+    backgroundColor: '#EDE9FE',
+    color: '#5B21B6',
+    '&:hover': {
+      backgroundColor: '#DDD6FE',
+    },
+  }),
+}));
+
+const MockTestCard = ({ data }) => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const [openBatchModal, setOpenBatchModal] = useState(false);
 
+  const formatDate = (dateString) => moment(dateString).format('Do MMM YYYY');
+  const formatTime = (time) => moment(time, 'HH:mm').format('h:mm A');
+  
   return (
-    <StyledCard style={{ marginTop: isMobile ? '40px' : '' }}>
-      <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '300px' }}>
-        <Swiper
-          modules={[Autoplay, Pagination]}
-          pagination={{ clickable: true }}
-          autoplay={{ delay: 6000, disableOnInteraction: false }}
-          loop={true}
-          style={{ height: '100%' }}
-        >
-          {data.imageUrls.map((image, index) => (
-            <SwiperSlide key={index}>
-              <CardMedia
-                component="img"
-                image={image}
-                alt={`${data.mockTestTitle} - Image ${index + 1}`}
-                sx={{
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
-              />
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </Box>
-
-      <Box sx={{ p: 2.5 }}>
-        <Typography
-          variant="h5"
-          sx={{
-            fontSize: { xs: '1.125rem', md: '1.25rem' },
-            fontWeight: 600,
-            color: '#0F172A',
-            mb: 2,
-            lineHeight: 1.4,
-            fontFamily: '"Adequate", "Helvetica Neue", Helvetica, sans-serif',
-          }}
-        >
-          {data.mockTestTitle}
-        </Typography>
-
-        <Box sx={{ 
-          display: 'flex', 
-          flexDirection: 'column', 
-          gap: 2 
-        }}>
-          {selectedBatch.length > 0 && (
-            <Box sx={{ 
-              display: 'flex', 
-              flexWrap: 'wrap', 
-              gap: 1 
-            }}>
-              {selectedBatch.map((batch) => (
-                <StyledChip
-                  key={batch.id}
-                  icon={<CalendarTodayIcon />}
-                  className="batch-chip"
-                  label={
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-                      <Typography component="span" sx={{ fontSize: '0.875rem' }}>
-                        {batch.date}
-                      </Typography>
-                      <AccessTimeIcon sx={{ fontSize: '1rem' }} />
-                      <Typography component="span" sx={{ fontSize: '0.875rem' }}>
-                        {batch.startTime} - {batch.endTime}
-                      </Typography>
-                    </Box>
-                  }
-                />
-              ))}
-            </Box>
-          )}
-
-          {data.testType?.label && (
-            <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-              <StyledChip
-                icon={<SchoolIcon />}
-                className="info-chip"
-                label={data.testType.label}
-              />
-            </Box>
-          )}
+    <>
+      <StyledCard style={{marginTop: isMobile ? '30px' : '0'}}>
+        {/* Image Carousel */}
+        <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '240px' }}>
+        <ImageCarousel
+            images={data.imageUrls}
+            title={data.mockTestTitle}
+            height="220px"
+            autoplayDelay={6000}
+          />
         </Box>
-      </Box>
-    </StyledCard>
+
+        <Box sx={{ p: 2.5 }}>
+          {/* Title and Price */}
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+            <Typography
+              variant="h5"
+              sx={{
+                fontSize: { xs: '1.125rem', md: '1.25rem' },
+                fontWeight: 600,
+                color: '#0F172A',
+                flex: 1,
+                lineHeight: 1.4,
+                fontFamily: '"Adequate", "Helvetica Neue", Helvetica, sans-serif',
+              }}
+            >
+              {data.mockTestTitle}
+            </Typography>
+            <Box sx={{
+              backgroundColor: '#FCD34D',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              transform: 'rotate(12deg)',
+            }}>
+              <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                £{Math.min(...data.batch.map(b => b.oneBatchprice))}
+              </Typography>
+            </Box>
+          </Box>
+
+          {/* Location */}
+          {data.location && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <LocationOnIcon sx={{ color: 'text.secondary', fontSize: '1.25rem' }} />
+              <Typography color="text.secondary" variant="body2">
+                {data.location.label}
+              </Typography>
+            </Box>
+          )}
+
+          {/* Test Type */}
+          {data.testType?.label && (
+            <StyledChip
+              icon={<SchoolIcon />}
+              className="info-chip"
+              label={data.testType.label}
+              sx={{ mb: 2 }}
+            />
+          )}
+
+   
+
+          {/* Action Buttons */}
+          <Box sx={{ display: 'flex', gap: 2, mt: 2, flexWrap: 'wrap' }}>
+            <ActionButton
+              variant="secondary"
+              startIcon={<CalendarMonthIcon />}
+              onClick={() => setOpenBatchModal(true)}
+            >
+              View Batches
+            </ActionButton>
+
+          </Box>
+        </Box>
+      </StyledCard>
+
+      {/* Batch Modal */}
+      <Dialog 
+        open={openBatchModal} 
+        onClose={() => setOpenBatchModal(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle sx={{ 
+          backgroundColor: '#F3F4F6',
+          color: '#1F2937',
+          fontWeight: 'bold'
+        }}>
+          Available Batches
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            {data.batch.map((batch, index) => (
+              <Box
+                key={index}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  backgroundColor: '#F9FAFB',
+                  p: 2,
+                  borderRadius: 1,
+                  mb: 1,
+                  flexWrap: 'wrap'
+                }}
+              >
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 0.5 }}>
+                    <CalendarMonthIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
+                    <Typography variant="body1" sx={{ color: '#4B5563', fontWeight: 500 }}>
+                      {formatDate(batch.date)}
+                    </Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <AccessTimeIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
+                    <Typography variant="body2" sx={{ color: '#6B7280' }}>
+                      {formatTime(batch.startTime)} - {formatTime(batch.endTime)}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant="body1" sx={{ color: '#059669', fontWeight: 'bold' }}>
+                  £{batch.oneBatchprice}
+                </Typography>
+              </Box>
+            ))}
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ p: 2 }}>
+          <Button 
+            onClick={() => setOpenBatchModal(false)}
+            sx={{ color: '#4B5563' }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
 
-export default SmallOneMockTest;
+export default MockTestCard;
