@@ -74,6 +74,69 @@ const faqData = [
       answer: "Usually, the post arrives 2 days after the test, but please allow up to 10 working days for Royal Mail delivery. Please do not contact us unless 10 days have passed."
   }
 ];
+
+const mockFaqData = [
+  {
+    id: "1",
+    question: "What services do you provide for 11+ preparation?",
+    answer: "We offer expert tuition for students preparing for the 11+ exams, focusing on both CSSE and FSCE formats. Our services include group classes, mock exams, and personalised help for parents"
+  },
+  {
+    id: "2",
+    question: "Who are your tutors?",
+    answer: "Our tutors are highly experienced professionals with a deep understanding of 11+ requirements and years of experience helping students succeed."
+  },
+  {
+    id: "3",
+    question: "What areas do your services cover?",
+    answer: "We specialise in preparing students for grammar schools not only in our area (KEGS, CCHS etc.), but also around the country."
+  },
+  {
+    id: "4",
+    question: "How does your tuition work?",
+    answer: "We offer: Group Classes: Small, focused groups where every child is involved. Mock Exams: Realistic practice under timed conditions, with detailed feedback within 24-48 hours. Practice Materials: Custom resources aligned with the FSCE and CSSE formats to help your child practice outside of our classes."
+  },
+  {
+    id: "5",
+    question: "When should my child start preparing?",
+    answer: "Every child and situations is different. Although we recommend starting preparation 12-18 months in advance, our classes range from Year 4, all the way through to the summer before the exam, ensuring your child is confident until the end."
+  },
+  {
+    id: "6",
+    question: "Do you offer mock exams?",
+    answer: "Yes, we conduct mock exams throughout the year. These help students experience exam conditions and receive detailed feedback to identify areas for improvement."
+  },
+  {
+    id: "7",
+    question: "How do you tailor your services to my child's needs?",
+    answer: "We begin with an initial assessment to understand your child's strengths and areas for improvement. This allows us to learn where they are and which class would be best suited."
+  },
+  {
+    id: "8",
+    question: "Where are your classes held?",
+    answer: "Our classes are conducted on Zoom. Each child will answer questions throughout the class with direct messaging available between our tutor and your child."
+  },
+  {
+    id: "9",
+    question: "How do I enrol my child in your program?",
+    answer: "You can enrol by contacting us via our website or simply booking a class online. We will guide you through the process and ensure you are satisfied."
+  },
+  {
+    id: "10",
+    question: "What makes your services unique?",
+    answer: "We pride ourselves on: Expert tutors with proven results, an adaptive approach to learning, comprehensive resources tailored to FSCE and CSSE formats, and a supportive and nurturing environment to help your child thrive and succeed."
+  },
+  {
+    id: "11",
+    question: "Do you provide support for parents?",
+    answer: "Yes, we keep parents informed about their child's progress through regular updates, homework tasks and provide guidance on supporting 11+ preparation outside of our classes."
+  },
+  {
+    id: "12",
+    question: "How do I find out more?",
+    answer: "Feel free to contact us directly through our website or phone to discuss your child's needs and how we can help them succeed in their 11+ journey."
+  }
+];
   
 
 const FaqCom = ({dataType}) => {
@@ -95,6 +158,16 @@ const FaqCom = ({dataType}) => {
             <div className="faq-accordion">
               <Accordion allowZeroExpanded preExpanded={["a"]}>
                 {dataType === "faqData" && faqData.map((faq) => (
+                  <AccordionItem key={faq.id} uuid={faq.id}>
+                    <AccordionItemHeading>
+                      <AccordionItemButton>{faq.question}</AccordionItemButton>
+                    </AccordionItemHeading>
+                    <AccordionItemPanel>
+                      <p className="accordion-content">{faq.answer}</p>
+                    </AccordionItemPanel>
+                  </AccordionItem>
+                ))}
+                {dataType === "mockFaqData" && mockFaqData.map((faq) => (
                   <AccordionItem key={faq.id} uuid={faq.id}>
                     <AccordionItemHeading>
                       <AccordionItemButton>{faq.question}</AccordionItemButton>

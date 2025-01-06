@@ -294,7 +294,7 @@ const OneMockTest = ({ data }) => {
         </DialogTitle>
         <DialogContent>
           <div style={{ marginTop: '16px' }}>
-          <FaqCom dataType={"faqData"} />
+          <FaqCom dataType={"mockFaqData"} />
           </div>
         </DialogContent>
         <DialogActions sx={{ padding: '16px' }}>

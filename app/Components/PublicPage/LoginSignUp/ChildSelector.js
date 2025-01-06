@@ -53,6 +53,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
   const snackRef = useRef();
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
   const [newChild, setNewChild] = useState({
     _id: '',
     childName: '',
@@ -71,6 +72,14 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleConfirmOpen = () => {
+    setConfirmOpen(true);
+  };
+
+  const handleConfirmClose = () => {
+    setConfirmOpen(false);
   };
 
   const handleInputChange = (event) => {
@@ -118,6 +127,11 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
       console.error('Error submitting data:', error);
       snackRef.current.handleSnack({ message: 'Failed to submit data.', variant: 'error' });
     }
+  };
+
+  const handleConfirmAddChild = async () => {
+    setConfirmOpen(false);
+    handleAddChild();
   };
 
   return (
@@ -201,22 +215,40 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
               select
               margin="dense"
               name="childYear"
-              label="Year"
+              label="Year Group"
               fullWidth
               variant="outlined"
               value={newChild.childYear}
               onChange={handleInputChange}
               required
             >
-              <MenuItem value="Year 4">Year 4</MenuItem>
               <MenuItem value="Year 5">Year 5</MenuItem>
+              <MenuItem value="Year 4">Year 4</MenuItem>
+
               <MenuItem value="Other">Other</MenuItem>
             </TextField>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleAddChild}>Add Child</Button>
+          <Button onClick={handleConfirmOpen}>Add Child</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={confirmOpen} onClose={handleConfirmClose}>
+        <DialogTitle>Confirm Child Details</DialogTitle>
+        <DialogContent>
+          <DialogContentText>Please confirm the details of the new child.</DialogContentText>
+          <Box sx={{ mt: 2, mb: 2, p: 2, border: '1px solid', borderColor: 'grey.300', borderRadius: 2 }}>
+            <Typography variant="body1"><strong>Name:</strong> {newChild.childName}</Typography>
+            <Typography variant="body1"><strong>Date of Birth:</strong> {newChild.childDob}</Typography>
+            <Typography variant="body1"><strong>Gender:</strong> {newChild.childGender}</Typography>
+            <Typography variant="body1"><strong>Year Group:</strong> {newChild.childYear}</Typography>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleConfirmClose} color="secondary">Cancel</Button>
+          <Button onClick={handleConfirmAddChild} color="primary" variant="contained">Confirm</Button>
         </DialogActions>
       </Dialog>
 
