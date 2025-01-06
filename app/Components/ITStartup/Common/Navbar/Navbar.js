@@ -10,6 +10,7 @@ import MainContext from "@/app/Components/Context/MainContext";
 import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 
+
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(true);
   const toggleNavbar = () => {
@@ -43,6 +44,53 @@ const Navbar = () => {
 
   return (
     <div id="navbar" className="navbar-area">
+      <style jsx>{`
+        .navbar-toggler {
+          border: none;
+          background: #eee !important;
+          padding: 10px;
+          border-radius: 0;
+          width: 28px;
+margin-right: 12px;
+        }
+        .navbar-toggler:focus {
+          box-shadow: none;
+        }
+        .navbar-toggler .icon-bar {
+          width: 28px;
+          transition: all 0.3s;
+          background: #0000ff;
+          height: 2px;
+          display: block;
+        }
+        .navbar-toggler .top-bar {
+          transform: rotate(45deg);
+          transform-origin: 10% 10%;
+          left: 4px;
+          position: relative;
+        }
+        .navbar-toggler .middle-bar {
+          opacity: 0;
+          margin: 6px 0;
+        }
+        .navbar-toggler .bottom-bar {
+          transform: rotate(-45deg);
+          transform-origin: 10% 90%;
+          left: 4px;
+          position: relative;
+        }
+        .navbar-toggler.collapsed .top-bar {
+          transform: rotate(0);
+          left: 0;
+        }
+        .navbar-toggler.collapsed .middle-bar {
+          opacity: 1;
+        }
+        .navbar-toggler.collapsed .bottom-bar {
+          transform: rotate(0);
+          left: 0;
+        }
+      `}</style>
       <div className="main-nav">
         <div className="container">
           <nav className="navbar navbar-expand-md navbar-light" style={{ alignItems: "center"}}>

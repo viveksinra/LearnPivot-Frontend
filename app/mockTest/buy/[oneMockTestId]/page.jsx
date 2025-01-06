@@ -6,6 +6,8 @@ import { mockTestService } from "../../../services";
 import Footer from '@/app/Components/Footer/Footer';
 import Navbar from "../../../Components/ITStartup/Common/Navbar/Navbar";
 import MtBuyComponent from '@/app/Components/PublicPage/MtBuyForm/MtBuyComponent';
+// import "../styles/style.css";
+import "../../../../styles/style.css";
 
 export default function OneClassBuy({ params }) {
   const [loading, setLoading] = useState(true);
