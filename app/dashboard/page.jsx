@@ -18,7 +18,9 @@ const Dashboard = () => {
       let res = await dashboardService.getData(`api/v1/dashboard/getDashboard/welcomeMsg`);
       if(res.variant === "success"){
         setHeading(res.data)
-      }else {console.log(res)};    
+      }else {
+        router.reload();
+      };    
      }
      getHeading()
    }, []);
