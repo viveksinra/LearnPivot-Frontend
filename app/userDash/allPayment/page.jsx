@@ -340,9 +340,10 @@ export default function PaymentsPage() {
             variant={isMobile ? "fullWidth" : "standard"}
             className="mb-4 border-b border-gray-200"
           >
-            <Tab label="All" value="all" />
             <Tab label="Succeeded" value="succeeded" />
-            <Tab label="Other" value="other" />
+            {/* <Tab label="All" value="all" /> */}
+
+            {/* <Tab label="Other" value="other" /> */}
           </Tabs>
 
           {loading ? (
