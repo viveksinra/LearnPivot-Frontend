@@ -97,7 +97,7 @@ export default function MulSelCom({ selectedCourses, setSelectedCourses, selecte
 
   const batches = getBatchesForSelectedCourses();
 
-  const filteredCourses = successOnly ? courses.filter(mt => mt.status == "succeeded") : courses;
+  const filteredCourses =  courses;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);
@@ -106,7 +106,7 @@ export default function MulSelCom({ selectedCourses, setSelectedCourses, selecte
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="mocktest-multiple-checkbox-label">Mock Tests</InputLabel>
+        <InputLabel id="mocktest-multiple-checkbox-label">Courses</InputLabel>
         <Select
           labelId="mocktest-multiple-checkbox-label"
           id="mocktest-multiple-checkbox"
