@@ -19,6 +19,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import moment from 'moment';
 import { styled } from '@mui/material/styles';
 import FaqCom from "../../ITStartup/Faq/FaqCom";
+import CloseIcon from '@mui/icons-material/Close';
 
 // Styled button with animation
 const AnimatedButton = styled('button')(({ theme }) => ({
@@ -34,7 +35,7 @@ const AnimatedButton = styled('button')(({ theme }) => ({
   overflow: 'hidden',
   '&:hover': {
     transform: 'translateY(-2px)',
-    boxShadow: '0 5px 15px rgba(249, 115, 22, 0.4)',
+    boxShadow: '0 5px 15px rgba(0,0,0,0.4)',
   },
   '&:active': {
     transform: 'translateY(0)',
@@ -231,9 +232,16 @@ const OneMockTest = ({ data }) => {
         <DialogTitle sx={{ 
           backgroundColor: '#F3F4F6',
           color: '#1F2937',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
           Available Batches
+          <CloseIcon 
+            onClick={() => setOpenBatchModal(false)} 
+            sx={{ cursor: 'pointer', color: '#1F2937' }} 
+          />
         </DialogTitle>
         <DialogContent>
           <div style={{ marginTop: '16px' }}>
@@ -271,7 +279,7 @@ const OneMockTest = ({ data }) => {
         <DialogActions sx={{ padding: '16px' }}>
           <Button 
             onClick={() => setOpenBatchModal(false)}
-            sx={{ color: '#4B5563' }}
+            sx={{ color: '#4B5563', fontWeight: 'bold' }}
           >
             Close
           </Button>
