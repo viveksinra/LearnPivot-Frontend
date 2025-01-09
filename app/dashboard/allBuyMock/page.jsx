@@ -147,8 +147,6 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       ) : rows.length === 0 ? (
         <NoResult label="No Mock Tests Available" />
       ) : tabular ? (
-  // Inside the SearchArea component, update the Table section:
-
 <Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MockTest data Table">
   <TableHead>
     <TableRow>
@@ -166,13 +164,10 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
         />
       </TableCell>
       <TableCell align="left">Mock Test Title</TableCell>
-      <TableCell align="left">Mock Test Link</TableCell>
       <TableCell align="left">Parent Name</TableCell>
       <TableCell align="left">Email</TableCell>
       <TableCell align="left">Child Name</TableCell>
       <TableCell align="left">Child Gender</TableCell>
-      <TableCell align="left">Amount (£)</TableCell>
-      <TableCell align="left">Payment ID</TableCell>
       <TableCell align="left">Batch Dates</TableCell>
       <TableCell align="left">Batch Times</TableCell>
       <TableCell align="left">Booking Date</TableCell>
@@ -190,39 +185,24 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
           />
         </TableCell>
         <TableCell align="left">
-          <Tooltip title="Click to view images">
-            <Badge color="primary" variant="dot" invisible={r.status !== "succeeded"}>
-              <LiveAvatar 
-                isLive={r.status === "succeeded"} 
-                alt={r.mockTestId.mockTestTitle} 
-                src={r.mockTestId.imageUrls?.[0]} 
-              />
+        
               {r.mockTestId.mockTestTitle}
-            </Badge>
-          </Tooltip>
         </TableCell>
-        <TableCell align="left">{r.mockTestId.mockTestLink}</TableCell>
         <TableCell align="left">{r.user.firstName + " " + r.user.lastName}</TableCell>
         <TableCell align="left">{r.user.email}</TableCell>
         <TableCell align="left">{r.childId.childName}</TableCell>
         <TableCell align="left">{r.childId.childGender}</TableCell>
-        <TableCell align="left">{r.amount}</TableCell>
-        <TableCell align="left">
-          <Tooltip title="Payment Intent ID">
-            <Typography variant="caption">{r.paymentIntent}</Typography>
-          </Tooltip>
-        </TableCell>
         <TableCell align="left">
           <Tooltip title="All batch dates">
             <Typography variant="caption">
-              {r.selectedBatch.map(batch => batch.date).join(", ")}
+              {formatDateToShortMonth(r.selectedBatch.date)}
             </Typography>
           </Tooltip>
         </TableCell>
         <TableCell align="left">
           <Tooltip title="All batch times">
             <Typography variant="caption">
-              {r.selectedBatch.map(batch => `${batch.startTime}-${batch.endTime}`).join(", ")}
+            {r.selectedBatch.startTime}-{r.selectedBatch.endTime}
             </Typography>
           </Tooltip>
         </TableCell>
@@ -254,7 +234,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                 <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.mockTestId.mockTestTitle}</Typography>
                 <Grid container sx={{ paddingLeft: "120px" }}>
                   <Grid item xs={10}>
-                    <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => batch.date).join(", ")}</Typography>
+                    <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => formatDateToShortMonth(batch.date)).join(", ")}</Typography>
                   </Grid>
                   <Grid item xs={2}>{c.status === "succeeded" ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
                 </Grid>
