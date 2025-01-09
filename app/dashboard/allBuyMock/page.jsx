@@ -172,7 +172,6 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       <TableCell align="left">Batch Times</TableCell>
       <TableCell align="left">Booking Date</TableCell>
       <TableCell align="center">Status</TableCell>
-      <TableCell align="center">Actions</TableCell>
     </TableRow>
   </TableHead>
   <TableBody>
@@ -215,11 +214,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
             color={r.status === "succeeded" ? "success" : "default"}
           />
         </TableCell>
-        <TableCell align="center">
-          <IconButton size="small" onClick={() => handleEdit(r._id)}>
-            <MdModeEdit />
-          </IconButton>
-        </TableCell>
+  
       </TableRow>
     ))}
   </TableBody>
