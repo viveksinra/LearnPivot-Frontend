@@ -211,7 +211,7 @@ const OneMockTest = ({ data }) => {
               onClick={() => setOpenBatchModal(true)}
               startIcon={<CalendarMonthIcon />}
             >
-              Available Batches
+               Batches
             </BatchButton>
             <Link href={"/mockTest/buy/" + data._id}>
               <AnimatedButton>
@@ -237,7 +237,7 @@ const OneMockTest = ({ data }) => {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          Available Batches
+           Batches
           <CloseIcon 
             onClick={() => setOpenBatchModal(false)} 
             sx={{ cursor: 'pointer', color: '#1F2937' }} 
