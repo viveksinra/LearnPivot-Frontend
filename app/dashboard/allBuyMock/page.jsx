@@ -71,7 +71,7 @@ export const ToggleFab = styled(Fab)({
 export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState([]);
-  const [tabular, setView] = useState(false);
+  const [tabular, setView] = useState(true);
   const sortOptions = [{ label: "New First", value: "newToOld" }, { label: "Old First", value: "oldToNew" }];
   const [sortBy, setSort] = useState("newToOld");
   const [page, setPage] = useState(0);
@@ -165,13 +165,12 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
               </TableCell>
               <TableCell align="left">Mock Test Title</TableCell>
 
-              <TableCell align="left">Name</TableCell>
+              <TableCell align="left">Parent Name</TableCell>
               <TableCell align="left">Email</TableCell>
               <TableCell align="left">Child Name</TableCell>
               <TableCell align="left">Amount</TableCell>
               <TableCell align="left">Booking Date</TableCell>
               <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -198,11 +197,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                 <TableCell align="left">{r.amount}</TableCell>
                 <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
                 <TableCell align="center"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
-                <TableCell align="center">
-                  <ButtonGroup variant="text">
-                    <Button onClick={() => handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
-                  </ButtonGroup>
-                </TableCell>
+             
               </TableRow>
             ))}
           </TableBody>

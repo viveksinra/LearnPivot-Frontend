@@ -97,7 +97,7 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
 
   const batches = getBatchesForSelectedMockTests();
 
-  const filteredMockTests = successOnly ? mockTests.filter(mt => (mt.status == "succeeded")) : mockTests;
+  const filteredMockTests = mockTests;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);
