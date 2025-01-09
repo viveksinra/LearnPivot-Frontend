@@ -106,7 +106,7 @@ export default function MockStripePay({ submittedId, totalAmount }) {
                     Total Amount
                   </Typography>
                   <Typography variant="h6" color="primary" sx={{ fontWeight: 600 }}>
-                    £{totalAmount.toFixed(2)}
+                    £{totalAmount?.toFixed(2)}
                   </Typography>
                 </Box>
               </Box>
@@ -126,7 +126,7 @@ export default function MockStripePay({ submittedId, totalAmount }) {
                   fontSize: "1rem",
                 }}
               >
-                {loading ? "Processing..." : `Pay £${totalAmount.toFixed(2)} with Debit Card`}
+                {loading ? "Processing..." : `Pay £${totalAmount?.toFixed(2)} with Debit Card`}
               </Button>
               {error && (
                 <Typography color="error" variant="body2">
