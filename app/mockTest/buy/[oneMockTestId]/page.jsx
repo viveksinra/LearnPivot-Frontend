@@ -49,7 +49,7 @@ export default function OneClassBuy({ params }) {
 
     <br />
   
-    <Container style={{ marginTop:"50px" }}>
+    <Container style={{ marginTop:"50px", paddingBottom:"200px" }}>
        {loading ? (
                 <div className="center">
                   <CircularProgress size={30} />{" "}
@@ -60,7 +60,6 @@ export default function OneClassBuy({ params }) {
     
     </Container>
   
-    <Footer />
 
     </main>
   );
