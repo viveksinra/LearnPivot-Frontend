@@ -9,7 +9,6 @@ import Checkbox from '@mui/material/Checkbox';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { mockTestService } from '@/app/services';
-import { format } from 'date-fns';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -86,9 +85,8 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
       const mockTestObj = mockTests.find(mt => mt.mockTestTitle === mockTest.title);
       if (mockTestObj && mockTestObj.batch) {
         mockTestObj.batch.forEach(batch => {
-          const formattedDate = format(new Date(batch.date), 'dd MMM yyyy');
           batches.push({
-            label: `${formattedDate} ${batch.startTime}-${batch.endTime}`,
+            label: `${batch.date} ${batch.startTime}-${batch.endTime}`,
             id: batch._id,
           });
         });
@@ -99,7 +97,7 @@ export default function MulSelCom({ selectedMockTests, setSelectedMockTests, sel
 
   const batches = getBatchesForSelectedMockTests();
 
-  const filteredMockTests = mockTests;
+  const filteredMockTests =  mockTests;
 
   const handleSwitchChange = (event) => {
     setSuccessOnly(event.target.checked);

@@ -2,12 +2,30 @@
 import "./addMockTestStyle.css";
 import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import {
-  Typography, Fab, styled, CircularProgress, Tab, Grid, ButtonGroup, AppBar, Toolbar,
-  Button, Tooltip, Chip, Table, TableRow, TableCell, TableBody, TableHead,
-  IconButton, TablePagination, Checkbox, Badge,
+  Typography, 
+  Fab, 
+  styled, 
+  CircularProgress, 
+  Grid, 
+  AppBar, 
+  Toolbar,
+  Tooltip, 
+  IconButton,
+  Tab,
+  ButtonGroup,
   ToggleButtonGroup,
-  ToggleButton
+  ToggleButton,
+  Chip,
+  Button
 } from '@mui/material/';
+import { 
+  DataGrid, 
+  GridToolbar,
+  gridPageCountSelector,
+  gridPageSelector,
+  useGridApiContext,
+  useGridSelector
+} from '@mui/x-data-grid';
 import { MdModeEdit, MdOutlineMail, MdOutlineClose } from "react-icons/md";
 import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline } from "react-icons/fc";
 import { BsTable } from "react-icons/bs";
@@ -22,6 +40,65 @@ import { TabContext, TabList } from "@mui/lab";
 
 const SendEmailCom = lazy(() => import("./SendEmailCom"));
 
+// Custom Pagination Component
+function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+  return (
+    <ButtonGroup variant="text" color="primary" aria-label="pagination button group">
+      <Button
+        onClick={() => apiRef.current.setPage(page - 1)}
+        disabled={page === 0}
+      >
+        Previous
+      </Button>
+      <Button disabled>Page {page + 1} of {pageCount}</Button>
+      <Button
+        onClick={() => apiRef.current.setPage(page + 1)}
+        disabled={page >= pageCount - 1}
+      >
+        Next
+      </Button>
+    </ButtonGroup>
+  );
+}
+
+// Styled Components
+const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
+  '& .status-succeeded': {
+    backgroundColor: '#e8f5e9',
+    '&:hover': {
+      backgroundColor: '#c8e6c9',
+    },
+  },
+  '& .status-pending': {
+    backgroundColor: '#fff3e0',
+    '&:hover': {
+      backgroundColor: '#ffe0b2',
+    },
+  },
+}));
+
+const ToggleFab = styled(Fab)({
+  position: 'absolute',
+  zIndex: 1,
+  top: -25,
+  left: 0,
+  right: 0,
+  margin: '0 auto',
+});
+
+const StyledCard = styled('div')(({ status }) => ({
+  backgroundColor: status === 'succeeded' ? '#e3ffea' : '#ffffe6',
+  borderRadius: '8px',
+  padding: '20px',
+  position: 'relative',
+  marginBottom: '20px',
+  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px',
+}));
+
 function MyMockTest() {
   const [viewTabular, toggleView] = useState(true);
   const [id, setId] = useState("");
@@ -32,17 +109,28 @@ function MyMockTest() {
     <main>
       {viewTabular ? (
         <Suspense fallback={<Loading />}>
-          <SearchArea selectedItems={selectedItems} setSelectedItems={setSelectedItems} handleEdit={(id) => { toggleView(false); setId(id); }} />
+          <SearchArea 
+            selectedItems={selectedItems} 
+            setSelectedItems={setSelectedItems} 
+            handleEdit={(id) => { 
+              toggleView(false); 
+              setId(id); 
+            }} 
+          />
         </Suspense>
       ) : (
         <Suspense fallback={null}>
-          <SendEmailCom selectedItems={selectedItems} ref={entryRef} id={id} setId={setId} />
+          <SendEmailCom 
+            selectedItems={selectedItems} 
+            ref={entryRef} 
+            id={id} 
+            setId={setId} 
+          />
         </Suspense>
       )}
       <AppBar position="fixed" sx={{ top: 'auto', bottom: 0, background: "#d6f9f7" }}>
         <Toolbar variant="dense">
           <span style={{ flexGrow: 0.2 }} />
-      
           <span style={{ flexGrow: 0.3 }} />
           {selectedItems.length >= 1 && (
             <Tooltip arrow title={viewTabular ? "Send Email to selected" : "Show List"}>
@@ -52,27 +140,20 @@ function MyMockTest() {
             </Tooltip>
           )}
           <span style={{ flexGrow: 0.3 }} />
-     
         </Toolbar>
       </AppBar>
     </main>
   );
 }
 
-export const ToggleFab = styled(Fab)({
-  position: 'absolute',
-  zIndex: 1,
-  top: -25,
-  left: 0,
-  right: 0,
-  margin: '0 auto',
-});
-
-export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
+function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [tabular, setView] = useState(true);
-  const sortOptions = [{ label: "New First", value: "newToOld" }, { label: "Old First", value: "oldToNew" }];
+  const sortOptions = [
+    { label: "New First", value: "newToOld" }, 
+    { label: "Old First", value: "oldToNew" }
+  ];
   const [sortBy, setSort] = useState("newToOld");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -82,198 +163,264 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(true);
 
-  const handleSelectItem = (row) => {
-    setSelectedItems((prevState) => {
-      const exists = prevState.find(item => item._id === row._id);
-      if (exists) {
-        return prevState.filter(item => item._id !== row._id);
-      } else {
-        return [...prevState, row];
-      }
-    });
-  };
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+    address: false,
+    mobileNo: false
+  });
+
+  const columns = [
+    {
+      field: 'mockTestTitle',
+      headerName: 'Mock Test Title',
+      width: 200,
+      valueGetter: (params) => params.row.mockTestId.mockTestTitle,
+      filterable: true,
+    },
+    {
+      field: 'parentName',
+      headerName: 'Parent Name',
+      width: 150,
+      valueGetter: (params) => `${params.row.user.firstName} ${params.row.user.lastName}`,
+      filterable: true,
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 200,
+      valueGetter: (params) => params.row.user.email,
+      filterable: true,
+    },
+    {
+      field: 'childName',
+      headerName: 'Child Name',
+      width: 150,
+      valueGetter: (params) => params.row.childId.childName,
+      filterable: true,
+    },
+    {
+      field: 'childGender',
+      headerName: 'Child Gender',
+      width: 120,
+      valueGetter: (params) => params.row.childId.childGender,
+      filterable: true,
+    },
+    {
+      field: 'batchDates',
+      headerName: 'Batch Dates',
+      width: 120,
+      valueGetter: (params) => formatDateToShortMonth(params.row.selectedBatch.date),
+      filterable: true,
+    },
+    {
+      field: 'batchTimes',
+      headerName: 'Batch Times',
+      width: 150,
+      valueGetter: (params) => `${params.row.selectedBatch.startTime}-${params.row.selectedBatch.endTime}`,
+      filterable: true,
+    },
+    {
+      field: 'bookingDate',
+      headerName: 'Booking Date',
+      width: 120,
+      valueGetter: (params) => formatDateToShortMonth(params.row.date),
+      filterable: true,
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 120,
+      renderCell: (params) => (
+        <Chip
+          label={params.row.status}
+          color={params.row.status === 'succeeded' ? 'success' : 'default'}
+          variant="outlined"
+          size="small"
+        />
+      ),
+      filterable: true,
+      sortable: true,
+    },
+    {
+      field: 'address',
+      headerName: 'Address',
+      width: 120,
+      valueGetter: (params) => params.row.user.address,
+      filterable: true,
+    },
+    {
+      field: 'mobileNo',
+      headerName: 'Mobile Number',
+      width: 120,
+      valueGetter: (params) => params.row.user.mobile,
+      filterable: true,
+    },
+
+
+  ];
 
   useEffect(() => {
     async function fetchAllData() {
       setLoading(true);
-      let response = await registrationService.getMockWithFilter({ sortBy, rowsPerPage, page, searchText, selectedMockTests, selectedBatches, successOnly });
-      if (response.variant === "success") {
-        setRows(response.data);
-        setTotalCount(response.totalCount);
+      try {
+        let response = await registrationService.getMockWithFilter({ 
+          sortBy, 
+          rowsPerPage, 
+          page, 
+          searchText, 
+          selectedMockTests, 
+          selectedBatches, 
+          successOnly 
+        });
+        if (response.variant === "success") {
+          setRows(response.data);
+          setTotalCount(response.totalCount);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     fetchAllData();
   }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
 
+  const handleSelectionChange = (newSelection) => {
+    const selectedRows = rows.filter(row => newSelection.includes(row._id));
+    setSelectedItems(selectedRows);
+  };
+
   return (
-    <main style={{ background: "#fff", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius: 8, padding: 10 }}>
-      <Grid container>
-        <Grid item xs={0} md={5} />
-        <Grid item xs={12} md={2}>
-          <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>All Mock Tests</Typography>
+    <main style={{ 
+      background: "#fff", 
+      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", 
+      borderRadius: 8, 
+      padding: 20 
+    }}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={6}>
+          <Typography 
+            color="primary" 
+            variant='h5' 
+            gutterBottom
+          >
+            All Mock Tests
+          </Typography>
         </Grid>
-        <Grid item xs={12} md={5} sx={{ display: "flex", justifyContent: "end", marginBottom: "20px" }}>
-          <Search onChange={e => setSearchText(e.target.value)} value={searchText} fullWidth endAdornment={<IconButton size="small" sx={{ display: searchText ? "block" : "none" }} onClick={() => setSearchText("")}><MdOutlineClose /></IconButton>} />
-          <ToggleButtonGroup aria-label="ViewMode" sx={{ display: { xs: "none", md: "block" }, marginLeft: "10px", marginRight: "10px" }}>
-            <Tooltip arrow title="Grid View">
-              <ToggleButton value="grid" onClick={() => setView(!tabular)} aria-label="gridView">
-                <FcOrgUnit />
-              </ToggleButton>
-            </Tooltip>
-            <Tooltip arrow title="List View">
-              <ToggleButton value="list" onClick={() => setView(!tabular)} aria-label="listView">
-                <FcTimeline />
-              </ToggleButton>
-            </Tooltip>
-          </ToggleButtonGroup>
+        <Grid item xs={12} md={6}>
+          <Search 
+            onChange={e => setSearchText(e.target.value)} 
+            value={searchText} 
+            fullWidth 
+            placeholder="Search mock tests..."
+            endAdornment={
+              searchText && (
+                <IconButton 
+                  size="small" 
+                  onClick={() => setSearchText("")}
+                >
+                  <MdOutlineClose />
+                </IconButton>
+              )
+            } 
+          />
         </Grid>
-        <Grid item xs={12} sx={{ maxWidth: { xs: 350, sm: 480, md: 1000 }, marginBottom: "10px" }}>
-          <MulSelCom selectedMockTests={selectedMockTests} setSelectedMockTests={setSelectedMockTests} selectedBatches={selectedBatches} setSelectedBatches={setSelectedBatches} successOnly={successOnly} setSuccessOnly={setSuccessOnly} />
+        <Grid item xs={12}>
+          <MulSelCom 
+            selectedMockTests={selectedMockTests} 
+            setSelectedMockTests={setSelectedMockTests} 
+            selectedBatches={selectedBatches} 
+            setSelectedBatches={setSelectedBatches} 
+            successOnly={successOnly} 
+            setSuccessOnly={setSuccessOnly} 
+          />
         </Grid>
-        <Grid item xs={12} sx={{ maxWidth: { xs: 350, sm: 480, md: 700 }, marginBottom: "10px" }}>
-          <TabContext value={sortBy} variant="scrollable" allowScrollButtonsMobile scrollButtons>
-            <TabList onChange={(e, v) => setSort(v)} aria-label="Sort Tabs" variant="scrollable" scrollButtons="auto" allowScrollButtonsMobile>
-              {sortOptions.map((t, i) => <Tab key={i} iconPosition="bottom" value={t?.value} label={t?.label} />)}
+        <Grid item xs={12}>
+          <TabContext value={sortBy}>
+            <TabList 
+              onChange={(e, v) => setSort(v)} 
+              aria-label="Sort options"
+            >
+              {sortOptions.map((option) => (
+                <Tab 
+                  key={option.value}
+                  label={option.label}
+                  value={option.value}
+                />
+              ))}
             </TabList>
           </TabContext>
         </Grid>
       </Grid>
+
       {loading ? (
-        <div className="center" style={{ flexDirection: "column" }}>
-          <CircularProgress size={30} />
-          <Typography color="slateblue" style={{ fontFamily: 'Courgette' }} variant='h6' align='center'>Loading Mock Tests...</Typography>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
+          <CircularProgress />
         </div>
       ) : rows.length === 0 ? (
         <NoResult label="No Mock Tests Available" />
-      ) : tabular ? (
-<Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MockTest data Table">
-  <TableHead>
-    <TableRow>
-      <TableCell padding="checkbox">
-        <Checkbox
-          indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
-          checked={rows.length > 0 && selectedItems.length === rows.length}
-          onChange={(e) => {
-            if (e.target.checked) {
-              setSelectedItems(rows);
-            } else {
-              setSelectedItems([]);
-            }
-          }}
-        />
-      </TableCell>
-      <TableCell align="left">Mock Test Title</TableCell>
-      <TableCell align="left">Parent Name</TableCell>
-      <TableCell align="left">Email</TableCell>
-      <TableCell align="left">Child Name</TableCell>
-      <TableCell align="left">Child Gender</TableCell>
-      <TableCell align="left">Batch Dates</TableCell>
-      <TableCell align="left">Batch Times</TableCell>
-      <TableCell align="left">Booking Date</TableCell>
-      <TableCell align="center">Status</TableCell>
-    </TableRow>
-  </TableHead>
-  <TableBody>
-    {rows.map((r) => (
-      <TableRow key={r._id} selected={selectedItems.find(item => item._id === r._id)}>
-        <TableCell padding="checkbox">
-          <Checkbox
-            checked={!!selectedItems.find(item => item._id === r._id)}
-            onChange={() => handleSelectItem(r)}
-          />
-        </TableCell>
-        <TableCell align="left">
-        
-              {r.mockTestId.mockTestTitle}
-        </TableCell>
-        <TableCell align="left">{r.user.firstName + " " + r.user.lastName}</TableCell>
-        <TableCell align="left">{r.user.email}</TableCell>
-        <TableCell align="left">{r.childId.childName}</TableCell>
-        <TableCell align="left">{r.childId.childGender}</TableCell>
-        <TableCell align="left">
-          <Tooltip title="All batch dates">
-            <Typography variant="caption">
-              {formatDateToShortMonth(r.selectedBatch.date)}
-            </Typography>
-          </Tooltip>
-        </TableCell>
-        <TableCell align="left">
-          <Tooltip title="All batch times">
-            <Typography variant="caption">
-            {r.selectedBatch.startTime}-{r.selectedBatch.endTime}
-            </Typography>
-          </Tooltip>
-        </TableCell>
-        <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
-        <TableCell align="center">
-          <Chip 
-            label={r.status} 
-            variant="outlined" 
-            size="small"
-            color={r.status === "succeeded" ? "success" : "default"}
-          />
-        </TableCell>
-  
-      </TableRow>
-    ))}
-  </TableBody>
-</Table>
       ) : (
-        <Grid container spacing={2}>
-          {rows.map((c) => (
-            <Grid item key={c._id} xs={12} md={4} className="center">
-              <div className="prospectCard" style={c.status === "succeeded" ? { backgroundColor: "#e3ffea" } : { backgroundColor: "#ffffe6" }}>
-                <LiveAvatar isLive={c.status === "succeeded"} alt={c.mockTestId.mockTestTitle} src={c.mockTestId.url} sx={{ width: "100px", height: "100px", position: "absolute", boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 12px", marginTop: "-20px" }} />
-                <Checkbox checked={!!selectedItems.find(item => item._id === c._id)} onChange={() => handleSelectItem(c)} style={{ position: "absolute", top: "10px", right: "10px" }} />
-                <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.mockTestId.mockTestTitle}</Typography>
-                <Grid container sx={{ paddingLeft: "120px" }}>
-                  <Grid item xs={10}>
-                    <Typography color="grey" variant="subtitle2">{formatDateToShortMonth(c.selectedBatch.date)}</Typography>
-                  </Grid>
-                  <Grid item xs={2}>{c.status === "succeeded" ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
-                </Grid>
-                <Table size="small" sx={{ minHeight: '180px' }} aria-label="MockTest data Table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="left" sx={{ width: "100px" }}>Full Name</TableCell>
-                      <TableCell align="right" sx={{ width: "120px" }}>{c.user.firstName + " " + c.user.lastName}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Total Amount</TableCell>
-                      <TableCell align="right">{c.amount}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Payment Date</TableCell>
-                      <TableCell align="right"><Typography variant="caption">{formatDateToShortMonth(c.date)}</Typography></TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell align="left">Payment Status</TableCell>
-                      <TableCell align="right"><Typography variant="caption">{c.status}</Typography></TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-         
-              </div>
-            </Grid>
-          ))}
-          <Grid item xs={12}></Grid>
-        </Grid>
+        <div style={{ height: 600, width: '100%', marginTop: 20 }}>
+          <StyledDataGrid
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row._id}
+            pagination
+            pageSize={rowsPerPage}
+            rowsPerPageOptions={[5, 10, 25, 50]}
+            rowCount={totalCount}
+            paginationMode="server"
+            onPageChange={(newPage) => setPage(newPage)}
+            onPageSizeChange={(newPageSize) => {
+              setRowsPerPage(newPageSize);
+              setPage(0);
+            }}
+            checkboxSelection
+            disableSelectionOnClick
+            onSelectionModelChange={handleSelectionChange}
+            selectionModel={selectedItems.map(item => item._id)}
+            loading={loading}
+            initialState={{
+              columns: {
+                columnVisibilityModel: {
+                  address: false,
+                  mobileNo: false,
+                }
+              }
+            }}
+            columnVisibilityModel={columnVisibilityModel}
+            onColumnVisibilityModelChange={(newModel) => {
+              setColumnVisibilityModel(newModel);
+            }}
+            components={{
+              Toolbar: GridToolbar,
+              Pagination: CustomPagination,
+            }}
+            componentsProps={{
+              toolbar: {
+                csvOptions: { 
+                  allColumns: true,
+                  fileName: 'MockTests_Export'
+                },
+                printOptions: { 
+                  disableToolbarButton: true 
+                },
+                filterButton: true,
+                showQuickFilter: true,
+              },
+            }}
+            getRowClassName={(params) => `status-${params.row.status}`}
+            sx={{
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: '#f5f5f5',
+              },
+              '& .MuiDataGrid-cell:focus': {
+                outline: 'none',
+              },
+            }}
+          />
+
+        </div>
       )}
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 15, 100]}
-        component="div"
-        count={totalCount}
-        sx={{ overflowX: "hidden" }}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={(e, v) => setPage(v)}
-        onRowsPerPageChange={e => {
-          setRowsPerPage(parseInt(e.target.value, 10));
-          setPage(0);
-        }}
-      />
-      <br /><br /><br />
     </main>
   );
 }
