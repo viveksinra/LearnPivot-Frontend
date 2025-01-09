@@ -1,16 +1,40 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Container, Typography, Stack, useTheme } from '@mui/material';
 import ChildSelectorDropDown from '../Components/Common/ChildSelectorDropDown';
 import { PaymentAlert } from '../Components/UserDash/PaymentAlert';
 import { UpcomingEvents } from '../Components/UserDash/UpcomingEvents';
 import { MoreContent } from '../Components/UserDash/MoreContent';
 import { QuickLinks } from '../Components/UserDash/QuickLinks';
+import { dashboardService } from '../services';
 
 
 const Dashboard = () => {
   const [selectedChild, setSelectedChild] = useState('all');
   const theme = useTheme();
+
+    const [heading, setHeading] = useState({msg: "Welcome",firstName: "Guest",lastName: "",designation:"Role"});
+  
+    useEffect(() => {
+       // Getting Heading Data
+       async function getHeading(){
+        let res = await dashboardService.getData(`api/v1/dashboard/getDashboard/welcomeMsg`);
+        console.log(res)
+        if(res.variant === "success"){
+          setHeading(res.data)
+        }else {
+          router.reload();
+        };    
+       }
+       getHeading()
+     }, []);
+
+     const getGreeting = () => {
+      const currentHour = new Date().getHours();
+      if (currentHour < 12) return "Good Morning";
+      if (currentHour < 18) return "Good Afternoon";
+      return "Good Evening";
+    };
 
   const children = [
     { id: 1, name: 'John Smith', grade: '8th' },
@@ -132,21 +156,24 @@ const Dashboard = () => {
       <Container maxWidth="xl">
         {/* Header Section */}
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
-          <Box>
-            <Typography variant="h4" sx={{ 
-              fontWeight: 700,
-              mb: 1,
-              background: 'linear-gradient(90deg, #1976D2 0%, #1565C0 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              Good Morning, Parent!
-            </Typography>
-            <Typography color="text.secondary" sx={{ fontSize: '1.1rem' }}>
+         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 5 }}>
+                <Box>
+                  <Typography variant="h4" sx={{ 
+                    fontWeight: 700,
+                    mb: 1,
+                    background: 'linear-gradient(90deg, #FF8E53 0%, #FE6B8B 100%)',
+                    backgroundClip: 'text',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}>
+                    {getGreeting()}, {heading?.firstName}!
+                  </Typography>
+                  <Typography color="text.secondary" sx={{ fontSize: '1.1rem' }}>
               Track your children's educational journey
             </Typography>
-          </Box>
+                </Box>
+       
+              </Box>
           <Stack direction="row" spacing={3} alignItems="center">
             <ChildSelectorDropDown selectedChild={selectedChild} setSelectedChild={setSelectedChild} />
           </Stack>

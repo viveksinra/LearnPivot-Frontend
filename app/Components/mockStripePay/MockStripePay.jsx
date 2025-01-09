@@ -28,12 +28,25 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 export default function MockStripePay({selectedBatch, submittedId, totalAmount }) {
-  console.log({selectedBatch})
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [error, setError] = useState("");
+
+  // Format the date and time
+  const formatBatchDateTime = (batch) => {
+    if (!batch || !batch.date) return null;
+    
+    const dateObj = new Date(batch.date);
+    const formattedDate = dateObj.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: '2-digit'
+    });
+
+    return `${formattedDate} @ ${batch.startTime} - ${batch.endTime}`;
+  };
 
   const handlePaymentClick = async () => {
     try {
@@ -87,6 +100,29 @@ export default function MockStripePay({selectedBatch, submittedId, totalAmount }
               <Typography variant="h6" component="h2" gutterBottom>
                 Secure Payment
               </Typography>
+              
+              {/* Batch Details Display */}
+              {selectedBatch && selectedBatch[0] && (
+                <Box sx={{ 
+                  width: '100%', 
+                  mb: 2,
+                  p: 2,
+                  bgcolor: '#f8fafc',
+                  borderRadius: 1,
+                  border: '1px solid #e2e8f0'
+                }}>
+                  <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+                    Selected Batch
+                  </Typography>
+                  {selectedBatch.map((batch, index) => ( 
+                       <Typography variant="body1" color="text.primary" sx={{ fontWeight: 500 }}>
+                       {formatBatchDateTime(batch)}
+                     </Typography>
+                  ))
+                  }
+             
+                </Box>
+              )}
               
               {/* Amount Display */}
               <Box sx={{ 
