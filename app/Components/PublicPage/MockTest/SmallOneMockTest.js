@@ -141,14 +141,14 @@ const MockTestCard = ({ data }) => {
           )}
 
           {/* Test Type */}
-          {data.testType?.label && (
+          {/* {data.testType?.label && (
             <StyledChip
               icon={<SchoolIcon />}
               className="info-chip"
               label={data.testType.label}
               sx={{ mb: 2 }}
             />
-          )}
+          )} */}
 
    
 

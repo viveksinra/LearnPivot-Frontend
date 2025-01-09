@@ -27,7 +27,8 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-export default function MockStripePay({ submittedId, totalAmount }) {
+export default function MockStripePay({selectedBatch, submittedId, totalAmount }) {
+  console.log({selectedBatch})
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
