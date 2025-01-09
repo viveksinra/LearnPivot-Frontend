@@ -229,7 +229,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                 <Typography color="teal" variant="h6" sx={{ paddingLeft: "120px" }}>{c.mockTestId.mockTestTitle}</Typography>
                 <Grid container sx={{ paddingLeft: "120px" }}>
                   <Grid item xs={10}>
-                    <Typography color="grey" variant="subtitle2">{c.selectedBatch.map(batch => formatDateToShortMonth(batch.date)).join(", ")}</Typography>
+                    <Typography color="grey" variant="subtitle2">{formatDateToShortMonth(c.selectedBatch.date)}</Typography>
                   </Grid>
                   <Grid item xs={2}>{c.status === "succeeded" ? <FcOk sx={{ fontSize: 50 }} /> : <FcNoIdea sx={{ fontSize: 50 }} />}</Grid>
                 </Grid>
@@ -253,11 +253,7 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                     </TableRow>
                   </TableBody>
                 </Table>
-                <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "20px" }}>
-                  <Button size="small" onClick={() => handleEdit(c._id)} variant="outlined" startIcon={<MdModeEdit />}>
-                    Edit
-                  </Button>
-                </div>
+         
               </div>
             </Grid>
           ))}
