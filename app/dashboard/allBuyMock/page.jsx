@@ -147,61 +147,103 @@ export function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       ) : rows.length === 0 ? (
         <NoResult label="No Mock Tests Available" />
       ) : tabular ? (
-        <Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MockTest data Table">
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox">
-                <Checkbox
-                  indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
-                  checked={rows.length > 0 && selectedItems.length === rows.length}
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedItems(rows);
-                    } else {
-                      setSelectedItems([]);
-                    }
-                  }}
-                />
-              </TableCell>
-              <TableCell align="left">Mock Test Title</TableCell>
+  // Inside the SearchArea component, update the Table section:
 
-              <TableCell align="left">Parent Name</TableCell>
-              <TableCell align="left">Email</TableCell>
-              <TableCell align="left">Child Name</TableCell>
-              <TableCell align="left">Amount</TableCell>
-              <TableCell align="left">Booking Date</TableCell>
-              <TableCell align="center">Status</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((r) => (
-              <TableRow key={r._id} selected={selectedItems.find(item => item._id === r._id)}>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={!!selectedItems.find(item => item._id === r._id)}
-                    onChange={() => handleSelectItem(r)}
-                  />
-                </TableCell>
-                <TableCell align="left">
-                  <Tooltip title={`Batch Dates - ${r.selectedBatch.map(batch => batch.date).join(", ")} || Batch Times - ${r.selectedBatch.map(batch => batch.startTime).join(", ")}`}>
-                    <Badge color="primary" variant="dot" invisible={r.status !== "succeeded"}>
-                      <LiveAvatar isLive={r.status === "succeeded"} alt={r.mockTestId.mockTestTitle} src={r.mockTestId.url} />
-                    </Badge>
-                    {r.mockTestId.mockTestTitle}
-                  </Tooltip>
-                </TableCell>
-           
-                <TableCell align="left">{r.user.firstName + " " + r.user.lastName}</TableCell>
-                <TableCell align="left">{r.user.email}</TableCell>
-                <TableCell align="left">{r.childId.childName}</TableCell>
-                <TableCell align="left">{r.amount}</TableCell>
-                <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
-                <TableCell align="center"><Chip label={r.status} variant="outlined" size="small" /></TableCell>
-             
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+<Table size="small" sx={{ display: { xs: "none", md: "block" } }} aria-label="MockTest data Table">
+  <TableHead>
+    <TableRow>
+      <TableCell padding="checkbox">
+        <Checkbox
+          indeterminate={selectedItems.length > 0 && selectedItems.length < rows.length}
+          checked={rows.length > 0 && selectedItems.length === rows.length}
+          onChange={(e) => {
+            if (e.target.checked) {
+              setSelectedItems(rows);
+            } else {
+              setSelectedItems([]);
+            }
+          }}
+        />
+      </TableCell>
+      <TableCell align="left">Mock Test Title</TableCell>
+      <TableCell align="left">Mock Test Link</TableCell>
+      <TableCell align="left">Parent Name</TableCell>
+      <TableCell align="left">Email</TableCell>
+      <TableCell align="left">Child Name</TableCell>
+      <TableCell align="left">Child Gender</TableCell>
+      <TableCell align="left">Amount (£)</TableCell>
+      <TableCell align="left">Payment ID</TableCell>
+      <TableCell align="left">Batch Dates</TableCell>
+      <TableCell align="left">Batch Times</TableCell>
+      <TableCell align="left">Booking Date</TableCell>
+      <TableCell align="center">Status</TableCell>
+      <TableCell align="center">Actions</TableCell>
+    </TableRow>
+  </TableHead>
+  <TableBody>
+    {rows.map((r) => (
+      <TableRow key={r._id} selected={selectedItems.find(item => item._id === r._id)}>
+        <TableCell padding="checkbox">
+          <Checkbox
+            checked={!!selectedItems.find(item => item._id === r._id)}
+            onChange={() => handleSelectItem(r)}
+          />
+        </TableCell>
+        <TableCell align="left">
+          <Tooltip title="Click to view images">
+            <Badge color="primary" variant="dot" invisible={r.status !== "succeeded"}>
+              <LiveAvatar 
+                isLive={r.status === "succeeded"} 
+                alt={r.mockTestId.mockTestTitle} 
+                src={r.mockTestId.imageUrls?.[0]} 
+              />
+              {r.mockTestId.mockTestTitle}
+            </Badge>
+          </Tooltip>
+        </TableCell>
+        <TableCell align="left">{r.mockTestId.mockTestLink}</TableCell>
+        <TableCell align="left">{r.user.firstName + " " + r.user.lastName}</TableCell>
+        <TableCell align="left">{r.user.email}</TableCell>
+        <TableCell align="left">{r.childId.childName}</TableCell>
+        <TableCell align="left">{r.childId.childGender}</TableCell>
+        <TableCell align="left">{r.amount}</TableCell>
+        <TableCell align="left">
+          <Tooltip title="Payment Intent ID">
+            <Typography variant="caption">{r.paymentIntent}</Typography>
+          </Tooltip>
+        </TableCell>
+        <TableCell align="left">
+          <Tooltip title="All batch dates">
+            <Typography variant="caption">
+              {r.selectedBatch.map(batch => batch.date).join(", ")}
+            </Typography>
+          </Tooltip>
+        </TableCell>
+        <TableCell align="left">
+          <Tooltip title="All batch times">
+            <Typography variant="caption">
+              {r.selectedBatch.map(batch => `${batch.startTime}-${batch.endTime}`).join(", ")}
+            </Typography>
+          </Tooltip>
+        </TableCell>
+        <TableCell align="left">{formatDateToShortMonth(r.date)}</TableCell>
+        <TableCell align="center">
+          <Chip 
+            label={r.status} 
+            variant="outlined" 
+            size="small"
+            color={r.status === "succeeded" ? "success" : "default"}
+          />
+        </TableCell>
+        <TableCell align="center">
+          <IconButton size="small" onClick={() => handleEdit(r._id)}>
+            <MdModeEdit />
+          </IconButton>
+        </TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
+</Table>
       ) : (
         <Grid container spacing={2}>
           {rows.map((c) => (
