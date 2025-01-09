@@ -17,6 +17,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import SchoolIcon from '@mui/icons-material/School';
+import CloseIcon from '@mui/icons-material/Close';
 import moment from 'moment';
 
 
@@ -175,9 +176,16 @@ const MockTestCard = ({ data }) => {
         <DialogTitle sx={{ 
           backgroundColor: '#F3F4F6',
           color: '#1F2937',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
-          Available Batches
+          Batches
+          <CloseIcon 
+            onClick={() => setOpenBatchModal(false)} 
+            sx={{ cursor: 'pointer', color: '#1F2937' }}
+          />
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
@@ -219,7 +227,7 @@ const MockTestCard = ({ data }) => {
         <DialogActions sx={{ p: 2 }}>
           <Button 
             onClick={() => setOpenBatchModal(false)}
-            sx={{ color: '#4B5563' }}
+            sx={{ color: 'white', backgroundColor: 'red', '&:hover': { backgroundColor: 'darkred' } }}
           >
             Close
           </Button>

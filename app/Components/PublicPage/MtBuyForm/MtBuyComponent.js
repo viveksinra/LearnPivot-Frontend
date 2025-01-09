@@ -41,7 +41,7 @@ const MtBuyComponent = ({data}) => {
           {!isMobile && (
             <Grid item xs={12} lg={6}>
               {submitted ? (
-                <MockStripePay submittedId={submittedId} totalAmount={totalAmount} />
+                <MockStripePay selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
               ) : (
                 <MockEnqForm 
                   data={data} 
@@ -76,19 +76,20 @@ const MtBuyComponent = ({data}) => {
             </DialogTitle>
             <DialogContent>
               {submitted ? (
-                <MockStripePay submittedId={submittedId} />
+                             <MockStripePay selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
+
               ) : (
                 <MockEnqForm 
-                  data={data} 
-                  setSubmitted={setSubmitted}
-                  setSubmittedId={setSubmittedId}
-                  setTotalAmount={setTotalAmount}                
-                  totalAmount={totalAmount} 
-                  selectedBatch={selectedBatch}
-                  setSelectedBatch={setSelectedBatch}
-                  selectedChild={selectedChild} 
-                  setSelectedChild={setSelectedChild} 
-                />
+                data={data} 
+                setSubmitted={setSubmitted}
+                setSubmittedId={setSubmittedId}
+                setTotalAmount={setTotalAmount}                
+                totalAmount={totalAmount} 
+                selectedBatch={selectedBatch}
+                setSelectedBatch={setSelectedBatch}
+                selectedChild={selectedChild} 
+                setSelectedChild={setSelectedChild} 
+              />
               )}
             </DialogContent>
           </Dialog>
