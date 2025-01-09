@@ -23,7 +23,8 @@ const AnimatedButton = styled(Button)`
   border: 0;
   border-radius: 3px;
   color: white;
-  height: 48px;
+  height: 58px;
+  font-size: 1.25rem;
   padding: 0 30px;
   animation: ${pulse} 2s infinite;
 `;

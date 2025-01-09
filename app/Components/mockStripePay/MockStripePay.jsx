@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -9,11 +8,11 @@ import {
   CircularProgress, 
   Paper,
   Typography,
-  Container
+  Container,
+  Divider
 } from "@mui/material";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { styled } from "@mui/material/styles";
-
 import "./mockStripePayStyle.css";
 import { mockTestService } from "../../services";
 import MockCheckoutForm from "./MockCheckoutForm";
@@ -28,7 +27,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-export default function MockStripePay({ submittedId }) {
+export default function MockStripePay({ submittedId, totalAmount }) {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
@@ -40,11 +39,9 @@ export default function MockStripePay({ submittedId }) {
       setLoading(true);
       setButtonDisabled(true);
       setError("");
-
       const response = await mockTestService.getPaymentIntentApi({
         items: [{ id: submittedId }],
       });
-
       if (response.variant === "success") {
         setClientSecret(response.clientSecret);
         setBuyMockId(response.buyMockId);
@@ -89,6 +86,33 @@ export default function MockStripePay({ submittedId }) {
               <Typography variant="h6" component="h2" gutterBottom>
                 Secure Payment
               </Typography>
+              
+              {/* Amount Display */}
+              <Box sx={{ 
+                width: '100%', 
+                mb: 2,
+                p: 2,
+                bgcolor: '#f8fafc',
+                borderRadius: 1,
+                border: '1px solid #e2e8f0'
+              }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  justifyContent: 'space-between', 
+                  alignItems: 'center',
+                  mb: 1
+                }}>
+                  <Typography variant="subtitle1" color="text.secondary">
+                    Total Amount
+                  </Typography>
+                  <Typography variant="h6" color="primary" sx={{ fontWeight: 600 }}>
+                    £{totalAmount.toFixed(2)}
+                  </Typography>
+                </Box>
+              </Box>
+
+              <Divider sx={{ width: '100%', my: 1 }} />
+
               <Button
                 variant="contained"
                 color="primary"
@@ -102,7 +126,7 @@ export default function MockStripePay({ submittedId }) {
                   fontSize: "1rem",
                 }}
               >
-                {loading ? "Processing..." : "Pay with Debit Card"}
+                {loading ? "Processing..." : `Pay £${totalAmount.toFixed(2)} with Debit Card`}
               </Button>
               {error && (
                 <Typography color="error" variant="body2">
@@ -112,7 +136,7 @@ export default function MockStripePay({ submittedId }) {
             </>
           ) : (
             <Elements options={options} stripe={stripePromise}>
-              <MockCheckoutForm buyMockId={buyMockId} />
+              <MockCheckoutForm buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
           )}
         </Box>

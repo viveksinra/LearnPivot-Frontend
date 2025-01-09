@@ -36,6 +36,14 @@ const MtBatchSelector = ({
     }
   }, []);
 
+  // Calculate total amount whenever selected batches change
+  useEffect(() => {
+    const newTotalAmount = selectedBatch.reduce((sum, batch) => {
+      return sum + Number(batch.oneBatchprice);
+    }, 0);
+    setTotalAmount(newTotalAmount);
+  }, [selectedBatch]);
+
   const handleCheckboxChange = (batch) => {
     const isSelected = selectedBatch.some(b => b._id === batch._id);
     if (isSelected) {
@@ -59,7 +67,8 @@ const MtBatchSelector = ({
   };
 
   return (
-    <>
+    <Box sx={{ position: 'relative', pb: '80px' }}>
+      {/* Batch list */}
       <Grid container spacing={2} sx={{ mt: 2, mb: 3 }}>
         {data.batch.map((batch) => {
           const isSelected = selectedBatch.some(b => b._id === batch._id);
@@ -181,16 +190,30 @@ const MtBatchSelector = ({
         })}
       </Grid>
 
-      <MockPayButton
-        data={data}
-        setSubmitted={setSubmitted}
-        setSubmittedId={setSubmittedId}
-        setTotalAmount={setTotalAmount}
-        totalAmount={totalAmount}
-        selectedBatch={selectedBatch}
-        selectedChild={selectedChild}
-      />
-    </>
+      {/* Sticky MockPayButton */}
+      <Box 
+        sx={{
+          position: 'fixed',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: 'white',
+          borderTop: '1px solid #E5E7EB',
+          padding: 2,
+          zIndex: 1000,
+        }}
+      >
+        <MockPayButton
+          data={data}
+          setSubmitted={setSubmitted}
+          setSubmittedId={setSubmittedId}
+          setTotalAmount={setTotalAmount}
+          totalAmount={totalAmount}
+          selectedBatch={selectedBatch}
+          selectedChild={selectedChild}
+        />
+      </Box>
+    </Box>
   );
 };
 

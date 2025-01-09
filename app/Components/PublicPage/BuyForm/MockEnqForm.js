@@ -35,12 +35,7 @@ function MockEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, total
         </>
       )}
       {step === 3 && (
-        <>
-          {totalAmount ? (
-            <Typography variant="h4" gutterBottom>
-              Proceed to pay amount: £ {totalAmount}
-            </Typography>
-          ) : (
+
     
            <>
           <MtBatchSelector
@@ -56,8 +51,7 @@ function MockEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, total
    
            </>
                     
-          )}
-        </>
+         
       )}
       <MySnackbar ref={snackRef} />
     </>

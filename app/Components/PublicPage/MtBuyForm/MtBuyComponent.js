@@ -41,7 +41,7 @@ const MtBuyComponent = ({data}) => {
           {!isMobile && (
             <Grid item xs={12} lg={6}>
               {submitted ? (
-                <MockStripePay submittedId={submittedId} />
+                <MockStripePay submittedId={submittedId} totalAmount={totalAmount} />
               ) : (
                 <MockEnqForm 
                   data={data} 
