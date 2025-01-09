@@ -66,9 +66,9 @@ const Dashboard = () => {
         {/* Quick Links */}
         <AdminQuickLinks />
         {/* Upcoming Events */}
-        <UpcomingEvents 
+        {/* <UpcomingEvents 
 selectedChild={selectedChild}
-        />
+        /> */}
 
       </Container>
     </Box>
