@@ -274,7 +274,7 @@ export default function PaymentsPage() {
     try {
       setLoading(true);
       setError(null);
-      const response = await reportService.getMyAllPayment({ childId: selectedChild });
+      const response = await reportService.getAdminAllPayment({ childId: selectedChild });
       if (response?.myData) {
         const { myBuyCourse, myBuyMock } = response.myData;
         console.log('formattedPayments');
@@ -324,14 +324,14 @@ export default function PaymentsPage() {
                 Payment History
               </Typography>
             </Grid>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
               <Box className="flex justify-center md:justify-end">
                 <ChildSelectorDropDown
                   selectedChild={selectedChild}
                   setSelectedChild={setSelectedChild}
                 />
               </Box>
-            </Grid>
+            </Grid> */}
           </Grid>
 
           <Tabs
@@ -341,9 +341,9 @@ export default function PaymentsPage() {
             className="mb-4 border-b border-gray-200"
           >
             <Tab label="Succeeded" value="succeeded" />
-            {/* <Tab label="All" value="all" /> */}
+            <Tab label="All" value="all" />
 
-            {/* <Tab label="Other" value="other" /> */}
+            <Tab label="Other" value="other" />
           </Tabs>
 
           {loading ? (

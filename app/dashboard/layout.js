@@ -84,12 +84,12 @@ const DrawerData = ({ open, setMobileOpen }) => {
       link: "/dashboard/addMockTest",
       icon: <FcFlowChart />,
     },
-    {
-      title: "All Notes",
-      active: false,
-      link: "/dashboard/notes",
-      icon: <FcInspection />,
-    },
+    // {
+    //   title: "All Notes",
+    //   active: false,
+    //   link: "/dashboard/notes",
+    //   icon: <FcInspection />,
+    // },
     {
       title: "Purchased Mock",
       active: false,
@@ -101,6 +101,12 @@ const DrawerData = ({ open, setMobileOpen }) => {
        active: false,
         link: "/dashboard/allBuyCourse",
          icon: <FcRightUp />
+     },
+    { 
+      title: "All Payment",
+       active: false,
+        link: "/dashboard/allPayment",
+         icon: <FcCalculator />
      },
     // {
     //   title: "Employee",
