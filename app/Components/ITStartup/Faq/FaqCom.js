@@ -11,7 +11,7 @@ const  mockFaqData= [
   {
       id: "1",
       question: "What test papers are covered in each mock test?",
-      answer: "CSSE: Two papers - Mathematics (60 minutes) and English (70 minutes) with a 15-minute break. FSCE: Three papers - Paper 1 and 2 (Maths/English/Verbal Reasoning, 30-40 minutes each) and Paper 3 (Creative Writing, 20 minutes) with a 15-minute break."
+      answer: "CSSE: Two papers - Mathematics (60 minutes) and English (70 minutes) with a 15-minute break.<br />FSCE: Three papers - Paper 1 and 2 (Maths/English/Verbal Reasoning, 30-40 minutes each) and Paper 3 (Creative Writing, 20 minutes) with a 15-minute break."
   },
   {
       id: "2",
@@ -173,7 +173,7 @@ const FaqCom = ({dataType}) => {
                       <AccordionItemButton>{faq.question}</AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel>
-                      <p className="accordion-content">{faq.answer}</p>
+                      <p className="accordion-content" dangerouslySetInnerHTML={{ __html: faq.answer }}></p>
                     </AccordionItemPanel>
                   </AccordionItem>
                 ))}
