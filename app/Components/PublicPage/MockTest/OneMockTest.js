@@ -66,7 +66,7 @@ const BatchButton = styled(Button)({
 const OneMockTest = ({ data }) => {
   const [openBatchModal, setOpenBatchModal] = useState(false);
   const [openFAQModal, setOpenFAQModal] = useState(false);
-
+console.log(data)
   // Format date for display
   const formatDateDisplay = (dateString) => {
     return moment(dateString).format('Do MMM YYYY');
@@ -303,13 +303,14 @@ const OneMockTest = ({ data }) => {
         </DialogTitle>
         <DialogContent>
           <div style={{ marginTop: '16px' }}>
-          <FaqCom dataType={"mockFaqData"} />
+          <FaqCom dataType={ data.testType?.id === "csse" ? "csseMockFaqData":"fsseMockFaqData"} />
           </div>
         </DialogContent>
         <DialogActions sx={{ padding: '16px' }}>
           <Button 
             onClick={() => setOpenFAQModal(false)}
-            sx={{ color: '#4B5563' }}
+            sx={{ color: 'white', backgroundColor: 'red', '&:hover': { backgroundColor: 'darkred' } }}
+
           >
             Close
           </Button>
