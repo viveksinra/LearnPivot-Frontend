@@ -13,7 +13,7 @@ export const menus = [
           link: "/about/",
         },         
         {
-          label: "Faq",
+          label: "FAQ",
           link: "/faq/",
         },
       ],

@@ -7,7 +7,7 @@ import {
   AccordionItemButton
 } from "react-accessible-accordion";
 
-const faqData = [
+const  mockFaqData= [
   {
       id: "1",
       question: "What test papers are covered in each mock test?",
@@ -75,7 +75,7 @@ const faqData = [
   }
 ];
 
-const mockFaqData = [
+const faqData = [
   {
     id: "1",
     question: "What services do you provide for 11+ preparation?",
