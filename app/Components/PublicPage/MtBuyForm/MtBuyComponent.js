@@ -19,6 +19,7 @@ const MtBuyComponent = ({data}) => {
 
   const [submittedId, setSubmittedId] = useState("");
   const [selectedChild, setSelectedChild] = useState(null);
+  const [step, setStep] = useState(1);
 
    const theme = useTheme();
    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -41,10 +42,16 @@ const MtBuyComponent = ({data}) => {
           {!isMobile && (
             <Grid item xs={12} lg={6}>
               {submitted ? (
-                <MockStripePay selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
+                <MockStripePay 
+                setSubmitted={setSubmitted}
+                  setSubmittedId={setSubmittedId}
+                  setStep={setStep}
+                selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
               ) : (
                 <MockEnqForm 
                   data={data} 
+                  setStep={setStep}
+                  step={step}
                   setSubmitted={setSubmitted}
                   setSubmittedId={setSubmittedId}
                   setTotalAmount={setTotalAmount}                

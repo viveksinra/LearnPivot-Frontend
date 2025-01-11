@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import { styled } from "@mui/material/styles";
+import CloseIcon from '@mui/icons-material/Close';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import "./mockStripePayStyle.css";
 import { mockTestService } from "../../services";
 import MockCheckoutForm from "./MockCheckoutForm";
@@ -27,7 +29,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-export default function MockStripePay({selectedBatch, submittedId, totalAmount }) {
+export default function MockStripePay({setStep, selectedBatch, submittedId, totalAmount, setSubmitted, setSubmittedId }) {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
@@ -72,6 +74,12 @@ export default function MockStripePay({selectedBatch, submittedId, totalAmount }
     }
   };
 
+  const handleUpdateBatch = () => {
+    setSubmitted(false);
+    setStep(3);
+    setSubmittedId("");
+  };
+
   const appearance = {
     theme: "stripe",
     variables: {
@@ -91,15 +99,30 @@ export default function MockStripePay({selectedBatch, submittedId, totalAmount }
       <StyledPaper elevation={3}>
         <Box sx={{ 
           display: "flex", 
-          flexDirection: "column", 
-          alignItems: "center",
+          flexDirection: "column",
+          alignItems: "flex-start",
           gap: 2 
         }}>
+          <Button
+            variant="text"
+            startIcon={<ArrowBackIcon />}
+            onClick={handleUpdateBatch}
+            sx={{ textTransform: 'none', mb: 1 }}
+          >
+            Go Back
+          </Button>
+          <Box sx={{ 
+            display: "flex", 
+            justifyContent: "space-between", 
+            width: "100%" 
+          }}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              Secure Payment
+            </Typography>
+            <CloseIcon onClick={handleUpdateBatch} style={{ cursor: 'pointer' }} />
+          </Box>
           {!clientSecret ? (
             <>
-              <Typography variant="h6" component="h2" gutterBottom>
-                Secure Payment
-              </Typography>
               
               {/* Batch Details Display */}
               {selectedBatch && selectedBatch[0] && (

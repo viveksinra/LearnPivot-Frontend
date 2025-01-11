@@ -9,13 +9,12 @@ import ChildSelector from "../LoginSignUp/ChildSelector";
 import { Typography } from "@mui/material"; // Assuming you are using Material-UI for Typography
 import MtBatchSelector from "../MockTest/MtBatchSelector";
 
-function MockEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
+function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
   const snackRef = useRef();
   
   // Context
   const { state } = useContext(MainContext);
   const currentUser = Cookies.get("currentUser");
-  const [step, setStep] = useState(1);
 
   useEffect(() => {
     // Check for authentication and set step
