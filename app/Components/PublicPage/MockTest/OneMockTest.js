@@ -279,7 +279,8 @@ const OneMockTest = ({ data }) => {
         <DialogActions sx={{ padding: '16px' }}>
           <Button 
             onClick={() => setOpenBatchModal(false)}
-            sx={{ color: '#4B5563', fontWeight: 'bold' }}
+            sx={{ color: 'white', backgroundColor: 'red', '&:hover': { backgroundColor: 'darkred' } }}
+
           >
             Close
           </Button>
