@@ -252,7 +252,7 @@ function DashboardLayout({ children }) {
             MenuListProps={{ "aria-labelledby": "basic-button-profile" }}
           >
             <MenuItem disabled>
-              Hi {authService.getLoggedInUser()?.lastName ?? "User"}!
+              Hi {authService.getLoggedInUser()?.firstName ?? "User"}!
             </MenuItem>
             <MenuItem
               onClick={() => {
