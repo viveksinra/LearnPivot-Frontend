@@ -4,21 +4,29 @@ import Image from "next/image";
 import Link from "next/link";
 import MenuItem from "./MenuItem";
 import { menus } from "./menus";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem as MuiMenuItem } from "@mui/material";
 import { authService } from "@/app/services";
 import MainContext from "@/app/Components/Context/MainContext";
 import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
-
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(true);
   const toggleNavbar = () => {
     setCollapsed(!collapsed);
   };
-  const currentUser = Cookies.get("currentUser");
+  const currentUser = JSON.parse(Cookies.get("currentUser") || "{}");
 
   const { state } = useContext(MainContext);
+  const router = useRouter();
+  const [anchorElProfile, setAnchorElProfile] = useState(null);
+  const openProfile = Boolean(anchorElProfile);
+
+  const handleLogout = () => {
+    authService.logout();
+    router.push("/login");
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -131,23 +139,46 @@ margin-right: 12px;
             </div>
 
             <div className="others-options" style={{ marginTop: "-15px"}}>
-              {state?.isAuthenticated && currentUser ? (
-                <Link href="/userDash">
-                  <Button
-                    color="secondary"
-                    startIcon={
-                      <Avatar
-                        alt={state.name}
-                        src={
-                          authService.getLoggedInUser()?.userImage ??
-                          "https://res.cloudinary.com/oasismanors/image/upload/v1687519053/user_myqgmv.png"
-                        }
-                      />
-                    }
+              {state?.isAuthenticated && currentUser?.firstName ? (
+                <>
+                  <Menu
+                    id="profile-menu"
+                    anchorEl={anchorElProfile}
+                    open={openProfile}
+                    onClose={() => setAnchorElProfile(null)}
+                    MenuListProps={{ "aria-labelledby": "basic-button-profile" }}
                   >
-                    
-                  </Button>
-                </Link>
+                    <MuiMenuItem disabled>
+                      Hi {currentUser.firstName}!
+                    </MuiMenuItem>
+                    <MuiMenuItem
+                      onClick={() => {
+                        router.push("/userDash");
+                      }}
+                    >
+                      Dashboard
+                    </MuiMenuItem>
+                    <MuiMenuItem
+                      onClick={() => {
+                        handleLogout();
+                        router.push("/login");
+                      }}
+                    >
+                      Logout
+                    </MuiMenuItem>
+                
+                  </Menu>
+                  <Avatar
+                    sx={{ height: 40, width: 40, ml: 1, cursor: "pointer" }}
+                    id="basic-button-profile"
+                    aria-controls={openProfile ? "profile-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={openProfile ? "true" : undefined}
+                    alt="User"
+                    src={currentUser.userImage}
+                    onClick={(e) => setAnchorElProfile(e.currentTarget)}
+                  />
+                </>
               ) : (
                 <Link href="/login">
                   <Button startIcon={<FaUserCircle />}>Login</Button>
