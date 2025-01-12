@@ -81,23 +81,24 @@ const ActionButton = styled(Button)(({ variant }) => ({
   }),
 }));
 
-const MockTestCard = ({ data }) => {
+const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [openBatchModal, setOpenBatchModal] = useState(false);
 
   const formatDate = (dateString) => moment(dateString).format('Do MMM YYYY');
   const formatTime = (time) => moment(time, 'HH:mm').format('h:mm A');
+  console.log({totalAmount, selectedBatch})
   
   return (
     <>
       <StyledCard style={{marginTop: isMobile ? '30px' : '0'}}>
         {/* Image Carousel */}
-        <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '240px' }}>
+        <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '280px' }}>
         <ImageCarousel
             images={data.imageUrls}
             title={data.mockTestTitle}
-            height="220px"
+            height= {isMobile ? '220px' : '280px' }
             autoplayDelay={6000}
           />
         </Box>
@@ -200,7 +201,8 @@ const MockTestCard = ({ data }) => {
                   p: 2,
                   borderRadius: 1,
                   mb: 1,
-                  flexWrap: 'wrap'
+                  flexWrap: 'wrap',
+                  border: selectedBatch.some(selected => selected._id === batch._id) ? '2px solid #059669' : 'none'
                 }}
               >
                 <Box sx={{ flex: 1 }}>
@@ -220,6 +222,11 @@ const MockTestCard = ({ data }) => {
                 <Typography variant="body1" sx={{ color: '#059669', fontWeight: 'bold' }}>
                   £{batch.oneBatchprice}
                 </Typography>
+                {selectedBatch.some(selected => selected._id === batch._id) && (
+                  <Typography variant="body2" sx={{ color: '#059669', fontWeight: 'bold' }}>
+                    Selected
+                  </Typography>
+                )}
               </Box>
             ))}
           </Box>
