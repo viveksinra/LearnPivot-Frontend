@@ -53,7 +53,7 @@ const styles = {
   },
 };
 
-export default function MockCheckoutForm({buyMockId, totalAmount}) {
+export default function MockCheckoutForm({selectedChild, buyMockId, totalAmount}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -123,15 +123,15 @@ export default function MockCheckoutForm({buyMockId, totalAmount}) {
   return (
     <>
       {/* Compact Payment Summary */}
-      <div style={styles.paymentSummary}>
+      {/* <div style={styles.paymentSummary}>
         <div style={styles.summaryRow}>
           <span style={styles.label}>Total Amount:</span>
           <span style={styles.amount}>£{totalAmount.toFixed(2)}</span>
         </div>
-      </div>
+      </div> */}
 
       {/* Payment Form */}
-      <form id="payment-form" onSubmit={handleSubmit}>
+      <form id="payment-form" style={{backgroundColor:null}} onSubmit={handleSubmit}>
         <PaymentElement id="payment-element" options={paymentElementOptions} />
         <button 
           disabled={isLoading || !stripe || !elements} 
@@ -141,7 +141,7 @@ export default function MockCheckoutForm({buyMockId, totalAmount}) {
             {isLoading ? (
               <div style={styles.spinner}></div>
             ) : (
-              `Pay £${totalAmount.toFixed(2)}`
+              `Pay £${totalAmount.toFixed(2)} for ${selectedChild.childName}`
             )}
           </span>
         </button>

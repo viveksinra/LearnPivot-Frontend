@@ -205,7 +205,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
             </>
           ) : (
             <Elements options={options} stripe={stripePromise}>
-              <MockCheckoutForm buyMockId={buyMockId} totalAmount={totalAmount} />
+              <MockCheckoutForm selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
           )}
         </Box>
