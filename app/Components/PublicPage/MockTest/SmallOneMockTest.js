@@ -88,7 +88,6 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
 
   const formatDate = (dateString) => moment(dateString).format('Do MMM YYYY');
   const formatTime = (time) => moment(time, 'HH:mm').format('h:mm A');
-  console.log({totalAmount, selectedBatch})
   
   return (
     <>
@@ -126,7 +125,7 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
               transform: 'rotate(12deg)',
             }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-                £{Math.min(...data.batch.map(b => b.oneBatchprice))}
+              £{totalAmount ? totalAmount : Math.min(...data.batch.map(b => b.oneBatchprice))}
               </Typography>
             </Box>
           </Box>
