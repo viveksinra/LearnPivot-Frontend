@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
-  Divider,
-  Grid,
-  Typography,
-  Checkbox,
-  Paper,
   Box,
+  Typography,
   IconButton,
+  Paper,
+  Grid,
+  Button
 } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import GroupIcon from '@mui/icons-material/Group';
@@ -18,6 +18,7 @@ import MockPayButton from "./MockPayButton";
 
 const MtBatchSelector = ({ 
   data, 
+  setStep,
   setSubmitted, 
   setSubmittedId, 
   selectedChild, 
@@ -36,7 +37,6 @@ const MtBatchSelector = ({
     }
   }, []);
 
-  // Calculate total amount whenever selected batches change
   useEffect(() => {
     const newTotalAmount = selectedBatch.reduce((sum, batch) => {
       return sum + Number(batch.oneBatchprice);
@@ -68,8 +68,27 @@ const MtBatchSelector = ({
 
   return (
     <Box sx={{ position: 'relative', pb: '80px' }}>
+      {/* Header */}
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={() => setStep(2)}
+
+          sx={{ 
+            width: '20%',
+            minWidth: 'auto',
+            color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
+          }}
+        >
+          Back
+        </Button>
+        <Typography variant="h5" sx={{ width: '80%', fontWeight: 400 }}>
+          Select Batches for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+        </Typography>
+      </Box>
+
       {/* Batch list */}
-      <Grid container spacing={2} sx={{ mt: 2, mb: 3 }}>
+      <Grid container spacing={2}>
         {data.batch.map((batch) => {
           const isSelected = selectedBatch.some(b => b._id === batch._id);
           const isSelectable = isBatchSelectable(batch);
@@ -190,7 +209,7 @@ const MtBatchSelector = ({
         })}
       </Grid>
 
-      {/* Sticky MockPayButton */}
+      {/* Sticky Payment Button */}
       <Box 
         sx={{
           position: 'fixed',

@@ -39,6 +39,7 @@ function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTota
            <>
           <MtBatchSelector
            data={data} 
+           setStep={setStep}
            selectedChild={selectedChild}
             selectedBatch={selectedBatch}
              setSelectedBatch={setSelectedBatch}

@@ -43,9 +43,12 @@ const MtBuyComponent = ({data}) => {
             <Grid item xs={12} lg={6}>
               {submitted ? (
                 <MockStripePay 
+                data={data} 
+
                 setSubmitted={setSubmitted}
                   setSubmittedId={setSubmittedId}
                   setStep={setStep}
+                  selectedChild={selectedChild}
                 selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
               ) : (
                 <MockEnqForm 

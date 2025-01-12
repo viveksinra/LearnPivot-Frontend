@@ -29,7 +29,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-export default function MockStripePay({setStep, selectedBatch, submittedId, totalAmount, setSubmitted, setSubmittedId }) {
+export default function MockStripePay({setStep,data,selectedChild, selectedBatch, submittedId, totalAmount, setSubmitted, setSubmittedId }) {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
@@ -75,9 +75,8 @@ export default function MockStripePay({setStep, selectedBatch, submittedId, tota
   };
 
   const handleUpdateBatch = () => {
-    setSubmitted(false);
     setStep(3);
-    setSubmittedId("");
+    setSubmitted(false);
   };
 
   const appearance = {
@@ -103,14 +102,24 @@ export default function MockStripePay({setStep, selectedBatch, submittedId, tota
           alignItems: "flex-start",
           gap: 2 
         }}>
-          <Button
-            variant="text"
-            startIcon={<ArrowBackIcon />}
-            onClick={handleUpdateBatch}
-            sx={{ textTransform: 'none', mb: 1 }}
-          >
-            Go Back
-          </Button>
+ 
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+        <Button
+          startIcon={<ArrowBackIcon />}
+          onClick={handleUpdateBatch}
+
+          sx={{ 
+            width: '20%',
+            minWidth: 'auto',
+            color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
+          }}
+        >
+          Back
+        </Button>
+        <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
+          Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+        </Typography>
+      </Box>
           <Box sx={{ 
             display: "flex", 
             justifyContent: "space-between", 
