@@ -15,6 +15,7 @@ import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import MockPayButton from "./MockPayButton";
+import { mockTestService } from "@/app/services";
 
 const MtBatchSelector = ({ 
   data, 
@@ -30,12 +31,15 @@ const MtBatchSelector = ({
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  const [loading, setLoading] = useState(true);
+  const [alreadyBoughtBatch, setAlreadyBoughtBatch] = useState([]);
+
   useEffect(() => {
-    const upcomingBatch = data.batch.find(batch => new Date(batch.date) >= today && !batch.filled);
+    const upcomingBatch = data.batch.find(batch => new Date(batch.date) >= today && !batch.filled && !alreadyBoughtBatch.some(b => b._id === batch._id));
     if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
       setSelectedBatch([...selectedBatch, upcomingBatch]);
     }
-  }, []);
+  }, [data.batch, today, selectedBatch, alreadyBoughtBatch]);
 
   useEffect(() => {
     const newTotalAmount = selectedBatch.reduce((sum, batch) => {
@@ -54,7 +58,7 @@ const MtBatchSelector = ({
   };
 
   const isBatchSelectable = (batch) => {
-    return !batch.filled && new Date(batch.date) >= today;
+    return !batch.filled && new Date(batch.date) >= today && !alreadyBoughtBatch.some(b => b._id === batch._id);
   };
 
   const formatDate = (dateString) => {
@@ -65,6 +69,33 @@ const MtBatchSelector = ({
       year: 'numeric'
     });
   };
+
+    async function getBoughtBatch() {
+      setLoading(true)
+      console.log("function got called")
+    try{
+      let res = await mockTestService.alreadyBoughtMock(`${data._id}`);
+      console.log({res,id:data._id})
+    
+      if (res.variant === "success") {
+        setAlreadyBoughtBatch(res.data)
+        setSelectedBatch([])
+      } else {
+        alert(res);
+        console.log(res);
+      }
+    }catch (error) {
+      console.error("Error fetching data:", error);
+    }   
+      setLoading(false)
+
+    }
+    useEffect(() => {
+  
+ 
+        getBoughtBatch();
+    }, []);
+  
 
   return (
     <Box sx={{ position: 'relative', pb: '80px' }}>
@@ -92,6 +123,7 @@ const MtBatchSelector = ({
         {data.batch.map((batch) => {
           const isSelected = selectedBatch.some(b => b._id === batch._id);
           const isSelectable = isBatchSelectable(batch);
+          const isAlreadyBought = alreadyBoughtBatch?.some(b => b._id === batch._id);
 
           return (
             <Grid item xs={12} key={batch._id}>
@@ -192,13 +224,13 @@ const MtBatchSelector = ({
                     {!isSelectable && (
                       <Typography 
                         sx={{ 
-                          color: '#DC2626',
+                          color: isAlreadyBought ? '#059669' : '#DC2626',
                           fontSize: '0.75rem',
                           fontWeight: 500,
                           mt: 1
                         }}
                       >
-                        Booking Full
+                        {isAlreadyBought ? 'Already Booked' : 'Booking Full'}
                       </Typography>
                     )}
                   </Grid>

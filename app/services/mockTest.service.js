@@ -26,6 +26,12 @@ export class MockTestService {
       })
       .then((res) => res.data);
   };
+  alreadyBoughtMock = async (id) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/mockTest/getMockTest/alreadyBoughtMock/${id}`, {
+      })
+      .then((res) => res.data);
+  };
 
   buyMockStepOne = async (data) => {
     return this.instance
