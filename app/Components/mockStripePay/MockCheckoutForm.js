@@ -6,6 +6,8 @@ import {
 } from "@stripe/react-stripe-js";
 import "./mockStripePayStyle.css";
 import { FRONT_ENDPOINT } from "@/app/utils";
+import { Box, Button, Typography } from "@mui/material";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // Internal styles
 const styles = {
@@ -53,7 +55,7 @@ const styles = {
   },
 };
 
-export default function MockCheckoutForm({selectedChild, buyMockId, totalAmount}) {
+export default function MockCheckoutForm({data,setClientSecret,selectedChild, buyMockId, totalAmount}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -122,16 +124,26 @@ export default function MockCheckoutForm({selectedChild, buyMockId, totalAmount}
 
   return (
     <>
-      {/* Compact Payment Summary */}
-      {/* <div style={styles.paymentSummary}>
-        <div style={styles.summaryRow}>
-          <span style={styles.label}>Total Amount:</span>
-          <span style={styles.amount}>£{totalAmount.toFixed(2)}</span>
-        </div>
-      </div> */}
+
 
       {/* Payment Form */}
       <form id="payment-form" style={{backgroundColor:null}} onSubmit={handleSubmit}>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+                 <Button
+                   startIcon={<ArrowBackIcon />}
+                   onClick={() => setClientSecret("")}
+                   sx={{ 
+                     width: '20%',
+                     minWidth: 'auto',
+                     color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
+                   }}
+                 >
+                   Back
+                 </Button>
+                 <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
+                   Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+                 </Typography>
+               </Box>
         <PaymentElement id="payment-element" options={paymentElementOptions} />
         <button 
           disabled={isLoading || !stripe || !elements} 

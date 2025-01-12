@@ -95,43 +95,43 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
 
   return (
     <Container maxWidth="sm">
-      <StyledPaper elevation={3}>
-        <Box sx={{ 
-          display: "flex", 
-          flexDirection: "column",
-          alignItems: "flex-start",
-          gap: 2 
-        }}>
- 
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-        <Button
-          startIcon={<ArrowBackIcon />}
-          onClick={handleUpdateBatch}
 
-          sx={{ 
-            width: '20%',
-            minWidth: 'auto',
-            color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
-          }}
-        >
-          Back
-        </Button>
-        <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
-          Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
-        </Typography>
-      </Box>
-          <Box sx={{ 
-            display: "flex", 
-            justifyContent: "space-between", 
-            width: "100%" 
-          }}>
-            <Typography variant="h6" component="h2" gutterBottom>
-              Secure Payment
-            </Typography>
-            <CloseIcon onClick={handleUpdateBatch} style={{ cursor: 'pointer' }} />
-          </Box>
           {!clientSecret ? (
-            <>
+                 <StyledPaper elevation={3}>
+                 <Box sx={{ 
+                   display: "flex", 
+                   flexDirection: "column",
+                   alignItems: "flex-start",
+                   gap: 2 
+                 }}>
+          
+                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
+                 <Button
+                   startIcon={<ArrowBackIcon />}
+                   onClick={handleUpdateBatch}
+         
+                   sx={{ 
+                     width: '20%',
+                     minWidth: 'auto',
+                     color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
+                   }}
+                 >
+                   Back
+                 </Button>
+                 <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
+                   Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+                 </Typography>
+               </Box>
+                   <Box sx={{ 
+                     display: "flex", 
+                     justifyContent: "space-between", 
+                     width: "100%" 
+                   }}>
+                     <Typography variant="h6" component="h2" gutterBottom>
+                       Secure Payment
+                     </Typography>
+                     <CloseIcon onClick={handleUpdateBatch} style={{ cursor: 'pointer' }} />
+                   </Box>
               
               {/* Batch Details Display */}
               {selectedBatch && selectedBatch[0] && (
@@ -202,14 +202,14 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                   {error}
                 </Typography>
               )}
-            </>
+                </Box>
+                </StyledPaper>
           ) : (
             <Elements options={options} stripe={stripePromise}>
-              <MockCheckoutForm selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
+              <MockCheckoutForm data={data} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
           )}
-        </Box>
-      </StyledPaper>
+    
     </Container>
   );
 }
