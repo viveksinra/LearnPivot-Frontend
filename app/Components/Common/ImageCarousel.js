@@ -70,7 +70,8 @@ const ImageCarousel = ({
               sx={{
                 width: "100%",
                 height: "100%",
-                objectFit: "cover",
+                objectFit: "contain",
+                aspectRatio: "16/9",
                 cursor: "pointer",
                 transition: "transform 0.3s ease",
                 "&:hover": {

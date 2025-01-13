@@ -93,11 +93,11 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
     <>
       <StyledCard style={{marginTop: isMobile ? '30px' : '0'}}>
         {/* Image Carousel */}
-        <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '280px' }}>
+        <Box sx={{ position: 'relative', width: '100%', height: isMobile ? '200px' : '230px' }}>
         <ImageCarousel
             images={data.imageUrls}
             title={data.mockTestTitle}
-            height= {isMobile ? '220px' : '280px' }
+            height= {isMobile ? '220px' : '230px' }
             autoplayDelay={6000}
           />
         </Box>
