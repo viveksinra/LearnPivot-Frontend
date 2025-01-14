@@ -1,45 +1,50 @@
-// components/MockPayButton.js
+import React from 'react';
+import { mockTestService } from '@/app/services';
+import { Button } from '@/components/ui/button';
 
-import React, { useEffect } from 'react';
-import Button from '@mui/material/Button';
-import { styled, keyframes } from '@mui/system';
-import {  mockTestService, myCourseService } from '@/app/services';
-import AnimatedButton from '../../Common/AnimatedButton';
+const MockPayButton = ({
+  data,
+  setSubmitted,
+  setSubmittedId,
+  setTotalAmount,
+  totalAmount,
+  selectedBatch,
+  selectedChild
+}) => {
+  const handleCoEnquiry = async () => {
+    const buyData = {
+      mockTestId: data._id,
+      selectedBatch,
+      selectedChild,
+    };
+    
+    try {
+      let response = await mockTestService.buyMockStepOne(buyData);
+  
+      if (response.variant === "success") {
+        setSubmitted(true);
+        setSubmittedId(response._id);
+        setTotalAmount(response.totalAmount);
+      }
+    } catch (error) {
+      console.error("Error submitting data:", error);
+    }
+  };
 
-
-const MockPayButton = ({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedBatch,selectedChild}) => {
-
-    const handleCoEnquiry = async (e) => {
-  console.log({data,setSubmitted,setSubmittedId,setTotalAmount,totalAmount,selectedBatch,selectedChild})
-
-        // e.preventDefault();
-        const buyData = {
-          mockTestId: data._id,
-          selectedBatch,
-          selectedChild,
-        };
-      
-        try {
-          let response = await mockTestService.buyMockStepOne(buyData);
-      
-          if (response.variant === "success") {
-            setSubmitted(true);
-            setSubmittedId(response._id);
-            setTotalAmount(response.totalAmount);
-            // snackRef.current.handleSnack(response);
-          } else {
-            // snackRef.current.handleSnack(response);
-          }
-        } catch (error) {
-          console.error("Error submitting data:", error);
-          snackRef.current.handleSnack({ message: "Failed to submit data.", variant: "error" });
-        }
-      };
+  // Determine button text based on totalAmount
+  const buttonText = totalAmount === 0 
+    ? "Please select at least one item" 
+    : `Proceed to Pay (£${totalAmount})`;
 
   return (
-    <AnimatedButton variant="contained" onClick={() => handleCoEnquiry()}>
-      Proceed to Pay {totalAmount&& (`Amount: £ ${totalAmount}`)}
-    </AnimatedButton>
+    <Button
+      variant={totalAmount === 0 ? "secondary" : "default"}
+      disabled={totalAmount === 0}
+      onClick={handleCoEnquiry}
+      className={`w-full ${totalAmount === 0 ? 'cursor-not-allowed opacity-60' : ''}`}
+    >
+      {buttonText}
+    </Button>
   );
 };
 
