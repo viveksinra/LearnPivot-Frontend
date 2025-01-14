@@ -59,10 +59,10 @@ const  csseMockFaqData= [
       answer: "A paid revision session is organized 5 days after the test to help children understand difficult questions. An overall anonymous result showing marks is shared. While we don't usually offer one-to-one feedback, we try our best to cater to individual needs."
   },
   {
-      id: "11",
-      question: "What is your booking and cancellation policy?",
-      answer: "We have a strict no-cancellation policy. No changes are allowed after booking. Only pre-booked children are allowed on the day of the test, and we don't accept cash payments at the venue."
-  },
+    id: "11",
+    question: "What is your booking and CANCELLATION policy?",
+    answer: "We have a <strong>no-cancellation policy. No changes are allowed after booking</strong>. Only pre-booked children are allowed on the day of the test, and we don't accept cash payments at the venue."
+},
   {
       id: "12",
       question: "How difficult are the tests?",
@@ -127,8 +127,8 @@ const  fsseMockFaqData= [
   },
   {
       id: "11",
-      question: "What is your booking and cancellation policy?",
-      answer: "We have a strict no-cancellation policy. No changes are allowed after booking. Only pre-booked children are allowed on the day of the test, and we don't accept cash payments at the venue."
+      question: "What is your booking and CANCELLATION policy?",
+      answer: "We have a <strong>no-cancellation policy. No changes are allowed after booking</strong>. Only pre-booked children are allowed on the day of the test, and we don't accept cash payments at the venue."
   },
   {
       id: "12",
