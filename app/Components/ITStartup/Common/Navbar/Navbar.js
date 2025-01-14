@@ -5,11 +5,11 @@ import Link from "next/link";
 import MenuItem from "./MenuItem";
 import { menus } from "./menus";
 import { Avatar, Button, Menu, MenuItem as MuiMenuItem } from "@mui/material";
-import { authService } from "@/app/services";
 import MainContext from "@/app/Components/Context/MainContext";
 import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
+import { useLogout } from "@/app/hooks/auth/uselogout";
 
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -23,10 +23,8 @@ const Navbar = () => {
   const [anchorElProfile, setAnchorElProfile] = useState(null);
   const openProfile = Boolean(anchorElProfile);
 
-  const handleLogout = () => {
-    authService.logout();
-    router.push("/login");
-  };
+  const { logout } = useLogout();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -160,7 +158,8 @@ margin-right: 12px;
                     </MuiMenuItem>
                     <MuiMenuItem
                       onClick={() => {
-                        handleLogout();
+                        logout();
+
                         router.push("/login");
                       }}
                     >
