@@ -39,7 +39,7 @@ const MtBatchSelector = ({
     if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
       setSelectedBatch([...selectedBatch, upcomingBatch]);
     }
-  }, [data.batch, today, selectedBatch, alreadyBoughtBatch]);
+  }, [ alreadyBoughtBatch]);
 
   useEffect(() => {
     const newTotalAmount = selectedBatch.reduce((sum, batch) => {
