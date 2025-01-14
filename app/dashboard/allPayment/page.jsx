@@ -91,7 +91,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
               {payment.year}
             </Typography>
           </Box>
-          <StatusChip status={payment.paymentStatus} />
+          <StatusChip status={payment.paymentStatus === "succeeded"? "Paid" : payment.paymentStatus} />
         </Stack>
         
         <Stack direction="row" justifyContent="space-between" alignItems="center">

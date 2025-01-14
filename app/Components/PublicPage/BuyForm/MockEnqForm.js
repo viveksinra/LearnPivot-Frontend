@@ -6,7 +6,6 @@ import ComLogSigForm from "../LoginSignUp/ComLogSigForm";
 import MainContext from "../../Context/MainContext";
 import Cookies from "js-cookie";
 import ChildSelector from "../LoginSignUp/ChildSelector";
-import { Typography } from "@mui/material"; // Assuming you are using Material-UI for Typography
 import MtBatchSelector from "../MockTest/MtBatchSelector";
 
 function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
