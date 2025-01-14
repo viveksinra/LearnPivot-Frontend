@@ -11,7 +11,7 @@ const  csseMockFaqData= [
   {
       id: "1",
       question: "What test papers are covered in each mock test?",
-      answer: "CSSE: Two papers - Mathematics (60 minutes) and English (70 minutes) with a 15-minute break."
+      answer: "Two papers - Mathematics (60 minutes) and English (70 minutes) with a 15-minute break."
   },
   {
       id: "2",
@@ -21,12 +21,12 @@ const  csseMockFaqData= [
   {
       id: "3",
       question: "Will I receive the test papers?",
-      answer: "CSSE: Marked papers are posted by first-class signed delivery (usually next day, up to 3 days). FSCE: PDF file with incorrect questions, scanned answer sheets, and creative writing will be sent via WhatsApp within 3 days."
+      answer: "Marked papers are posted by first-class signed delivery (usually next day, up to 3 days). "
   },
   {
       id: "4",
       question: "What should children bring for the test?",
-      answer: "CSSE: HB pencil, black biro, eraser, sharpener, water bottle, and snacks. FSCE: 2 black biros, water bottle, and snacks."
+      answer: "HB pencil, black biro, eraser, sharpener, water bottle, and snacks."
   },
   {
       id: "5",
@@ -51,7 +51,7 @@ const  csseMockFaqData= [
   {
       id: "9",
       question: "Do you accommodate children with special needs?",
-      answer: "CSSE: We welcome all children and provide extra time with an exam board letter. FSCE: We welcome all children but no extra time is provided. For both tests, parents must contact us in advance for any special requirements."
+      answer: "We welcome all children and provide extra time with an exam board letter. "
   },
   {
       id: "10",
@@ -66,7 +66,7 @@ const  csseMockFaqData= [
   {
       id: "12",
       question: "How difficult are the tests?",
-      answer: "CSSE: All our mock tests are in line with the real CSSE standard. FSCE: We try our best to maintain a challenging level, though we don't have access to actual FSCE papers."
+      answer: "All our mock tests are in line with the real CSSE standard."
   },
   {
       id: "13",
@@ -78,7 +78,7 @@ const  fsseMockFaqData= [
   {
       id: "1",
       question: "What test papers are covered in each mock test?",
-      answer: "FSCE: Three papers - Paper 1 and 2 (Maths/English/Verbal Reasoning, 30-40 minutes each) and Paper 3 (Creative Writing, 20 minutes) with a 15-minute break."
+      answer: "Three papers - Paper 1 and 2 (Maths/English/Verbal Reasoning, 30-40 minutes each) and Paper 3 (Creative Writing, 20 minutes) with a 15-minute break."
   },
   {
       id: "2",
@@ -88,12 +88,12 @@ const  fsseMockFaqData= [
   {
       id: "3",
       question: "Will I receive the test papers?",
-      answer: "CSSE: Marked papers are posted by first-class signed delivery (usually next day, up to 3 days). FSCE: PDF file with incorrect questions, scanned answer sheets, and creative writing will be sent via WhatsApp within 3 days."
+      answer: "PDF file with incorrect questions, scanned answer sheets, and creative writing will be sent via WhatsApp within 3 days."
   },
   {
       id: "4",
       question: "What should children bring for the test?",
-      answer: "CSSE: HB pencil, black biro, eraser, sharpener, water bottle, and snacks. FSCE: 2 black biros, water bottle, and snacks."
+      answer: "2 black biros, water bottle, and snacks."
   },
   {
       id: "5",
@@ -118,7 +118,7 @@ const  fsseMockFaqData= [
   {
       id: "9",
       question: "Do you accommodate children with special needs?",
-      answer: "CSSE: We welcome all children and provide extra time with an exam board letter. FSCE: We welcome all children but no extra time is provided. For both tests, parents must contact us in advance for any special requirements."
+      answer: "We welcome all children but no extra time is provided. For both tests, parents must contact us in advance for any special requirements."
   },
   {
       id: "10",
@@ -133,7 +133,7 @@ const  fsseMockFaqData= [
   {
       id: "12",
       question: "How difficult are the tests?",
-      answer: "CSSE: All our mock tests are in line with the real CSSE standard. FSCE: We try our best to maintain a challenging level, though we don't have access to actual FSCE papers."
+      answer: "We try our best to maintain a challenging level, though we don't have access to actual FSCE papers."
   },
   {
       id: "13",
