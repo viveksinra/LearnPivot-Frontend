@@ -1,6 +1,7 @@
+// MockPayButton.js
 import React from 'react';
 import { mockTestService } from '@/app/services';
-import { Button } from '@/components/ui/button';
+import AnimatedButton from '../../Common/AnimatedButton';
 
 const MockPayButton = ({
   data,
@@ -12,6 +13,8 @@ const MockPayButton = ({
   selectedChild
 }) => {
   const handleCoEnquiry = async () => {
+    if (totalAmount === 0) return;
+
     const buyData = {
       mockTestId: data._id,
       selectedBatch,
@@ -31,20 +34,18 @@ const MockPayButton = ({
     }
   };
 
-  // Determine button text based on totalAmount
   const buttonText = totalAmount === 0 
     ? "Please select at least one item" 
-    : `Proceed to Pay (£${totalAmount})`;
+    : `Proceed to Pay ${totalAmount ? `Amount: £ ${totalAmount}` : ''}`;
 
   return (
-    <Button
-      variant={totalAmount === 0 ? "secondary" : "default"}
-      disabled={totalAmount === 0}
+    <AnimatedButton 
+      variant="contained" 
       onClick={handleCoEnquiry}
-      className={`w-full ${totalAmount === 0 ? 'cursor-not-allowed opacity-60' : ''}`}
+      disabled={totalAmount === 0}
     >
       {buttonText}
-    </Button>
+    </AnimatedButton>
   );
 };
 
