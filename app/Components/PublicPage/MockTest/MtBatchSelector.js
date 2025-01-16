@@ -72,10 +72,8 @@ const MtBatchSelector = ({
 
     async function getBoughtBatch() {
       setLoading(true)
-      console.log("function got called")
     try{
-      let res = await mockTestService.alreadyBoughtMock(`${data._id}`);
-      console.log({res,id:data._id})
+      let res = await mockTestService.alreadyBoughtMock({childId:selectedChild._id,id:`${data._id}`});
     
       if (res.variant === "success") {
         setAlreadyBoughtBatch(res.data)
@@ -94,7 +92,7 @@ const MtBatchSelector = ({
   
  
         getBoughtBatch();
-    }, []);
+    }, [selectedChild]);
   
 
   return (
@@ -126,14 +124,14 @@ const MtBatchSelector = ({
           const isAlreadyBought = alreadyBoughtBatch?.some(b => b._id === batch._id);
 
           return (
-            <Grid item xs={12} key={batch._id}>
+            <Grid item xs={12} key={batch._id} >
               <Paper
                 elevation={isSelected ? 3 : 1}
                 sx={{
                   p: 2.5,
                   backgroundColor: isSelected ? '#F0F9FF' : '#ffffff',
                   border: '1px solid',
-                  borderColor: isSelected ? '#BAE6FD' : '#E5E7EB',
+                  borderColor: isSelected ? '#BAE6FD' : isSelectable ? '#059669' : '#DC2626',
                   borderRadius: 2,
                   transition: 'all 0.3s ease',
                   cursor: isSelectable ? 'pointer' : 'default',
@@ -145,6 +143,7 @@ const MtBatchSelector = ({
                   } : {},
                 }}
                 onClick={() => isSelectable && handleCheckboxChange(batch)}
+                
               >
                 <Grid container spacing={2}>
                   {/* Checkbox Column */}
@@ -160,10 +159,10 @@ const MtBatchSelector = ({
 
                   {/* Info Column */}
                   <Grid item xs={11}>
-                    <Grid container spacing={2}>
+                    <Grid container spacing={2} >
                       {/* Date and Time */}
                       <Grid item xs={12} md={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <EventIcon sx={{ color: '#64748B' }} />
                             <Typography 
@@ -177,35 +176,7 @@ const MtBatchSelector = ({
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <AccessTimeIcon sx={{ color: '#64748B' }} />
-                            <Typography 
-                              sx={{ 
-                                color: '#64748B',
-                                fontSize: '0.875rem'
-                              }}
-                            >
-                              {batch.startTime} - {batch.endTime}
-                            </Typography>
-                          </Box>
-                        </Box>
-                      </Grid>
-
-                      {/* Seats and Price */}
-                      <Grid item xs={12} md={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <GroupIcon sx={{ color: '#64748B' }} />
-                            <Typography 
-                              sx={{ 
-                                color: '#64748B',
-                                fontSize: '0.875rem'
-                              }}
-                            >
-                              Total Seats: {batch.totalSeat}
-                            </Typography>
-                          </Box>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                            <CurrencyPoundIcon sx={{ color: '#64748B' }} />
+                          <CurrencyPoundIcon sx={{ color: '#64748B' }} />
                             <Typography 
                               sx={{ 
                                 color: '#059669',
@@ -218,21 +189,50 @@ const MtBatchSelector = ({
                           </Box>
                         </Box>
                       </Grid>
-                    </Grid>
 
-                    {/* Status Message */}
-                    {!isSelectable && (
+                      {/* Seats and Price */}
+                      <Grid item xs={12} md={6}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <AccessTimeIcon sx={{ color: '#64748B' }} />
+                            <Typography 
+                              sx={{ 
+                                color: '#64748B',
+                                fontSize: '0.875rem'
+                              }}
+                            >
+                               {batch.startTime} - {batch.endTime}
+                            </Typography>
+                          </Box>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>    
+                         
                       <Typography 
                         sx={{ 
-                          color: isAlreadyBought ? '#059669' : '#DC2626',
+                          color: isSelectable ? '#059669' : '#DC2626',
                           fontSize: '0.75rem',
                           fontWeight: 500,
                           mt: 1
                         }}
                       >
-                        {isAlreadyBought ? 'Already Booked' : 'Booking Full'}
+                        {isSelectable? "Available" : isAlreadyBought ? `Already Booked - ${selectedChild.childName}` : 'Booking Full'}
                       </Typography>
-                    )}
+                        
+                          {/* <GroupIcon sx={{ color: '#64748B' }} />
+                            <Typography 
+                              sx={{ 
+                                color: '#64748B',
+                                fontSize: '0.875rem'
+                              }}
+                            >
+                             Total Seats: {batch.totalSeat}
+                            </Typography> */}
+                          </Box>
+                        </Box>
+                      </Grid>
+                    </Grid>
+
+                    {/* Status Message */}
+             
                   </Grid>
                 </Grid>
               </Paper>

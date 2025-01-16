@@ -206,12 +206,12 @@ const columns = [
     width: 120,
     valueGetter: (params) => `£${params.value.toFixed(2)}`,
   },
-  {
-    field: 'paymentStatus',
-    headerName: 'Status',
-    width: 140,
-    renderCell: (params) => <StatusChip status={params.value} />,
-  },
+  // {
+  //   field: 'paymentStatus',
+  //   headerName: 'Status',
+  //   width: 140,
+  //   renderCell: (params) => <StatusChip status={params.value} />,
+  // },
   {
     field: 'courseName',
     headerName: 'Course/Test Name',
@@ -226,15 +226,15 @@ const columns = [
       <Stack>
         <Typography variant="body2">{params.value} {params.row.year}</Typography>
                 
-                <Typography variant="caption" color="text.secondary">{params.row.parentName} • {params.row.email} </Typography>
+                {/* <Typography variant="caption" color="text.secondary">{params.row.parentName} • {params.row.email} </Typography> */}
       </Stack>
     ),
   },
-  {
-    field: 'paymentIntent',
-    headerName: 'Payment ID',
-    width: 220,
-  },
+  // {
+  //   field: 'paymentIntent',
+  //   headerName: 'Payment ID',
+  //   width: 220,
+  // },
   {
     field: 'invoiceLink',
     headerName: 'Invoice',
@@ -248,7 +248,7 @@ const columns = [
           rel="noopener noreferrer"
           className="text-blue-600 hover:text-blue-800"
         >
-          View Invoice
+          View Receipt
         </Typography>
       )
     ),

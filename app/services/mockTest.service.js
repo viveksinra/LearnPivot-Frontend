@@ -26,9 +26,9 @@ export class MockTestService {
       })
       .then((res) => res.data);
   };
-  alreadyBoughtMock = async (id) => {
+  alreadyBoughtMock = async ({childId,id}) => {
     return this.instance
-      .get(`/api/v1/publicMaster/mockTest/getMockTest/alreadyBoughtMock/${id}`, {
+      .get(`/api/v1/publicMaster/mockTest/getMockTest/alreadyBoughtMock/${childId}/${id}`, {
       })
       .then((res) => res.data);
   };
