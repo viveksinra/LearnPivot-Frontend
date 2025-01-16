@@ -53,7 +53,8 @@ function MyApp() {
         </div>
         <Box>
           <Suspense fallback={<Loading />}>
-            <FaqCom />
+          <FaqCom dataType={"faqData"} />
+
             <Suspense fallback={<Loading />}>
               <Enquiry />
               <Suspense fallback={<Loading />}>

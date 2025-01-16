@@ -48,13 +48,13 @@ const Banner = () => {
                       data-aos-delay="300"
                     >
                       <Link href="/course" className="default-btn-course mr-3">
-                        COURSES <span></span>
+                        11+ COURSES <span></span>
                       </Link>
                       <Link
                         href="/mockTest"
                         className="default-btn-mocktest mr-3"
                       >
-                        MOCK TESTS
+                        11+ MOCK TESTS
                         <span></span>
                       </Link>
                     </div>

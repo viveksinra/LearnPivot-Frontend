@@ -44,7 +44,8 @@ function MyContact() {
           <Enquiry />
           
           <Suspense fallback={<Loading />}>
-          <FaqCom />
+          <FaqCom dataType={"faqData"} />
+
             {/* <FeedBackCom /> */}
             <Suspense fallback={<Loading />}>
               <Footer />
