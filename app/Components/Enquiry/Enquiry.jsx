@@ -58,16 +58,8 @@ const Enquiry = () => {
                     <Typography sx={{fontSize:{xs:"14px"}}}>Have a doubt? Need some information? Reach us by E-mail</Typography>
                     <br/> 
                     </Grid>
-                    {/* <Grid item xs={12} md={4} lg={12} className="center">
-                    <div className="enquiryCard">
-                    <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190817/Customer_Service_v1maqp.png" alt="CustomerCall" />
-                    <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>9am to 9pm Support</Typography>
-                    <Divider light sx={{maxWidth:"200px"}}/> <br/>
-                    <Typography color="#333" sx={{fontSize:"14px"}}>Just call us on</Typography>
-                    <Link href="tel:+447732762384"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
-                    </div>
-                    </Grid> */}
-                    <Grid item xs={12} md={4} lg={12}>
+                 
+                    <Grid item xs={12} md={12} lg={12} sx={{display:"flex",alignItems:"center",flexDirection:"column"}}>
                     <div className="enquiryCard">
                     <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190847/Email_z6afpk.png" alt="CustomerCall" />
                     <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>Reach us by E-mail</Typography>
@@ -76,15 +68,7 @@ const Enquiry = () => {
                     <Link href="mailto:info@chelmsford11plus.com"><Typography color="#007bff" sx={{fontSize:"14px"}}>info@chelmsford11plus.com</Typography></Link> 
                     </div>
                     </Grid> 
-                    {/* <Grid item xs={12} md={4} lg={12} className="center">
-                    <div className="enquiryCard">
-                    <img src="https://res.cloudinary.com/oasismanors/image/upload/v1708190871/whatsapp_nkr7x7.png" alt="CustomerCall" />
-                    <Typography gutterBottom color="#333" sx={{fontSize:"20px"}}>WhatsApp Us</Typography>
-                    <Divider light sx={{maxWidth:"200px"}}/> <br/>
-                    <Typography color="#333" sx={{fontSize:"14px"}}>Say "Hi" from registered mobile number</Typography>
-                    <Link href="https://wa.me/+447732762384?text=Hi,%20I'm%20interested%20in%20Chelmsford"><Typography color="#007bff" sx={{fontSize:"14px"}}>(+44) 7732 762384</Typography></Link> 
-                    </div>
-                    </Grid> */}
+                
                   </Grid>
                 </Grid>
                 <Grid item xs={12} lg={6}>

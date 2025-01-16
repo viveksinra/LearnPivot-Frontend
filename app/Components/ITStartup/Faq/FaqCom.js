@@ -135,11 +135,6 @@ const  fsseMockFaqData= [
       question: "How difficult are the tests?",
       answer: "We try our best to maintain a challenging level, though we don't have access to actual FSCE papers."
   },
-  {
-      id: "13",
-      question: "What if I don't receive my CSSE marked papers?",
-      answer: "Usually, the post arrives 2 days after the test, but please allow up to 10 working days for Royal Mail delivery. Please do not contact us unless 10 days have passed."
-  }
 ];
 
 const faqData = [
@@ -214,7 +209,7 @@ const FaqCom = ({dataType}) => {
   <span className="sub-title">Answers to Common Questions</span>
   <h2>Frequently Asked Questions</h2>
   <p>
-    Have questions about our { dataType === "csseMockFaqData" ? "CSSE Mock Test" : dataType === "fsseMockFaqData" ? "FSSE Mock Test" : "teaching services"} Find answers below. We believe
+    Have questions about our { dataType === "csseMockFaqData" ? "CSSE Mock Test" : dataType === "fsseMockFaqData" ? "FSSE Mock Test" : "teaching services"}. Find answers below, We believe
     that clear communication and understanding are vital for successful
     learning experiences.
   </p>
