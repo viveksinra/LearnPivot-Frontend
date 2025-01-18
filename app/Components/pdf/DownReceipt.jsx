@@ -5,28 +5,29 @@ import download from 'downloadjs';
 import { reportService } from '@/app/services';
 
 const DownReceipt = ({
-
+  data
 }) => {
-  const [posData, setPosData] = useState({});
-  // Fetch POS data when the component mounts
+  console.log({data});
+  // const [posData, setPosData] = useState({});
+  // Fetch Payment data when the component mounts
   const fetchPosData = async () => {
     try {
-            const response = await reportService.getMyAllPayment(
-              // { childId: selectedChild }
+            const response = await reportService.getOnePaymentReceiptData(
+              data
             );
-      
+      console.log(response);
       if (response.data.variant === 'success') {
         setPosData(response.data.myData);
       } else {
-        console.log('Failed to fetch POS data');
+        console.log('Failed to fetch Payment data');
       }
     } catch (error) {
-      console.log('Failed to fetch POS data');
+      console.log('Failed to fetch Payment data');
     }
   };
 
   useEffect(() => {
-    fetchPosData();
+    // fetchPosData();
   }, []);
 
   const formatMyDate = (dateString) => {
@@ -37,10 +38,23 @@ const DownReceipt = ({
     return `${day}/${month}/${year}`;
   };
 
-  const downloadAgreement = async () => {
+  const downloadAgreement = async (data) => {
+    if (!data) {
+      console.error('Data is not defined');
+      return;
+    }
     try {
+      let posData = {}
+      const response = await reportService.getOnePaymentReceiptData(data);
+console.log(response);
+if (response.variant === 'success') {
+   posData = response.myData;
+} else {
+  alert('Failed to fetch Payment data');
+  return;
+}
       // i want date in dd/mm/yyyy format
-      const myAgreementDate = formatMyDate(posData.aggrementSignedDate);
+      const receiptDate = formatMyDate(posData.aggrementSignedDate);
 
       // getting address 2
       let myAddress = '';
@@ -49,7 +63,7 @@ const DownReceipt = ({
       }
 
       // Load the existing PDF from local path
-      const url = '/assets/pdf/aggreData.pdf';
+      const url = '/pdf/receipt.pdf';
       const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
 
       // Load a PDFDocument from the existing PDF bytes
@@ -70,7 +84,7 @@ const DownReceipt = ({
       const ifsc = form.getTextField('ifsc');
 
       // Fill in the fields with the fetched data
-      agreementDate.setText(myAgreementDate);
+      agreementDate.setText(receiptDate);
       posName.setText(`${posData?.firstName} ${posData?.middleName} ${posData?.lastName}` || 'N/A');
       address.setText(myAddress || 'N/A');
       panNumber.setText(posData?.panNumber || 'N/A');
@@ -104,7 +118,7 @@ const DownReceipt = ({
       <Button
         variant="contained"
         style={{ backgroundColor: '#18B5AC' }}
-        onClick={downloadAgreement}
+        onClick={() => downloadAgreement(data)} // Pass the data parameter here
       >
         View Receipt
       </Button>

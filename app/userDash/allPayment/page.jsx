@@ -242,7 +242,7 @@ const columns = [
     width: 140,
     renderCell: (params) => (
       params.value && (
-        <DownReceipt />
+        <DownReceipt data={params.value} />
       )
     ),
   },
@@ -270,10 +270,8 @@ export default function PaymentsPage() {
       const response = await reportService.getMyAllPayment({ childId: selectedChild });
       if (response?.myData) {
         const { myBuyCourse, myBuyMock } = response.myData;
-        console.log('formattedPayments');
 
         const formattedPayments = await formatPaymentData(myBuyCourse, myBuyMock);
-        console.log('formattedPayments', formattedPayments);
         setPayments(formattedPayments);
       }
     } catch (error) {
@@ -296,8 +294,10 @@ export default function PaymentsPage() {
   const filteredPayments = payments.filter(payment => {
     if (tabValue === 'all') return true;
     if (tabValue === 'other') return ['formfilled', 'processing', 'canceled'].includes(payment.paymentStatus.toLowerCase());
+
     return tabValue === payment.paymentStatus.toLowerCase();
   });
+
 
   if (error) {
     return (

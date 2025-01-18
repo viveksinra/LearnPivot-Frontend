@@ -35,7 +35,13 @@ export class ReportService {
       .then((res) => res.data);
   };
 
-
+  getOnePaymentReceiptData = async ( id) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/getOnePaymentReceiptData/${id}`, {}, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
  
 
 }
