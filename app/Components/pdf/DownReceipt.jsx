@@ -8,27 +8,9 @@ const DownReceipt = ({
   data
 }) => {
   console.log({data});
-  // const [posData, setPosData] = useState({});
+  // const [payData, setPosData] = useState({});
   // Fetch Payment data when the component mounts
-  const fetchPosData = async () => {
-    try {
-            const response = await reportService.getOnePaymentReceiptData(
-              data
-            );
-      console.log(response);
-      if (response.data.variant === 'success') {
-        setPosData(response.data.myData);
-      } else {
-        console.log('Failed to fetch Payment data');
-      }
-    } catch (error) {
-      console.log('Failed to fetch Payment data');
-    }
-  };
 
-  useEffect(() => {
-    // fetchPosData();
-  }, []);
 
   const formatMyDate = (dateString) => {
     const date = new Date(dateString);
@@ -44,23 +26,18 @@ const DownReceipt = ({
       return;
     }
     try {
-      let posData = {}
+      let payData = {}
       const response = await reportService.getOnePaymentReceiptData(data);
 console.log(response);
 if (response.variant === 'success') {
-   posData = response.myData;
+   payData = response.data;
 } else {
   alert('Failed to fetch Payment data');
   return;
 }
       // i want date in dd/mm/yyyy format
-      const receiptDate = formatMyDate(posData.aggrementSignedDate);
+      const finalReceiptDate = formatMyDate(payData?.date);
 
-      // getting address 2
-      let myAddress = '';
-      if (posData?.pincode) {
-        myAddress = `${posData?.district} ${posData?.state} ${posData?.pincode}`;
-      }
 
       // Load the existing PDF from local path
       const url = '/pdf/receipt.pdf';
@@ -73,26 +50,23 @@ if (response.variant === 'success') {
       const form = pdfDoc.getForm();
 
       // Get individual fields using their names
-      const agreementDate = form.getTextField('agreementDate');
-      const posName = form.getTextField('posName');
-      const panNumber = form.getTextField('panNumber');
-      const aadhar = form.getTextField('aadhar');
+      const toName = form.getTextField('toName');
       const address = form.getTextField('address');
-      const education = form.getTextField('education');
-      const account = form.getTextField('account');
-      const holderName = form.getTextField('holderName');
-      const ifsc = form.getTextField('ifsc');
+      const receipt = form.getTextField('receipt');
+      const receiptDate = form.getTextField('receiptDate');
+      const product = form.getTextField('product');
+      const amount = form.getTextField('amount');
+      const totalAmount = form.getTextField('totalAmount');
+
 
       // Fill in the fields with the fetched data
-      agreementDate.setText(receiptDate);
-      posName.setText(`${posData?.firstName} ${posData?.middleName} ${posData?.lastName}` || 'N/A');
-      address.setText(myAddress || 'N/A');
-      panNumber.setText(posData?.panNumber || 'N/A');
-      aadhar.setText(posData?.aadharNumber || 'N/A');
-      education.setText('Verified' || 'N/A');
-      account.setText(posData?.accountNumber || 'N/A');
-      holderName.setText(posData?.holderName || 'N/A');
-      ifsc.setText(posData?.ifscCode || 'N/A');
+      receiptDate.setText(finalReceiptDate);
+      toName.setText(`${payData?.user?.firstName}  ${payData?.user?.lastName}`);
+      address.setText(`${payData?.user?.address}`|| 'N/A');
+      receipt.setText(payData?.invoiceNumber || 'N/A');
+      product.setText(payData?.mockTestId?.mockTestTitle || 'N/A');
+      totalAmount.setText(String(payData?.amount) || 'N/A');
+      amount.setText(String(payData?.amount) || 'N/A');
 
       // Flatten the form to make the fields non-editable
       form.flatten();
