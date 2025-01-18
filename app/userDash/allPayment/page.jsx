@@ -29,6 +29,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import moment from 'moment';
 import ChildSelectorDropDown from '../../Components/Common/ChildSelectorDropDown';
 import { reportService } from '@/app/services';
+import DownReceipt from '@/app/Components/pdf/DownReceipt';
 
 const formatPaymentData = (myBuyCourse = [], myBuyMock = []) => {
   const coursePayments = myBuyCourse.map(payment => ({
@@ -221,7 +222,7 @@ const columns = [
   {
     field: 'childName',
     headerName: 'Student',
-    width: 250,
+    width: 150,
     renderCell: (params) => (
       <Stack>
         <Typography variant="body2">{params.value} {params.row.year}</Typography>
@@ -238,18 +239,10 @@ const columns = [
   {
     field: 'invoiceLink',
     headerName: 'Invoice',
-    width: 120,
+    width: 140,
     renderCell: (params) => (
       params.value && (
-        <Typography
-          component="a"
-          href={params.value}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800"
-        >
-          View Receipt
-        </Typography>
+        <DownReceipt />
       )
     ),
   },
