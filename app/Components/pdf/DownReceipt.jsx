@@ -64,7 +64,7 @@ if (response.variant === 'success') {
       toName.setText(`${payData?.user?.firstName}  ${payData?.user?.lastName}`);
       address.setText(`${payData?.user?.address}`|| 'N/A');
       receipt.setText(payData?.invoiceNumber || 'N/A');
-      product.setText(payData?.mockTestId?.mockTestTitle || 'N/A');
+      product.setText(payData?.mockTestId?.mockTestTitle || payData?.courseId?.courseTitle ||'N/A');
       totalAmount.setText(String(payData?.amount) || 'N/A');
       amount.setText(String(payData?.amount) || 'N/A');
 
