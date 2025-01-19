@@ -119,7 +119,14 @@ export default function MockCheckoutForm({data,setClientSecret,selectedChild, bu
   };
 
   const paymentElementOptions = {
-    layout: "tabs"
+    layout: "tabs",
+    fields: {
+      billingDetails: {
+        name: 'never', // Hides the name field
+        email: 'auto', // You can set this to 'never' if not required by any payment method
+        phone: 'never' // Hides the phone field
+      }
+    }
   }
 
   return (
