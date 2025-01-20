@@ -29,6 +29,7 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import moment from 'moment';
 import ChildSelectorDropDown from '../../Components/Common/ChildSelectorDropDown';
 import { reportService } from '@/app/services';
+import DownReceipt from '@/app/Components/pdf/DownReceipt';
 
 const formatPaymentData = (myBuyCourse = [], myBuyMock = []) => {
   const coursePayments = myBuyCourse.map(payment => ({
@@ -154,15 +155,9 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
               </Typography>
             </Box>
             {payment.invoiceLink && (
-              <Typography
-                component="a"
-                href={payment.invoiceLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                View Invoice
-              </Typography>
+        <DownReceipt data={payment.invoiceLink} />
+
+
             )}
           </Stack>
         </Collapse>
@@ -240,17 +235,8 @@ const columns = [
     headerName: 'Invoice',
     width: 120,
     renderCell: (params) => (
-      params.value && (
-        <Typography
-          component="a"
-          href={params.value}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-blue-600 hover:text-blue-800"
-        >
-          View Invoice
-        </Typography>
-      )
+      <DownReceipt data={params.value} />
+
     ),
   },
 ];
