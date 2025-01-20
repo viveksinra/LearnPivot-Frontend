@@ -126,6 +126,13 @@ function MyMockTest() {
   const [selectedItems, setSelectedItems] = useState([]);
   const entryRef = useRef();
 
+   useEffect(() => { 
+  console.log("selectedItems", selectedItems);
+    
+
+  }, [selectedItems])
+  
+
   return (
     <main>
       {viewTabular ? (
