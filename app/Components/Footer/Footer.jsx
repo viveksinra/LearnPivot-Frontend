@@ -31,7 +31,7 @@ const Footer = () => {
         </Link><br/><br/>
         <Typography color="black" variant="subtitle1">Embark on a journey of knowledge, innovation, and personal growth with our cutting-edge e-learning platform. Here, empowerment flourishes, and your educational aspirations take center stage.</Typography>
 <br />
-<Typography variant="body2" color="secondary">Your Platform - Igniting Minds, Shaping Futures</Typography>
+<Typography variant="body2" color="secondary">Our Platform - Igniting Minds, Shaping Futures</Typography>
 
             </Grid>
             <Grid item xs={12} md={3}>

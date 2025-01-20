@@ -32,7 +32,6 @@ import { BsTable } from "react-icons/bs";
 import Loading from "../../Components/Loading/Loading";
 import NoResult from "@/app/Components/NoResult/NoResult";
 import Search from "../../Components/Search";
-import LiveAvatar from "@/app/Components/Common/LiveAvatar";
 import { registrationService } from "@/app/services";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 import MulSelCom from "./MulSelCom";
@@ -78,6 +77,28 @@ const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
     '&:hover': {
       backgroundColor: '#ffe0b2',
     },
+  },
+  // Add horizontal scroll
+  '& .MuiDataGrid-main': {
+    overflow: 'auto',
+  },
+  '& .MuiDataGrid-virtualScroller': {
+    overflow: 'auto',
+  },
+  // Optional: Add some styling for better scroll appearance
+  '& ::-webkit-scrollbar': {
+    height: '8px',
+    width: '8px',
+  },
+  '& ::-webkit-scrollbar-track': {
+    background: '#f1f1f1',
+  },
+  '& ::-webkit-scrollbar-thumb': {
+    background: '#888',
+    borderRadius: '4px',
+  },
+  '& ::-webkit-scrollbar-thumb:hover': {
+    background: '#555',
   },
 }));
 
@@ -222,7 +243,16 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       field: 'bookingDate',
       headerName: 'Booking Date',
       width: 120,
-      valueGetter: (params) => formatDateToShortMonth(params.row.date),
+      valueGetter: (params) => {
+        // Store the original date for sorting
+        const originalDate = new Date(params.row.date);
+        return {
+          sort: originalDate.getTime(), // Use timestamp for sorting
+          formatted: formatDateToShortMonth(params.row.date) // Use formatted date for display
+        };
+      },
+      valueFormatter: (params) => params.value.formatted, // Display the formatted date
+      sortComparator: (v1, v2) => v1.sort - v2.sort, // Compare using timestamps
       filterable: true,
     },
     {
@@ -294,7 +324,12 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       background: "#fff", 
       boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", 
       borderRadius: 8, 
-      padding: 20 
+      padding: 20,
+      alignItems: "center",
+      justifyContent: "center",
+      alignSelf: "center",
+      marginRight: 20,
+      maxWidth: 1250,
     }}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
@@ -359,66 +394,76 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       ) : rows.length === 0 ? (
         <NoResult label="No Mock Tests Available" />
       ) : (
-        <div style={{ height: 600, width: '100%', marginTop: 20 }}>
-          <StyledDataGrid
-            rows={rows}
-            columns={columns}
-            getRowId={(row) => row._id}
-            pagination
-            pageSize={rowsPerPage}
-            rowsPerPageOptions={[5, 10, 25, 50]}
-            rowCount={totalCount}
-            paginationMode="server"
-            onPageChange={(newPage) => setPage(newPage)}
-            onPageSizeChange={(newPageSize) => {
-              setRowsPerPage(newPageSize);
-              setPage(0);
-            }}
-            checkboxSelection
-            disableSelectionOnClick
-            onSelectionModelChange={handleSelectionChange}
-            selectionModel={selectedItems.map(item => item._id)}
-            loading={loading}
-            initialState={{
-              columns: {
-                columnVisibilityModel: {
-                  address: false,
-                  mobileNo: false,
-                }
-              }
-            }}
-            columnVisibilityModel={columnVisibilityModel}
-            onColumnVisibilityModelChange={(newModel) => {
-              setColumnVisibilityModel(newModel);
-            }}
-            components={{
-              Toolbar: GridToolbar,
-              Pagination: CustomPagination,
-            }}
-            componentsProps={{
-              toolbar: {
-                csvOptions: { 
-                  allColumns: true,
-                  fileName: 'MockTests_Export'
-                },
-                printOptions: { 
-                  disableToolbarButton: true 
-                },
-                filterButton: true,
-                showQuickFilter: true,
-              },
-            }}
-            getRowClassName={(params) => `status-${params.row.status}`}
-            sx={{
-              '& .MuiDataGrid-columnHeaders': {
-                backgroundColor: '#f5f5f5',
-              },
-              '& .MuiDataGrid-cell:focus': {
-                outline: 'none',
-              },
-            }}
-          />
-
+        <div style={{ height: 600, width: '99.9%', marginTop: 20 }}>
+          <Grid container>
+            <Grid item xs={12} style={{ overflowX: 'auto' }}>
+              <StyledDataGrid
+                rows={rows}
+                columns={columns}
+                getRowId={(row) => row._id}
+                pagination
+                pageSize={rowsPerPage}
+                rowsPerPageOptions={[5, 10, 25, 50]}
+                rowCount={totalCount}
+                paginationMode="server"
+                onPageChange={(newPage) => setPage(newPage)}
+                onPageSizeChange={(newPageSize) => {
+                  setRowsPerPage(newPageSize);
+                  setPage(0);
+                }}
+                checkboxSelection
+                disableSelectionOnClick
+                onSelectionModelChange={handleSelectionChange}
+                selectionModel={selectedItems.map(item => item._id)}
+                loading={loading}
+                initialState={{
+                  columns: {
+                    columnVisibilityModel: {
+                      address: false,
+                      mobileNo: false,
+                    }
+                  }
+                }}
+                columnVisibilityModel={columnVisibilityModel}
+                onColumnVisibilityModelChange={(newModel) => {
+                  setColumnVisibilityModel(newModel);
+                }}
+                components={{
+                  Toolbar: GridToolbar,
+                  Pagination: CustomPagination,
+                }}
+                componentsProps={{
+                  toolbar: {
+                    csvOptions: { 
+                      allColumns: true,
+                      fileName: 'MockTests_Export'
+                    },
+                    printOptions: { 
+                      disableToolbarButton: true 
+                    },
+                    filterButton: true,
+                    showQuickFilter: true,
+                  },
+                }}
+                getRowClassName={(params) => `status-${params.row.status}`}
+                autoHeight // Optional: makes the grid adjust to content
+                disableExtendRowFullWidth={false}
+                sx={{
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: '#f5f5f5',
+                  },
+                  '& .MuiDataGrid-cell:focus': {
+                    outline: 'none',
+                  },
+                  // Ensure horizontal scroll works properly
+                  width: '99.9%',
+                  '& .MuiDataGrid-root': {
+                    maxWidth: '99.9%',
+                  },
+                }}
+              />
+            </Grid>
+          </Grid>
         </div>
       )}
     </main>
