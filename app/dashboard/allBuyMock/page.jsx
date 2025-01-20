@@ -311,6 +311,13 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
         if (response.variant === "success") {
           setRows(response.data);
           setTotalCount(response.totalCount);
+          
+          // Update selectedItems to maintain selection after data refresh
+          const currentSelectedIds = selectedItems.map(item => item._id);
+          const updatedSelectedItems = response.data.filter(row => 
+            currentSelectedIds.includes(row._id)
+          );
+          setSelectedItems(updatedSelectedItems);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -321,8 +328,11 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     fetchAllData();
   }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
 
-  const handleSelectionChange = (newSelection) => {
-    const selectedRows = rows.filter(row => newSelection.includes(row._id));
+  const handleSelectionChange = (newSelectionModel) => {
+    console.log("newSelectionModel", newSelectionModel);
+    const selectedRows = rows.filter(row => 
+      newSelectionModel.includes(row._id)
+    );
     setSelectedItems(selectedRows);
   };
 
@@ -419,9 +429,9 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   setPage(0);
                 }}
                 checkboxSelection
-                disableSelectionOnClick
-                onSelectionModelChange={handleSelectionChange}
-                selectionModel={selectedItems.map(item => item._id)}
+  disableRowSelectionOnClick // updated from disableSelectionOnClick
+  rowSelectionModel={selectedItems.map(item => item._id)} // updated from selectionModel
+  onRowSelectionModelChange={handleSelectionChange} 
                 loading={loading}
                 initialState={{
                   columns: {
@@ -453,7 +463,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   },
                 }}
                 getRowClassName={(params) => `status-${params.row.status}`}
-                autoHeight // Optional: makes the grid adjust to content
+                autoHeight
                 disableExtendRowFullWidth={false}
                 sx={{
                   '& .MuiDataGrid-columnHeaders': {
@@ -462,7 +472,6 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   '& .MuiDataGrid-cell:focus': {
                     outline: 'none',
                   },
-                  // Ensure horizontal scroll works properly
                   width: '99.9%',
                   '& .MuiDataGrid-root': {
                     maxWidth: '99.9%',

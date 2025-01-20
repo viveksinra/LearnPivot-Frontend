@@ -30,6 +30,7 @@ import moment from 'moment';
 import ChildSelectorDropDown from '../../Components/Common/ChildSelectorDropDown';
 import { reportService } from '@/app/services';
 import DownReceipt from '@/app/Components/pdf/DownReceipt';
+import { Padding } from '@mui/icons-material';
 
 const formatPaymentData = (myBuyCourse = [], myBuyMock = []) => {
   const coursePayments = myBuyCourse.map(payment => ({
@@ -233,7 +234,7 @@ const columns = [
   {
     field: 'invoiceLink',
     headerName: 'Invoice',
-    width: 120,
+    width: 180,
     renderCell: (params) => (
       <DownReceipt data={params.value} />
 
@@ -301,7 +302,7 @@ export default function PaymentsPage() {
   }
 
   return (
-    <Box className="p-4">
+    <Box className="p-4" style={{width: '99.9%', PaddingRight: '100px'}}>
       <Card className="shadow-md rounded-xl">
         <CardContent>
           <Grid container spacing={2} alignItems="center" className="mb-4">
