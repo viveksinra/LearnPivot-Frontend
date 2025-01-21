@@ -197,6 +197,13 @@ const columns = [
     valueGetter: (params) => moment(params.value).format('DD MMM YYYY'),
   },
   {
+    field: 'paymentTime',
+    headerName: 'Time',
+    width: 160,
+    valueGetter: (params) => 
+  moment(params.value).format('HH:mm:ss')
+  },
+  {
     field: 'amountPaid',
     headerName: 'Amount',
     width: 120,
@@ -353,7 +360,7 @@ export default function PaymentsPage() {
               ))}
             </List>
           ) : (
-            <Box className="h-[600px] " style={{width: '90%'}}>
+            <Box className="h-[600px] " style={{maxWidth: 1200}}>
               <DataGrid
                 rows={filteredPayments}
                 columns={columns}
