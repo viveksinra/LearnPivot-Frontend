@@ -119,13 +119,13 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
               {data.mockTestTitle}
             </Typography>
             <Box sx={{
-              backgroundColor: '#FCD34D',
+              backgroundColor: totalAmount?"#a0ff69":'#FCD34D',
               padding: '8px 16px',
               borderRadius: '8px',
-              transform: 'rotate(12deg)',
+              transform: !totalAmount && 'rotate(12deg)',
             }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              £{totalAmount ? totalAmount : Math.min(...data.batch.map(b => b.oneBatchprice))}
+              {totalAmount ? `Total: £${totalAmount}` : `£${Math.min(...data.batch.map(b => b.oneBatchprice))}`}
               </Typography>
             </Box>
           </Box>
