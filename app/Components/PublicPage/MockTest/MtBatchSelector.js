@@ -33,12 +33,13 @@ const MtBatchSelector = ({
 
   const [loading, setLoading] = useState(true);
   const [alreadyBoughtBatch, setAlreadyBoughtBatch] = useState([]);
-
+console.log({data})
   useEffect(() => {
     const upcomingBatch = data.batch.find(batch => new Date(batch.date) >= today && !batch.filled && !alreadyBoughtBatch.some(b => b._id === batch._id));
     if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
       setSelectedBatch([...selectedBatch, upcomingBatch]);
     }
+    console.log({upcomingBatch})
   }, [ alreadyBoughtBatch]);
 
   useEffect(() => {
@@ -214,7 +215,7 @@ const MtBatchSelector = ({
                           mt: 1
                         }}
                       >
-                        {isSelectable? "Available" : isAlreadyBought ? `Already Booked - ${selectedChild.childName}` : 'Booking Full'}
+                        {isSelectable? "Available" : isAlreadyBought ? `Already Booked for ${selectedChild.childName}` : 'Booking Full'}
                       </Typography>
                         
                           {/* <GroupIcon sx={{ color: '#64748B' }} />
