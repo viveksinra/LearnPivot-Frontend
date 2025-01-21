@@ -20,6 +20,10 @@ const DownReceipt = ({
     return `${day}/${month}/${year}`;
   };
 
+  const formatAmount = (amount) => {
+    return `£${parseFloat(amount).toFixed(2)}`;
+  };
+
   const downloadAgreement = async (data) => {
     if (!data) {
       console.error('Data is not defined');
@@ -37,6 +41,8 @@ if (response.variant === 'success') {
 }
       // i want date in dd/mm/yyyy format
       const finalReceiptDate = formatMyDate(payData?.date);
+
+      const productName = payData?.mockTestId?.mockTestTitle + " for " + payData?.childId?.childName || payData?.courseId?.courseTitle + " for " + payData?.childId?.childName || 'N/A';
 
 
       // Load the existing PDF from local path
@@ -64,9 +70,9 @@ if (response.variant === 'success') {
       toName.setText(`${payData?.user?.firstName}  ${payData?.user?.lastName}`);
       address.setText(`${payData?.user?.address}`|| 'N/A');
       receipt.setText(payData?.invoiceNumber || 'N/A');
-      product.setText(payData?.mockTestId?.mockTestTitle || payData?.courseId?.courseTitle ||'N/A');
-      totalAmount.setText(String(payData?.amount) || 'N/A');
-      amount.setText(String(payData?.amount) || 'N/A');
+      product.setText(productName);
+      totalAmount.setText(formatAmount(payData?.amount) || 'N/A');
+      amount.setText(formatAmount(payData?.amount) || 'N/A');
 
       // Flatten the form to make the fields non-editable
       form.flatten();
