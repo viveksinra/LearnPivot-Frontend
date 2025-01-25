@@ -5,13 +5,16 @@ import {
   IconButton,
   Paper,
   Grid,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
 } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import EventIcon from '@mui/icons-material/Event';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import GroupIcon from '@mui/icons-material/Group';
-import CurrencyPoundIcon from '@mui/icons-material/CurrencyPound';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import MockPayButton from "./MockPayButton";
@@ -33,14 +36,19 @@ const MtBatchSelector = ({
 
   const [loading, setLoading] = useState(true);
   const [alreadyBoughtBatch, setAlreadyBoughtBatch] = useState([]);
-console.log({data})
+  const [conflictDialogOpen, setConflictDialogOpen] = useState(false);
+  const [conflictBatch, setConflictBatch] = useState(null);
+
   useEffect(() => {
-    const upcomingBatch = data.batch.find(batch => new Date(batch.date) >= today && !batch.filled && !alreadyBoughtBatch.some(b => b._id === batch._id));
+    const upcomingBatch = data.batch.find(batch => 
+      new Date(batch.date) >= today && 
+      !batch.filled && 
+      !alreadyBoughtBatch.some(b => b._id === batch._id)
+    );
     if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
       setSelectedBatch([...selectedBatch, upcomingBatch]);
     }
-    console.log({upcomingBatch})
-  }, [ alreadyBoughtBatch]);
+  }, [alreadyBoughtBatch]);
 
   useEffect(() => {
     const newTotalAmount = selectedBatch.reduce((sum, batch) => {
@@ -50,16 +58,37 @@ console.log({data})
   }, [selectedBatch]);
 
   const handleCheckboxChange = (batch) => {
+    // Check for existing batch on the same date
+    const existingDateBatch = selectedBatch.find(
+      b => new Date(b.date).toDateString() === new Date(batch.date).toDateString()
+    );
+
+    // Check for already booked batch on the same date
+    const alreadyBookedDateBatch = alreadyBoughtBatch.find(
+      b => new Date(b.date).toDateString() === new Date(batch.date).toDateString()
+    );
+
+    // If batch already exists or is already booked, show conflict dialog
+
+
+    // Normal selection logic
     const isSelected = selectedBatch.some(b => b._id === batch._id);
     if (isSelected) {
       setSelectedBatch(selectedBatch.filter(b => b._id !== batch._id));
     } else if (!batch.filled && new Date(batch.date) >= today) {
+      if (existingDateBatch || alreadyBookedDateBatch) {
+        setConflictBatch(batch);
+        setConflictDialogOpen(true);
+        return;
+      }
       setSelectedBatch([...selectedBatch, batch]);
     }
   };
 
   const isBatchSelectable = (batch) => {
-    return !batch.filled && new Date(batch.date) >= today && !alreadyBoughtBatch.some(b => b._id === batch._id);
+    return !batch.filled && 
+           new Date(batch.date) >= today && 
+           !alreadyBoughtBatch.some(b => b._id === batch._id);
   };
 
   const formatDate = (dateString) => {
@@ -71,10 +100,13 @@ console.log({data})
     });
   };
 
-    async function getBoughtBatch() {
-      setLoading(true)
-    try{
-      let res = await mockTestService.alreadyBoughtMock({childId:selectedChild._id,id:`${data._id}`});
+  async function getBoughtBatch() {
+    setLoading(true)
+    try {
+      let res = await mockTestService.alreadyBoughtMock({
+        childId: selectedChild._id, 
+        id: `${data._id}`
+      });
     
       if (res.variant === "success") {
         setAlreadyBoughtBatch(res.data)
@@ -83,31 +115,48 @@ console.log({data})
         alert(res);
         console.log(res);
       }
-    }catch (error) {
+    } catch (error) {
       console.error("Error fetching data:", error);
     }   
-      setLoading(false)
+    setLoading(false)
+  }
 
-    }
-    useEffect(() => {
-  
- 
-        getBoughtBatch();
-    }, [selectedChild]);
-  
+  useEffect(() => {
+    getBoughtBatch();
+  }, [selectedChild]);
 
   return (
     <Box sx={{ position: 'relative', pb: '80px' }}>
+      {/* Conflict Dialog */}
+      <Dialog
+        open={conflictDialogOpen}
+        onClose={() => setConflictDialogOpen(false)}
+      >
+        <DialogTitle>Date Conflict</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}. 
+            Please deselect the existing batch before selecting a new one.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setConflictDialogOpen(false)} color="primary">
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
         <Button
           startIcon={<ArrowBackIcon />}
           onClick={() => setStep(2)}
-
           sx={{ 
             width: '20%',
             minWidth: 'auto',
-            color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
+            color: 'white', 
+            backgroundColor: '#fc7658', 
+            '&:hover': { backgroundColor: 'darkred' }
           }}
         >
           Back
@@ -144,7 +193,6 @@ console.log({data})
                   } : {},
                 }}
                 onClick={() => isSelectable && handleCheckboxChange(batch)}
-                
               >
                 <Grid container spacing={2}>
                   {/* Checkbox Column */}
@@ -177,7 +225,6 @@ console.log({data})
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      
                             <Typography 
                               sx={{ 
                                 color: '#1E293B',
@@ -195,7 +242,7 @@ console.log({data})
                       <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <AccessTimeIcon sx={{ color: '#64748B' }} />
+                            <AccessTimeIcon sx={{ color: '#64748B' }} />
                             <Typography 
                               sx={{ 
                                 color: '#64748B',
@@ -206,34 +253,20 @@ console.log({data})
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>    
-                         
-                      <Typography 
-                        sx={{ 
-                          color: isSelectable ? '#059669' : '#DC2626',
-                          fontSize: '0.75rem',
-                          fontWeight: 500,
-                          mt: 1
-                        }}
-                      >
-                        {isSelectable? "Available" : isAlreadyBought ? `Already Booked for ${selectedChild.childName}` : 'Booking Full'}
-                      </Typography>
-                        
-                          {/* <GroupIcon sx={{ color: '#64748B' }} />
                             <Typography 
                               sx={{ 
-                                color: '#64748B',
-                                fontSize: '0.875rem'
+                                color: isSelectable ? '#059669' : '#DC2626',
+                                fontSize: '0.75rem',
+                                fontWeight: 500,
+                                mt: 1
                               }}
                             >
-                             Total Seats: {batch.totalSeat}
-                            </Typography> */}
+                              {isSelectable? "Available" : isAlreadyBought ? `Already Booked for ${selectedChild.childName}` : 'Booking Full'}
+                            </Typography>
                           </Box>
                         </Box>
                       </Grid>
                     </Grid>
-
-                    {/* Status Message */}
-             
                   </Grid>
                 </Grid>
               </Paper>
