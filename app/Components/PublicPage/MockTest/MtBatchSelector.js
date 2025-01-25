@@ -185,7 +185,7 @@ console.log({data})
                                 fontSize: '0.975rem'
                               }}
                             >
-                              £{batch.oneBatchprice}
+                              £ {batch.oneBatchprice}
                             </Typography>
                           </Box>
                         </Box>
