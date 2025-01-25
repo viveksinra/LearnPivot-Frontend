@@ -177,15 +177,15 @@ console.log({data})
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                          <CurrencyPoundIcon sx={{ color: '#64748B' }} />
+                      
                             <Typography 
                               sx={{ 
                                 color: '#059669',
                                 fontWeight: 600,
-                                fontSize: '0.875rem'
+                                fontSize: '0.975rem'
                               }}
                             >
-                              {batch.oneBatchprice}
+                              £{batch.oneBatchprice}
                             </Typography>
                           </Box>
                         </Box>
