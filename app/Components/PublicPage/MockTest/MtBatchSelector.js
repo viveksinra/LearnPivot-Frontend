@@ -180,7 +180,7 @@ console.log({data})
                       
                             <Typography 
                               sx={{ 
-                                color: '#059669',
+                                color: '#1E293B',
                                 fontWeight: 600,
                                 fontSize: '0.975rem'
                               }}
