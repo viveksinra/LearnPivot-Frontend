@@ -174,7 +174,9 @@ margin-right: 12px;
                     aria-haspopup="true"
                     aria-expanded={openProfile ? "true" : undefined}
                     alt="User"
-                    src={currentUser.userImage}
+                    // src={currentUser.userImage}
+                    src={"https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg"}
+
                     onClick={(e) => setAnchorElProfile(e.currentTarget)}
                   />
                 </>

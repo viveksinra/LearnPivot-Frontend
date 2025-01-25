@@ -502,7 +502,8 @@ function DashboardLayout({ children }) {
             aria-haspopup="true"
             aria-expanded={openProfile ? "true" : undefined}
             alt="User"
-            src={authService.getLoggedInUser()?.userImage}
+            // src={authService.getLoggedInUser()?.userImage}
+            src={"https://img.freepik.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg"}
             onClick={(e) => setAnchorElProfile(e.currentTarget)}
           />
         </Toolbar>
