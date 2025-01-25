@@ -85,21 +85,29 @@ const MtBuyComponent = ({data}) => {
               <CloseIcon onClick={handleCloseDialog} style={{ cursor: 'pointer' }} />
             </DialogTitle>
             <DialogContent>
-              {submitted ? (
-                             <MockStripePay selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
+            {submitted ? (
+                <MockStripePay 
+                data={data} 
 
+                setSubmitted={setSubmitted}
+                  setSubmittedId={setSubmittedId}
+                  setStep={setStep}
+                  selectedChild={selectedChild}
+                selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
               ) : (
                 <MockEnqForm 
-                data={data} 
-                setSubmitted={setSubmitted}
-                setSubmittedId={setSubmittedId}
-                setTotalAmount={setTotalAmount}                
-                totalAmount={totalAmount} 
-                selectedBatch={selectedBatch}
-                setSelectedBatch={setSelectedBatch}
-                selectedChild={selectedChild} 
-                setSelectedChild={setSelectedChild} 
-              />
+                  data={data} 
+                  setStep={setStep}
+                  step={step}
+                  setSubmitted={setSubmitted}
+                  setSubmittedId={setSubmittedId}
+                  setTotalAmount={setTotalAmount}                
+                  totalAmount={totalAmount} 
+                  selectedBatch={selectedBatch}
+                  setSelectedBatch={setSelectedBatch}
+                  selectedChild={selectedChild} 
+                  setSelectedChild={setSelectedChild} 
+                />
               )}
             </DialogContent>
           </Dialog>
