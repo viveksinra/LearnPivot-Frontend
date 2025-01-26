@@ -20,7 +20,7 @@ const AnimatedButton = styled(Button)`
   background: linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%);
   border: 0;
   border-radius: 3px;
-  height: 58px;
+  min-height: 58px;  // Changed from height to min-height
   font-size: 1.25rem;
   padding: 0 30px;
   animation: ${props => props.disabled ? 'none' : `${pulse} 2s infinite`};

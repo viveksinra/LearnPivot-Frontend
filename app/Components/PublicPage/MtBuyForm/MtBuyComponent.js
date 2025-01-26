@@ -9,6 +9,7 @@ import SmallOneMockTest from "../MockTest/SmallOneMockTest";
 import MockStripePay from "../../mockStripePay/MockStripePay";
 import MockEnqForm from "../BuyForm/MockEnqForm";
 import CloseIcon from '@mui/icons-material/Close';
+import AnimatedButton from "../../Common/AnimatedButton";
 
 const MtBuyComponent = ({data}) => {
   const snackRef = useRef();  
@@ -65,14 +66,17 @@ const MtBuyComponent = ({data}) => {
       </Container>
       {isMobile && (
         <>
-          <Button 
+               <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }}  onClick={handleOpenDialog}>
+               Book Now
+        </AnimatedButton>
+          {/* <Button 
             variant="contained" 
             color="primary" 
             style={{ position: 'fixed', bottom: '10px', width: '90%', left: '5%' }} 
             onClick={handleOpenDialog}
           >
-            Book Now
-          </Button>
+           
+          </Button> */}
           <Dialog fullScreen open={openDialog} onClose={handleCloseDialog}>
             <DialogTitle style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'darkblue', color: 'white' }}>
               {`Book Now`}
