@@ -25,6 +25,8 @@ const Footer = () => {
     <section className="footerBg">
         <Container maxWidth="xl">
           <Grid container>
+          <Grid item xs={12} md={1}>
+            </Grid>
             <Grid item xs={12} md={3}>
             <Link href="/">
             <Image width={160} height={60} src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" loading="lazy"/>
@@ -54,7 +56,7 @@ const Footer = () => {
               {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
             </ul>   
             </Grid>
-            <Grid item xs={12} md={2}>
+            <Grid item xs={12} md={1}>
             </Grid>
           </Grid>
         </Container>
