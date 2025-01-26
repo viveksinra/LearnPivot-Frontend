@@ -162,6 +162,13 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
       if (response.variant === 'success') {
         handleClose();
         handleGetAllChildren();
+        setNewChild({
+          _id: '',
+          childName: '',
+          childDob: '',
+          childGender: '',
+          childYear: '',
+        });
       }
     } catch (error) {
       console.error('Error submitting data:', error);
