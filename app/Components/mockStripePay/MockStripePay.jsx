@@ -98,12 +98,13 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
     < >
 
           {!clientSecret ? (
-                 <StyledPaper elevation={3}>
+                //  <StyledPaper elevation={3}>
                  <Box sx={{ 
                    display: "flex", 
                    flexDirection: "column",
                    alignItems: "flex-start",
-                   gap: 2 
+                   gap: 2 ,
+                   padding: 1,
                  }}>
           
                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
@@ -204,9 +205,9 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                 </Typography>
               )}
                 </Box>
-                </StyledPaper>
+                // </StyledPaper>
           ) : (
-            <Elements options={options} stripe={stripePromise}>
+            <Elements options={options} stripe={stripePromise} style={{ width: '100%'}}>
               <MockCheckoutForm data={data} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
           )}
