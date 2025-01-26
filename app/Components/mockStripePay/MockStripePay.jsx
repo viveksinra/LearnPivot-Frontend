@@ -95,7 +95,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container >
 
           {!clientSecret ? (
                  <StyledPaper elevation={3}>

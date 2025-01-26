@@ -31,7 +31,7 @@ function CourseEnqForm({ data, setSubmitted, setSubmittedId, setTotalAmount, tot
       {step === 1 && <ComLogSigForm isRedirectToDashboard={false} />}
       {step === 2 && (
         <>
-          <ChildSelector selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
+          <ChildSelector title={data.courseTitle} selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
         </>
       )}
       {step === 3 && (

@@ -297,9 +297,16 @@ console.log(data)
         <DialogTitle sx={{ 
           backgroundColor: '#F3F4F6',
           color: '#1F2937',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
           FAQs
+          <CloseIcon 
+            onClick={() => setOpenFAQModal(false)} 
+            sx={{ cursor: 'pointer', color: '#1F2937' }} 
+          />
         </DialogTitle>
         <DialogContent>
           <div style={{ marginTop: '16px' }}>

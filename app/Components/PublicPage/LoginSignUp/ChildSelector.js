@@ -49,7 +49,7 @@ const CheckIconContainer = styled(Box)(({ theme }) => ({
   padding: 2,
 }));
 
-const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
+const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   const snackRef = useRef();
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
@@ -137,7 +137,7 @@ const ChildSelector = ({ selectedChild, setSelectedChild, setStep }) => {
   return (
     <div>
       <Typography variant="h6" gutterBottom>
-        Select the child, for whom you are purchasing this course.
+        Select the child, for this {title} purchase.
       </Typography>
 
       {allChildren.map((child) => (

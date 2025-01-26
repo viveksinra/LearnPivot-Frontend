@@ -10,7 +10,7 @@ import MtBatchSelector from "../MockTest/MtBatchSelector";
 
 function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
   const snackRef = useRef();
-  
+  console.log(data)
   // Context
   const { state } = useContext(MainContext);
   const currentUser = Cookies.get("currentUser");
@@ -29,7 +29,7 @@ function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTota
       {step === 1 && <ComLogSigForm isRedirectToDashboard={false} />}
       {step === 2 && (
         <>
-          <ChildSelector selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
+          <ChildSelector title={data.mockTestTitle} selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
         </>
       )}
       {step === 3 && (
