@@ -1,4 +1,3 @@
-// AnimatedButton.js
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
 
@@ -21,14 +20,14 @@ const AnimatedButton = styled(Button)`
   background: linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%);
   border: 0;
   border-radius: 3px;
-  color: white;
   height: 58px;
   font-size: 1.25rem;
   padding: 0 30px;
   animation: ${props => props.disabled ? 'none' : `${pulse} 2s infinite`};
   opacity: ${props => props.disabled ? 0.6 : 1};
+  color: white !important;  // Ensure text is always white
   background: ${props => props.disabled ? 
-    'linear-gradient(45deg, #9E9E9E 30%, #757575 90%)' : 
+    'linear-gradient(45deg,rgb(53, 53, 53) 30%,rgb(0, 0, 0) 90%)' : 
     'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)'
   };
   
