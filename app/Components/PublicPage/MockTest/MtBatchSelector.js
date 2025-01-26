@@ -206,7 +206,7 @@ const MtBatchSelector = ({
           Back
         </Button>
         <Typography variant="h5" sx={{ width: '80%', fontWeight: 400 }}>
-          Select Batches for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+          Select Mock-Test(s) for :  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
         </Typography>
       </Box>
 
