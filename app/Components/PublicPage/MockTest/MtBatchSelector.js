@@ -146,22 +146,49 @@ const MtBatchSelector = ({
     <Box sx={{ position: 'relative', pb: '80px' }}>
       {/* Conflict Dialog */}
       <Dialog
-        open={conflictDialogOpen}
-        onClose={() => setConflictDialogOpen(false)}
-      >
-        <DialogTitle>Date Conflict</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}. 
-            
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setConflictDialogOpen(false)} color="primary">
-            OK
-          </Button>
-        </DialogActions>
-      </Dialog>
+  open={conflictDialogOpen}
+  onClose={() => setConflictDialogOpen(false)}
+  PaperProps={{
+    sx: {
+      borderRadius: 3,
+      backgroundColor: '#F5F5F5',
+      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+    }
+  }}
+>
+  <DialogTitle 
+    sx={{ 
+      backgroundColor: '#FEF3C7', 
+      color: '#78350F', 
+      fontWeight: 600,
+      padding: 2 
+    }}
+  >
+    Date Conflict
+  </DialogTitle>
+  <DialogContent sx={{ padding: 3 }}>
+    <DialogContentText sx={{ color: '#4B5563' }}>
+      You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}.
+    </DialogContentText>
+  </DialogContent>
+  <DialogActions sx={{ padding: 2 }}>
+    <Button 
+      onClick={() => setConflictDialogOpen(false)} 
+      variant="contained"
+      sx={{ 
+        backgroundColor: '#F97316', 
+        color: 'white',
+        '&:hover': { 
+          backgroundColor: '#EA580C' 
+        },
+        textTransform: 'none',
+        borderRadius: 2
+      }}
+    >
+      Close
+    </Button>
+  </DialogActions>
+</Dialog>
 
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
