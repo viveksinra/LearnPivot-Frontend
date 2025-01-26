@@ -222,7 +222,7 @@ const MtBatchSelector = ({
               <Paper
                 elevation={isSelected ? 3 : 1}
                 sx={{
-                  p: 2.5,
+                  p: 1,
                   backgroundColor: isSelected ? '#F0F9FF' : '#ffffff',
                   border: '1px solid',
                   borderColor: isSelected ? '#BAE6FD' : isSelectable ? '#059669' : '#DC2626',
@@ -252,7 +252,7 @@ const MtBatchSelector = ({
 
                   {/* Info Column */}
                   <Grid item xs={11}>
-                    <Grid container spacing={2} >
+                    <Grid container spacing={1} >
                       {/* Date and Time */}
                       <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, }}>
@@ -262,7 +262,7 @@ const MtBatchSelector = ({
                               variant="subtitle1" 
                               sx={{ 
                                 color: '#1E293B',
-                                fontWeight: 500
+                                fontWeight: 600
                               }}
                             >
                               {formatDate(batch.date)}
@@ -289,8 +289,10 @@ const MtBatchSelector = ({
                             <AccessTimeIcon sx={{ color: '#64748B' }} />
                             <Typography 
                               sx={{ 
-                                color: '#64748B',
-                                fontSize: '0.875rem'
+                                color: '#1E293B',
+                                fontSize: '0.875rem',
+                                fontWeight: 700,
+
                               }}
                             >
                                {batch.startTime} - {batch.endTime}
@@ -301,7 +303,7 @@ const MtBatchSelector = ({
                               sx={{ 
                                 color: isSelectable ? '#059669' : '#DC2626',
                                 fontSize: '0.75rem',
-                                fontWeight: 500,
+                                fontWeight: 700,
                                 mt: 1
                               }}
                             >
