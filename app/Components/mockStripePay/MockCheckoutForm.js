@@ -55,7 +55,7 @@ const styles = {
   },
 };
 
-export default function MockCheckoutForm({data,setClientSecret,selectedChild, buyMockId, totalAmount}) {
+export default function MockCheckoutForm({data, setClientSecret, selectedChild, buyMockId, totalAmount, isMobile}) {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -124,26 +124,32 @@ export default function MockCheckoutForm({data,setClientSecret,selectedChild, bu
 
   return (
     <>
-
-
       {/* Payment Form */}
-      <form id="payment-form" style={{backgroundColor:"red"}} onSubmit={handleSubmit}>
-      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                 <Button
-                   startIcon={<ArrowBackIcon />}
-                   onClick={() => setClientSecret("")}
-                   sx={{ 
-                     width: '20%',
-                     minWidth: 'auto',
-                     color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
-                   }}
-                 >
-                   Back
-                 </Button>
-                 <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
-                   Book {data.testType?.label} Mock Test for :  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
-                 </Typography>
-               </Box>
+      <form 
+        id="payment-form" 
+        style={{ 
+          width: isMobile ? '100%' : 'auto' 
+        }} 
+        onSubmit={handleSubmit}
+      >
+        <Box sx={{ display: 'flex',  alignItems: 'center', mb: 3, gap: 2 }}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => setClientSecret("")}
+            sx={{ 
+              width: isMobile?"30%":'20%',
+              minWidth: 'auto',
+              color: 'white', 
+              backgroundColor: '#fc7658', 
+              '&:hover': { backgroundColor: 'darkred' }
+            }}
+          >
+            Back
+          </Button>
+          <Typography variant="h7" sx={{ width: isMobile?"70%":'80%', fontWeight: 400 }}>
+            Book {data.testType?.label} Mock Test for :  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+          </Typography>
+        </Box>
         <PaymentElement id="payment-element" options={paymentElementOptions} />
         <button 
           disabled={isLoading || !stripe || !elements} 
