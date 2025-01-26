@@ -153,7 +153,7 @@ const MtBatchSelector = ({
         <DialogContent>
           <DialogContentText>
             You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}. 
-            Please deselect the existing batch before selecting a new one.
+            
           </DialogContentText>
         </DialogContent>
         <DialogActions>
