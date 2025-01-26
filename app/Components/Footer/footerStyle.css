@@ -59,7 +59,7 @@
 }
 #amenitiesUl li{
     padding-top: 20px;
-    margin-left: 50px;
+    /* margin-left: 50px; */
     color: #3905c7;
 }
 #quickUl{
@@ -67,7 +67,7 @@
 }
 #quickUl li{
     padding-top: 20px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     color: darkgreen;
 }
 

@@ -34,19 +34,27 @@ const Footer = () => {
 <Typography variant="body2" color="secondary">Our Platform - Igniting Minds, Shaping Futures</Typography>
 
             </Grid>
+            <Grid item xs={12} md={1}>
+            </Grid>
             <Grid item xs={12} md={3}>
             <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}>Our Amenities :-</Typography>
             <ul id="amenitiesUl">
                 {amenities.map(d=><li key={d}>{d}</li>)}
               </ul>
             </Grid>
+            {/* <Grid item xs={12} md={3}>
+            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> Quick Links :- </Typography>
+            <ul id="quickUl">
+              {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
+            </ul>   
+            </Grid> */}
             <Grid item xs={12} md={3}>
             <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> Quick Links :- </Typography>
             <ul id="quickUl">
               {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
             </ul>   
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={2}>
             </Grid>
           </Grid>
         </Container>
