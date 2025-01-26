@@ -184,7 +184,7 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   return (
     <div>
       <Typography variant="h6" gutterBottom>
-        Select the child, for this {title} purchase.
+        Select a child for this {title}:
       </Typography>
 
       {allChildren.map((child) => (

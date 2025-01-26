@@ -100,9 +100,11 @@ const DrawerData = ({ open, setMobileOpen }) => {
             <ListItemButton
               sx={{ minHeight: 48, justifyContent: open ? "initial" : "center", px: 2.5 }}
             >
-              <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", fontSize: 24 }}>
-                {item.icon}
-              </ListItemIcon>
+              <Tooltip title={item.title} placement="right">
+                <ListItemIcon sx={{ minWidth: 0, mr: open ? 3 : "auto", fontSize: 24 }}>
+                  {item.icon}
+                </ListItemIcon>
+              </Tooltip>
               <ListItemText primary={item.title} sx={{ opacity: open ? 1 : 0 }} />
             </ListItemButton>
           </ListItem>
