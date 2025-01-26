@@ -39,7 +39,7 @@ export const QuickLinks = () => {
               sx={{
                 background: link.bgColor,
                 borderRadius: 2,
-                p: 2,
+                p: 1,
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
