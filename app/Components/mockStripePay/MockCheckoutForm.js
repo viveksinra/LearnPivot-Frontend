@@ -127,7 +127,7 @@ export default function MockCheckoutForm({data,setClientSecret,selectedChild, bu
 
 
       {/* Payment Form */}
-      <form id="payment-form" style={{backgroundColor:null}} onSubmit={handleSubmit}>
+      <form id="payment-form" style={{backgroundColor:"red"}} onSubmit={handleSubmit}>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
                  <Button
                    startIcon={<ArrowBackIcon />}

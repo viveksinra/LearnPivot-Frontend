@@ -49,7 +49,7 @@ const CheckIconContainer = styled(Box)(({ theme }) => ({
   padding: 2,
 }));
 
-const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
+const ChildSelector = ({ isMobile,title, selectedChild, setSelectedChild, setStep }) => {
   const snackRef = useRef();
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
@@ -182,7 +182,7 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   };
 
   return (
-    <div>
+    <div style={{ padding: isMobile? 20 : 0 }}>
       <Typography variant="h6" gutterBottom>
         Select a child for this {title}:
       </Typography>

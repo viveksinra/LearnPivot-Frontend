@@ -42,6 +42,8 @@ const MtBuyComponent = ({data}) => {
             <Grid item xs={12} lg={6}>
          
                 <MockEnqForm 
+              isMobile={true}
+
                   data={data} 
                   setStep={setStep}
                   step={step}
@@ -80,8 +82,10 @@ const MtBuyComponent = ({data}) => {
               {`Book Now`}
               <CloseIcon onClick={handleCloseDialog} style={{ cursor: 'pointer' }} />
             </DialogTitle>
-            <DialogContent>
-            <MockEnqForm 
+            <DialogContent style={{ width: '100%', padding: 0 }}>
+             
+              <MockEnqForm 
+              isMobile={true}
                   data={data} 
                   setStep={setStep}
                   step={step}

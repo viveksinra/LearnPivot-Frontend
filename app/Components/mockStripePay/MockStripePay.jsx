@@ -30,7 +30,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   boxShadow: theme.shadows[3],
 }));
 
-export default function MockStripePay({setStep,data,selectedChild, selectedBatch, submittedId, totalAmount, setSubmitted, setSubmittedId }) {
+export default function MockStripePay({isMobile, setStep,data,selectedChild, selectedBatch, submittedId, totalAmount, setSubmitted, setSubmittedId }) {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
   const [buyMockId, setBuyMockId] = useState("");
@@ -108,7 +108,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                    flexDirection: "column",
                    alignItems: "flex-start",
                    gap: 2 ,
-                   padding: 1,
+                  padding: isMobile? "20px" : "1px"
                  }}>
           
                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
@@ -211,8 +211,8 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                 </Box>
                 // </StyledPaper>
           ) : (
-   
-     <Elements options={options} stripe={stripePromise} style={{ width: '100%'}}>
+
+     <Elements options={options} stripe={stripePromise} style={{ width: '100%', backgroundColor:"green"}}>
               <MockCheckoutForm data={data} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
          

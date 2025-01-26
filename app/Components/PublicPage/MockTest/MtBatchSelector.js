@@ -21,6 +21,7 @@ import MockPayButton from "./MockPayButton";
 import { mockTestService } from "@/app/services";
 
 const MtBatchSelector = ({ 
+  isMobile,
   data, 
   setStep,
   setSubmitted, 
@@ -148,7 +149,7 @@ const MtBatchSelector = ({
   }, [selectedChild]);
 
   return (
-    <Box sx={{ position: 'relative', pb: '80px' }}>
+    <Box sx={{ position: 'relative', pb: '80px', padding: isMobile? "20px" : "0px" }}>
       {/* Conflict Dialog */}
       <Dialog
   open={conflictDialogOpen}
