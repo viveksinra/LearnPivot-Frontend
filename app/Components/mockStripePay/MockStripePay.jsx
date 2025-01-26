@@ -107,7 +107,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                  }}>
           
                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                 <Button
+                 {/* <Button
                    startIcon={<ArrowBackIcon />}
                    onClick={handleUpdateBatch}
          
@@ -118,7 +118,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                    }}
                  >
                    Back
-                 </Button>
+                 </Button> */}
                  <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
                    Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
                  </Typography>

@@ -36,7 +36,7 @@ const MockPayButton = ({
 
   const buttonText = totalAmount === 0 
     ? "Please select at least one item" 
-    : `Proceed to Pay ${totalAmount ? `Amount: £ ${totalAmount}` : ''}`;
+    : `Proceed to Pay ${totalAmount ? `Amount: £ ${totalAmount.toFixed(2)}` : ''}`;
 
   return (
     <AnimatedButton 
