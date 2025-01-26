@@ -1,28 +1,25 @@
 import React from 'react';
-import { Grid, Card, Typography, Stack } from '@mui/material';
+import { Grid, Typography, Box } from '@mui/material';
 import { AssignmentOutlined, Book, CalendarToday } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 
 const quickLinks = [
-    {
-      id: 1,
-      title: 'Classes',
-      link: "/course",
-      icon: <Book sx={{ fontSize: 40, color: 'primary.main' }} />
-    },
-    {
-      id: 2,
-      title: 'Mock Tests',
-      link: "/mockTest",
-      icon: <AssignmentOutlined sx={{ fontSize: 40, color: 'success.main' }} />
-    },
-    {
-      id: 3,
-      title: 'Payments',
-      link: "/userDash/allPayment",
-      icon: <CalendarToday sx={{ fontSize: 40, color: 'warning.main' }} />
-    }
-  ];
+  {
+    id: 1,
+    title: 'Book New Classes',
+    link: "/course",
+    icon: <Book sx={{ fontSize: 28, color: 'white' }} />,
+    bgColor: 'linear-gradient(135deg, #6A11CB 0%, #2575FC 100%)'
+  },
+  {
+    id: 2,
+    title: 'Book Mock Tests',
+    link: "/mockTest",
+    icon: <AssignmentOutlined sx={{ fontSize: 28, color: 'white' }} />,
+    bgColor: 'linear-gradient(135deg, #FF6B6B 0%, #FFD93D 100%)'
+  },
+
+];
 
 export const QuickLinks = () => {
   const router = useRouter();
@@ -33,30 +30,43 @@ export const QuickLinks = () => {
 
   return (
     <>
-      <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>Quick Links</Typography>
-      <Grid container spacing={3} sx={{ mb: 5 }}>
+      <Typography variant="h6" sx={{ mb: 2, fontWeight: 700 }}>Quick Links</Typography>
+      <Grid container spacing={2}>
         {quickLinks.map((link) => (
-          <Grid item xs={12} sm={6} md={3} key={link.id}>
-            <Card
+          <Grid item xs={4} key={link.id}>
+            <Box
               onClick={() => handleCardClick(link.link)}
               sx={{
-                p: 3,
-                borderRadius: 3,
+                background: link.bgColor,
+                borderRadius: 2,
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.2s',
+                height: 140,
+                transition: 'transform 0.3s ease',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
                 '&:hover': {
-                  transform: 'translateY(-4px)',
-                  boxShadow: '0 6px 25px rgba(0,0,0,0.1)'
+                  transform: 'scale(1.05)',
+                  boxShadow: '0 6px 20px rgba(0,0,0,0.15)'
                 }
               }}
             >
-              <Stack alignItems="center" spacing={2}>
-                {link.icon}
-                <Typography variant="h6" align="center" sx={{ fontWeight: 600 }}>
-                  {link.title}
-                </Typography>
-              </Stack>
-            </Card>
+              {link.icon}
+              <Typography 
+                variant="subtitle1" 
+                sx={{ 
+                  mt: 1, 
+                  color: 'white', 
+                  fontWeight: 600,
+                  textAlign: 'center'
+                }}
+              >
+                {link.title}
+              </Typography>
+            </Box>
           </Grid>
         ))}
       </Grid>
