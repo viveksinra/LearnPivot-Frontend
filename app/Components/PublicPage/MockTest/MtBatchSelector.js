@@ -50,10 +50,27 @@ const MtBatchSelector = ({
     }
   }, [alreadyBoughtBatch]);
 
+  function countDecimalPlaces(num) {
+    // Convert the number to a string
+    const numStr = num.toString();
+  
+    // Check if it contains a decimal point
+    if (numStr.includes('.')) {
+      // Split the number at the decimal point and return the length of the fractional part
+      return numStr.split('.')[1].length;
+    }
+  
+    // If no decimal point, return 0
+    return 0;
+  }
+
   useEffect(() => {
-    const newTotalAmount = selectedBatch.reduce((sum, batch) => {
+    let newTotalAmount = selectedBatch.reduce((sum, batch) => {
       return sum + Number(batch.oneBatchprice);
     }, 0);
+    if (countDecimalPlaces(newTotalAmount) > 2) {
+      newTotalAmount = parseFloat(newTotalAmount.toFixed(2));
+    }
     setTotalAmount(newTotalAmount);
   }, [selectedBatch]);
 
