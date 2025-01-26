@@ -46,7 +46,10 @@ const MtBatchSelector = ({
       !alreadyBoughtBatch.some(b => b._id === batch._id)
     );
     if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
-      setSelectedBatch([...selectedBatch, upcomingBatch]);
+      if(!selectedBatch || !(selectedBatch?.length > 0)){
+        setSelectedBatch([...selectedBatch, upcomingBatch]);
+
+      }
     }
   }, [alreadyBoughtBatch]);
 
@@ -127,7 +130,9 @@ const MtBatchSelector = ({
     
       if (res.variant === "success") {
         setAlreadyBoughtBatch(res.data)
+        if(!selectedBatch || !(selectedBatch?.length > 0)){
         setSelectedBatch([])
+      }
       } else {
         alert(res);
         console.log(res);
