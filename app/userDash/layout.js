@@ -113,7 +113,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
       <Divider />
 
       
-      <List sx={{ display: { xs: "none", md: "block" }, width: "100%" }}>
+      <List sx={{  width: "100%" }}>
         <ListItem
           onClick={() => {
             logout();
