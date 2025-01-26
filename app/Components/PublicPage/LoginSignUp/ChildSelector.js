@@ -54,6 +54,7 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [errors, setErrors] = useState({});
   const [newChild, setNewChild] = useState({
     _id: '',
     childName: '',
@@ -62,20 +63,58 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
     childYear: '',
   });
 
+  // Utility function to format date
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!newChild.childName.trim()) {
+      newErrors.childName = 'Name is required';
+    }
+    
+    if (!newChild.childDob) {
+      newErrors.childDob = 'Date of Birth is required';
+    }
+    
+    if (!newChild.childGender) {
+      newErrors.childGender = 'Gender is required';
+    }
+    
+    if (!newChild.childYear) {
+      newErrors.childYear = 'Year Group is required';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSelectChild = (child) => {
     setSelectedChild(child);
   };
 
   const handleOpenDialog = () => {
     setOpen(true);
+    setErrors({});
   };
 
   const handleClose = () => {
     setOpen(false);
+    setErrors({});
   };
 
   const handleConfirmOpen = () => {
-    setConfirmOpen(true);
+    if (validateForm()) {
+      setConfirmOpen(true);
+    }
   };
 
   const handleConfirmClose = () => {
@@ -85,6 +124,11 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setNewChild((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear specific field error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
   };
 
   const handleGetAllChildren = async () => {
@@ -112,10 +156,6 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
   }, [allChildren]);
 
   const handleAddChild = async () => {
-    if (!newChild.childName || !newChild.childGender || !newChild.childYear) {
-      snackRef.current.handleSnack({ message: 'Please fill all required fields.', variant: 'error' });
-      return;
-    }
     try {
       const response = await childService.add(newChild._id, newChild);
       snackRef.current.handleSnack(response);
@@ -185,6 +225,8 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
               value={newChild.childName}
               onChange={handleInputChange}
               required
+              error={!!errors.childName}
+              helperText={errors.childName}
             />
             <TextField
               style={{ marginTop: 16 }}
@@ -196,6 +238,9 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
               value={newChild.childDob}
               onChange={handleInputChange}
               focused
+              required
+              error={!!errors.childDob}
+              helperText={errors.childDob}
             />
             <TextField
               select
@@ -207,6 +252,8 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
               value={newChild.childGender}
               onChange={handleInputChange}
               required
+              error={!!errors.childGender}
+              helperText={errors.childGender}
             >
               <MenuItem value="Boy">Boy</MenuItem>
               <MenuItem value="Girl">Girl</MenuItem>
@@ -221,34 +268,79 @@ const ChildSelector = ({ title, selectedChild, setSelectedChild, setStep }) => {
               value={newChild.childYear}
               onChange={handleInputChange}
               required
+              error={!!errors.childYear}
+              helperText={errors.childYear}
             >
               <MenuItem value="Year 5">Year 5</MenuItem>
               <MenuItem value="Year 4">Year 4</MenuItem>
-
               <MenuItem value="Other">Other</MenuItem>
             </TextField>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirmOpen}>Add Child</Button>
+          <Button 
+                  variant="contained"
+                  style={{ 
+                    backgroundColor: '#FC7658', 
+                    color: 'white',
+                    '&:hover': { backgroundColor: '#E65B47' }
+                  }}
+          
+          onClick={handleClose}>Cancel</Button>
+          <Button
+           variant="contained"
+           style={{ 
+             backgroundColor: '#4CAF50', 
+             color: 'white',
+             '&:hover': { backgroundColor: '#45A049' }
+           }}
+          onClick={handleConfirmOpen}>Add Child</Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={confirmOpen} onClose={handleConfirmClose}>
+      <Dialog 
+        open={confirmOpen} 
+        onClose={handleConfirmClose}
+        PaperProps={{
+          style: { 
+            backgroundColor: '#f0f0f0',
+            borderRadius: 12 
+          }
+        }}
+      >
         <DialogTitle>Confirm Child Details</DialogTitle>
         <DialogContent>
           <DialogContentText>Please confirm the details of the new child.</DialogContentText>
           <Box sx={{ mt: 2, mb: 2, p: 2, border: '1px solid', borderColor: 'grey.300', borderRadius: 2 }}>
             <Typography variant="body1"><strong>Name:</strong> {newChild.childName}</Typography>
-            <Typography variant="body1"><strong>Date of Birth:</strong> {newChild.childDob}</Typography>
+            <Typography variant="body1"><strong>Date of Birth:</strong> {formatDate(newChild.childDob)}</Typography>
             <Typography variant="body1"><strong>Gender:</strong> {newChild.childGender}</Typography>
             <Typography variant="body1"><strong>Year Group:</strong> {newChild.childYear}</Typography>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleConfirmClose} color="secondary">Cancel</Button>
-          <Button onClick={handleConfirmAddChild} color="primary" variant="contained">Confirm</Button>
+          <Button 
+            onClick={handleConfirmClose} 
+            variant="contained"
+            style={{ 
+              backgroundColor: '#FC7658', 
+              color: 'white',
+              '&:hover': { backgroundColor: '#E65B47' }
+            }}
+          >
+            Cancel
+          </Button>
+          <Button 
+            onClick={handleConfirmAddChild} 
+            variant="contained"
+            style={{ 
+              backgroundColor: '#4CAF50', 
+              color: 'white',
+              '&:hover': { backgroundColor: '#45A049' }
+            }}
+          >
+            Add Child
+          </Button>
         </DialogActions>
       </Dialog>
 
