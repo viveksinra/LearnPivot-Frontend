@@ -7,8 +7,9 @@ import MainContext from "../../Context/MainContext";
 import Cookies from "js-cookie";
 import ChildSelector from "../LoginSignUp/ChildSelector";
 import MtBatchSelector from "../MockTest/MtBatchSelector";
+import MockStripePay from "../../mockStripePay/MockStripePay";
 
-function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
+function MockEnqForm({ data,step, setStep, submitted,setSubmitted, submittedId,setSubmittedId, setTotalAmount, totalAmount, selectedBatch, setSelectedBatch, selectedChild, setSelectedChild }) {
   const snackRef = useRef();
   console.log(data)
   // Context
@@ -32,11 +33,11 @@ function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTota
           <ChildSelector title={data.mockTestTitle} selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
         </>
       )}
-      {step === 3 && (
+      {(step === 3 ) && (
 
     
            <>
-          <MtBatchSelector
+                {!submitted ? <MtBatchSelector
            data={data} 
            setStep={setStep}
            selectedChild={selectedChild}
@@ -46,12 +47,23 @@ function MockEnqForm({ data,step, setStep, setSubmitted, setSubmittedId, setTota
              setSubmittedId={setSubmittedId}
              setTotalAmount={setTotalAmount}
              totalAmount={totalAmount}             
-             />
+             /> : (
+           <MockStripePay 
+           data={data} 
+
+           setSubmitted={setSubmitted}
+             setSubmittedId={setSubmittedId}
+             setStep={setStep}
+             selectedChild={selectedChild}
+           selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
+      )}
+          
    
            </>
                     
          
       )}
+
       <MySnackbar ref={snackRef} />
     </>
   );

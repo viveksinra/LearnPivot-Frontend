@@ -41,21 +41,15 @@ const MtBuyComponent = ({data}) => {
           </Grid>
           {!isMobile && (
             <Grid item xs={12} lg={6}>
-              {submitted ? (
-                <MockStripePay 
-                data={data} 
-
-                setSubmitted={setSubmitted}
-                  setSubmittedId={setSubmittedId}
-                  setStep={setStep}
-                  selectedChild={selectedChild}
-                selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
-              ) : (
+         
                 <MockEnqForm 
                   data={data} 
                   setStep={setStep}
                   step={step}
+                  submitted={submitted}
                   setSubmitted={setSubmitted}
+                  submittedId={submittedId}
+
                   setSubmittedId={setSubmittedId}
                   setTotalAmount={setTotalAmount}                
                   totalAmount={totalAmount} 
@@ -64,7 +58,7 @@ const MtBuyComponent = ({data}) => {
                   selectedChild={selectedChild} 
                   setSelectedChild={setSelectedChild} 
                 />
-              )}
+           
             </Grid>
           )}
         </Grid>
@@ -85,21 +79,13 @@ const MtBuyComponent = ({data}) => {
               <CloseIcon onClick={handleCloseDialog} style={{ cursor: 'pointer' }} />
             </DialogTitle>
             <DialogContent>
-            {submitted ? (
-                <MockStripePay 
-                data={data} 
-
-                setSubmitted={setSubmitted}
-                  setSubmittedId={setSubmittedId}
-                  setStep={setStep}
-                  selectedChild={selectedChild}
-                selectedBatch={selectedBatch} submittedId={submittedId} totalAmount={totalAmount} />
-              ) : (
-                <MockEnqForm 
+            <MockEnqForm 
                   data={data} 
                   setStep={setStep}
                   step={step}
+                  submitted={submitted}
                   setSubmitted={setSubmitted}
+                  submittedId={submittedId}
                   setSubmittedId={setSubmittedId}
                   setTotalAmount={setTotalAmount}                
                   totalAmount={totalAmount} 
@@ -108,7 +94,6 @@ const MtBuyComponent = ({data}) => {
                   selectedChild={selectedChild} 
                   setSelectedChild={setSelectedChild} 
                 />
-              )}
             </DialogContent>
           </Dialog>
         </>
