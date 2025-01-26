@@ -23,7 +23,7 @@ const MtBuyComponent = ({data}) => {
   const [step, setStep] = useState(1);
 
    const theme = useTheme();
-   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleOpenDialog = () => {
     setOpenDialog(true);
