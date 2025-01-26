@@ -181,6 +181,7 @@ const Dashboard = () => {
 
         {/* Payment Alert */}
    {"sdf" == "SDyF" &&     <PaymentAlert payment={paymentDues[0]} />}
+   <QuickLinks />
 
         {/* Upcoming Events */}
         <UpcomingEvents 
@@ -195,7 +196,6 @@ selectedChild={selectedChild}
         />}
 
         {/* Quick Links */}
-        <QuickLinks />
       </Container>
     </Box>
   );
