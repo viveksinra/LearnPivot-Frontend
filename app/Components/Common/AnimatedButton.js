@@ -27,7 +27,7 @@ const AnimatedButton = styled(Button)`
   opacity: ${props => props.disabled ? 0.6 : 1};
   color: white !important;  // Ensure text is always white
   background: ${props => props.disabled ? 
-    'linear-gradient(45deg,rgb(53, 53, 53) 30%,rgb(0, 0, 0) 90%)' : 
+    'linear-gradient(45deg,rgb(194, 0, 0) 30%,rgb(126, 0, 0) 90%)' : 
     'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)'
   };
   
