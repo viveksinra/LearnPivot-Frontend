@@ -125,7 +125,7 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
               transform: !totalAmount && 'rotate(12deg)',
             }}>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
-              Total: £{totalAmount} 
+              Total: £{totalAmount.toFixed(2)} 
             
               </Typography>
             </Box>}
