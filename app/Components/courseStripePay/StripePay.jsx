@@ -28,7 +28,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   boxShadow: theme.shadows[3],
 }));
-
+// this is for course
 export default function StripePay({ submittedId }) {
   const [clientSecret, setClientSecret] = useState("");
   const [loading, setLoading] = useState(false);
@@ -50,8 +50,12 @@ export default function StripePay({ submittedId }) {
         setClientSecret(response.clientSecret);
         setBuyCourseId(response.buyCourseId);
       } else {
-        setError("Failed to initialize payment. Please try again.");
-        console.error("Payment initialization failed:", response);
+        if (response.message){
+           setError(response.message);
+          } else {
+            setError("Failed to initialize payment. Please try again.");
+
+          }
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.");

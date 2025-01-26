@@ -2,11 +2,9 @@
 import { useEffect, useState, useRef } from "react";
 import { useMediaQuery,Container,useTheme, Grid, Typography, TextField, RadioGroup, FormControlLabel, Radio, MenuItem, Fab, Alert, FormControl, InputLabel, Select, Dialog, DialogContent, DialogTitle, Button } from '@mui/material/';
 import { FcFeedback, FcApproval } from "react-icons/fc";
-import StripePay from "../../courseStripePay/StripePay";
 import MySnackbar from "../../MySnackbar/MySnackbar";
 import { mockTestService } from "@/app/services";
 import SmallOneMockTest from "../MockTest/SmallOneMockTest";
-import MockStripePay from "../../mockStripePay/MockStripePay";
 import MockEnqForm from "../BuyForm/MockEnqForm";
 import CloseIcon from '@mui/icons-material/Close';
 import AnimatedButton from "../../Common/AnimatedButton";

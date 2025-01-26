@@ -63,8 +63,12 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
         setClientSecret(response.clientSecret);
         setBuyMockId(response.buyMockId);
       } else {
-        setError("Failed to initialize payment. Please try again.");
-        console.error("Payment initialization failed:", response);
+        if (response.message){
+          setError(response.message);
+         } else {
+           setError("Failed to initialize payment. Please try again.");
+
+         }
       }
     } catch (err) {
       setError("An unexpected error occurred. Please try again later.");
@@ -207,9 +211,11 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
                 </Box>
                 // </StyledPaper>
           ) : (
-            <Elements options={options} stripe={stripePromise} style={{ width: '100%'}}>
+   
+     <Elements options={options} stripe={stripePromise} style={{ width: '100%'}}>
               <MockCheckoutForm data={data} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
+         
           )}
     
     </>
