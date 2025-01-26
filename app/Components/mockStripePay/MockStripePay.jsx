@@ -95,7 +95,7 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
   };
 
   return (
-    <Container >
+    < >
 
           {!clientSecret ? (
                  <StyledPaper elevation={3}>
@@ -211,6 +211,6 @@ export default function MockStripePay({setStep,data,selectedChild, selectedBatch
             </Elements>
           )}
     
-    </Container>
+    </>
   );
 }
