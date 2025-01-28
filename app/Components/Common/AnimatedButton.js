@@ -1,5 +1,7 @@
+import React from 'react';
 import Button from '@mui/material/Button';
 import { styled, keyframes } from '@mui/system';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 const pulse = keyframes`
   0% {
@@ -16,27 +18,40 @@ const pulse = keyframes`
   }
 `;
 
-const AnimatedButton = styled(Button)`
-  background: linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%);
-  border: 0;
-  border-radius: 3px;
-  min-height: 58px;  // Changed from height to min-height
-  font-size: 1.25rem;
-  padding: 0 30px;
-  animation: ${props => props.disabled ? 'none' : `${pulse} 2s infinite`};
-  opacity: ${props => props.disabled ? 0.6 : 1};
-  color: white !important;  // Ensure text is always white
-  background: ${props => props.disabled ? 
-    'linear-gradient(45deg,rgb(194, 0, 0) 30%,rgb(126, 0, 0) 90%)' : 
-    'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)'
-  };
-  
-  &:hover {
-    background: ${props => props.disabled ? 
-      'linear-gradient(45deg, #9E9E9E 30%, #757575 90%)' : 
-      'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)'
-    };
-  }
-`;
+const StyledButton = styled(Button, {
+  shouldForwardProp: (prop) => prop !== 'isMobile',
+})(({ theme, isMobile, disabled }) => ({
+  background: disabled
+    ? 'linear-gradient(45deg, rgb(194, 0, 0) 30%, rgb(126, 0, 0) 90%)'
+    : 'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)',
+  border: 0,
+  borderRadius: 3,
+  minHeight: 58,
+  fontSize: isMobile ? '1rem' : '1.25rem',
+  padding: '0 30px',
+  animation: disabled ? 'none' : `${pulse} 2s infinite`,
+  opacity: disabled ? 0.6 : 1,
+  color: 'white !important',
+  '&:hover': {
+    background: disabled
+      ? 'linear-gradient(45deg, #9E9E9E 30%, #757575 90%)'
+      : 'linear-gradient(45deg, #0D47A1 30%, #7B1FA2 90%)',
+  },
+}));
+
+const AnimatedButton = ({ children, disabled, ...props }) => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  return (
+    <StyledButton
+      {...props}
+      isMobile={isMobile}
+      disabled={disabled}
+    >
+      {children}
+    </StyledButton>
+  );
+};
 
 export default AnimatedButton;
