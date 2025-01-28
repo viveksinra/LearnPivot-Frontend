@@ -158,7 +158,7 @@ const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, 
   return (
     <div style={{ padding: isMobile ? 20 : 0 }}>
       <Typography variant="h6" gutterBottom>
-        Select a child for this {title}:
+        Select a child for {title}:
       </Typography>
 
       {allChildren.map((child) => (
