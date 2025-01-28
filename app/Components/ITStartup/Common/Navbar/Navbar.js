@@ -160,7 +160,7 @@ margin-right: 12px;
                       onClick={() => {
                         logout();
 
-                        router.push("/login");
+                        router.push("/");
                       }}
                     >
                       Logout

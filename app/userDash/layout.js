@@ -117,7 +117,7 @@ const DrawerData = ({ open, setMobileOpen }) => {
         <ListItem
           onClick={() => {
             logout();
-            router.push("/login");
+            router.push("/");
           }}
           disablePadding
         >
@@ -259,7 +259,7 @@ function DashboardLayout({ children }) {
             <MenuItem
               onClick={() => {
                 logout();
-                router.push("/login");
+                router.push("/");
               }}
             >
               Logout
