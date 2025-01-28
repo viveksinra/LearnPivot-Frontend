@@ -36,7 +36,7 @@ const MtBuyComponent = ({data}) => {
       <Container maxWidth="xl" style={{   marginTop:"40px"  }}>
         <Grid container>
           <Grid style={{  paddingRight: isMobile? "0px":"20px"}} item xs={12} lg={6}>
-            <SmallOneMockTest data={data} totalAmount={totalAmount} selectedBatch={selectedBatch} />
+            <SmallOneMockTest data={data} selectedChild={selectedChild} totalAmount={totalAmount} selectedBatch={selectedBatch} />
           </Grid>
           {!isMobile && (
             <Grid item xs={12} lg={6}>

@@ -30,7 +30,7 @@ function MockEnqForm({ isMobile,data,step, setStep, submitted,setSubmitted, subm
       {step === 1 && <ComLogSigForm isRedirectToDashboard={false} />}
       {step === 2 && (
         <>
-          <ChildSelector isMobile={isMobile} title={data.mockTestTitle} selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
+          <ChildSelector isMobile={isMobile} title={data.mockTestTitle} setSelectedBatch={setSelectedBatch} selectedChild={selectedChild} setSelectedChild={setSelectedChild} setStep={setStep} />
         </>
       )}
       {(step === 3 ) && (

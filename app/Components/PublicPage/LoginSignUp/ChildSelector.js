@@ -49,7 +49,7 @@ const CheckIconContainer = styled(Box)(({ theme }) => ({
   padding: 2,
 }));
 
-const ChildSelector = ({ isMobile,title, selectedChild, setSelectedChild, setStep }) => {
+const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
   const snackRef = useRef();
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
@@ -99,6 +99,7 @@ const ChildSelector = ({ isMobile,title, selectedChild, setSelectedChild, setSte
 
   const handleSelectChild = (child) => {
     setSelectedChild(child);
+    setSelectedBatch(null);
   };
 
   const handleOpenDialog = () => {
@@ -133,6 +134,7 @@ const ChildSelector = ({ isMobile,title, selectedChild, setSelectedChild, setSte
 
   const handleGetAllChildren = async () => {
     try {
+      if (allChildren.length <=0) return;
       const response = await childService.getAll();
       if (response.data) {
         setAllChildren(response.data);

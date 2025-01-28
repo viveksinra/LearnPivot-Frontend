@@ -81,7 +81,7 @@ const ActionButton = styled(Button)(({ variant }) => ({
   }),
 }));
 
-const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
+const MockTestCard = ({ data , selectedChild, totalAmount, selectedBatch}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [openBatchModal, setOpenBatchModal] = useState(false);
@@ -160,7 +160,7 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
               startIcon={<CalendarMonthIcon />}
               onClick={() => setOpenBatchModal(true)}
             >
-              Selected Batches
+              Selected Batches for {selectedChild.childName}
             </ActionButton>
 
           </Box>}
@@ -189,7 +189,7 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
           />
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2 }}>
+          {selectedBatch && selectedBatch?.length > 0 && (  <Box sx={{ mt: 2 }}>
             {data.batch.map((batch, index) => (
               <Box
                 key={index}
@@ -229,7 +229,8 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
                 )}
               </Box>
             ))}
-          </Box>
+          </Box> )}
+        
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
           <Button 
