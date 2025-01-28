@@ -190,7 +190,7 @@ const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, 
         </Typography>
       </ChildContainer>
 
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add a New Child</DialogTitle>
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
