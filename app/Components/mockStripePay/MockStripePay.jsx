@@ -117,7 +117,7 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
                    onClick={handleUpdateBatch}
          
                    sx={{ 
-                     width: '20%',
+                     width: isMobile?'30%':'20%',
                      minWidth: 'auto',
                      color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
                    }}
@@ -125,7 +125,7 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
                    Back
                  </Button>
                  <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
-                   Book {data.testType?.label} Mock Test for child:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+                   Book {data.testType?.label} Mock Test for  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
                  </Typography>
                </Box>
                    <Box sx={{ 
