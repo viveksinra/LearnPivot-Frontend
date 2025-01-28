@@ -37,7 +37,7 @@ function ComLogSigForm({ isRedirectToDashboard }) {
           isForget? <ForgetPassword setIsForget={setIsForget} /> : <LoginForm isRedirectToDashboard={isRedirectToDashboard} />
         }
         <Grid container justifyContent="right" sx={{ marginBottom: 2 }}>
-        <Link style={{marginRight:"2px"}} href="#" onClick={() => setIsForget(!isForget)} passHref>
+        <Link style={{marginRight:"10px"}} href="#" onClick={() => setIsForget(!isForget)} passHref>
         <Typography color="secondary" variant="subtitle1" component="a">
           
           {isForget ? "Back to Login" : "Forget Password?"}

@@ -62,7 +62,7 @@ function LoginForm({ isRedirectToDashboard }) {
 
   return (
     <>
-      <form onSubmit={handleLogin} id="login-form" className="loginDataBox">
+      <form onSubmit={handleLogin} id="login-form" className="loginDataBox" style={{ width: "100%" }}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <TextField

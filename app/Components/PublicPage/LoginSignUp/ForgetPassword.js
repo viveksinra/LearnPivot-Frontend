@@ -90,7 +90,7 @@ function ForgetPassword({ setIsForget }) {
 
   return (
     <>
-      <form onSubmit={handleResetPassword} className="loginDataBox">
+      <form onSubmit={handleResetPassword} className="loginDataBox" style={{ width: "100%", marginHorizontal: 20 }}>
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <TextField
