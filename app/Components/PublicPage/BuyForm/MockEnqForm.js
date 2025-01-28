@@ -24,6 +24,10 @@ function MockEnqForm({ isMobile,data,step, setStep, submitted,setSubmitted, subm
       setStep(1);
     } 
   }, [state, currentUser]);
+  useEffect(() => {
+    // Scroll to top when submitted state changes
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [submitted,step]);
 
   return (
     <>
