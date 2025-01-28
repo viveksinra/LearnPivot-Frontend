@@ -190,7 +190,7 @@ const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, 
         </Typography>
       </ChildContainer>
 
-      <Dialog fullScreen open={open} onClose={() => setOpen(false)}>
+      <Dialog fullScreen open={open} onClose={() => setOpen(false)} disableBackdropClick>
         <DialogTitle>Add a New Child</DialogTitle>
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
@@ -261,6 +261,7 @@ const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, 
       <Dialog 
         open={confirmOpen} 
         onClose={() => setConfirmOpen(false)}
+        disableBackdropClick
         PaperProps={{
           style: { 
             backgroundColor: '#f0f0f0',
