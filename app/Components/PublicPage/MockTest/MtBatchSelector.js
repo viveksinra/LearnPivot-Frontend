@@ -40,38 +40,20 @@ const MtBatchSelector = ({
   const [conflictDialogOpen, setConflictDialogOpen] = useState(false);
   const [conflictBatch, setConflictBatch] = useState(null);
 
-  useEffect(() => {
-    const upcomingBatch = data.batch.find(batch => 
-      new Date(batch.date) >= today && 
-      !batch.filled && 
-      !alreadyBoughtBatch.some(b => b._id === batch._id)
-    );
-    if (upcomingBatch && !selectedBatch.some(b => b._id === upcomingBatch._id)) {
-      if(!selectedBatch || !(selectedBatch?.length > 0)){
-        setSelectedBatch([...selectedBatch, upcomingBatch]);
-
-      }
-    }
-  }, [alreadyBoughtBatch]);
-
   function countDecimalPlaces(num) {
-    // Convert the number to a string
     const numStr = num.toString();
-  
-    // Check if it contains a decimal point
-    if (numStr.includes('.')) {
-      // Split the number at the decimal point and return the length of the fractional part
-      return numStr.split('.')[1].length;
-    }
-  
-    // If no decimal point, return 0
-    return 0;
+    return numStr.includes('.') ? numStr.split('.')[1].length : 0;
   }
 
   useEffect(() => {
-    let newTotalAmount = selectedBatch.reduce((sum, batch) => {
+    if (!selectedBatch) {
+      setSelectedBatch([]);
+    }
+    
+    let newTotalAmount = (selectedBatch || []).reduce((sum, batch) => {
       return sum + Number(batch.oneBatchprice);
     }, 0);
+    
     if (countDecimalPlaces(newTotalAmount) > 2) {
       newTotalAmount = parseFloat(newTotalAmount.toFixed(2));
     }
@@ -79,30 +61,24 @@ const MtBatchSelector = ({
   }, [selectedBatch]);
 
   const handleCheckboxChange = (batch) => {
-    // Check for existing batch on the same date
-    const existingDateBatch = selectedBatch.find(
+    const existingDateBatch = (selectedBatch || []).find(
       b => new Date(b.date).toDateString() === new Date(batch.date).toDateString()
     );
 
-    // Check for already booked batch on the same date
     const alreadyBookedDateBatch = alreadyBoughtBatch.find(
       b => new Date(b.date).toDateString() === new Date(batch.date).toDateString()
     );
 
-    // If batch already exists or is already booked, show conflict dialog
-
-
-    // Normal selection logic
-    const isSelected = selectedBatch.some(b => b._id === batch._id);
+    const isSelected = (selectedBatch || []).some(b => b._id === batch._id);
     if (isSelected) {
-      setSelectedBatch(selectedBatch.filter(b => b._id !== batch._id));
+      setSelectedBatch((selectedBatch || []).filter(b => b._id !== batch._id));
     } else if (!batch.filled && new Date(batch.date) >= today) {
       if (existingDateBatch || alreadyBookedDateBatch) {
         setConflictBatch(batch);
         setConflictDialogOpen(true);
         return;
       }
-      setSelectedBatch([...selectedBatch, batch]);
+      setSelectedBatch([...(selectedBatch || []), batch]);
     }
   };
 
@@ -122,7 +98,7 @@ const MtBatchSelector = ({
   };
 
   async function getBoughtBatch() {
-    setLoading(true)
+    setLoading(true);
     try {
       let res = await mockTestService.alreadyBoughtMock({
         childId: selectedChild._id, 
@@ -130,10 +106,10 @@ const MtBatchSelector = ({
       });
     
       if (res.variant === "success") {
-        setAlreadyBoughtBatch(res.data)
-        if(!selectedBatch || !(selectedBatch?.length > 0)){
-        setSelectedBatch([])
-      }
+        setAlreadyBoughtBatch(res.data);
+        if (!selectedBatch) {
+          setSelectedBatch([]);
+        }
       } else {
         alert(res);
         console.log(res);
@@ -141,7 +117,7 @@ const MtBatchSelector = ({
     } catch (error) {
       console.error("Error fetching data:", error);
     }   
-    setLoading(false)
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -149,54 +125,52 @@ const MtBatchSelector = ({
   }, [selectedChild]);
 
   return (
-    <Box sx={{ position: 'relative', pb: '80px', padding: isMobile? "20px" : "0px" }}>
-      {/* Conflict Dialog */}
+    <Box sx={{ position: 'relative', pb: '80px', padding: isMobile ? "20px" : "0px" }}>
       <Dialog
-  open={conflictDialogOpen}
-  onClose={() => setConflictDialogOpen(false)}
-  PaperProps={{
-    sx: {
-      borderRadius: 3,
-      backgroundColor: '#F5F5F5',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-    }
-  }}
->
-  <DialogTitle 
-    sx={{ 
-      backgroundColor: '#FEF3C7', 
-      color: '#78350F', 
-      fontWeight: 600,
-      padding: 2 
-    }}
-  >
-    Date Conflict
-  </DialogTitle>
-  <DialogContent sx={{ padding: 3 }}>
-    <DialogContentText sx={{ color: '#4B5563' }}>
-      You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}.
-    </DialogContentText>
-  </DialogContent>
-  <DialogActions sx={{ padding: 2 }}>
-    <Button 
-      onClick={() => setConflictDialogOpen(false)} 
-      variant="contained"
-      sx={{ 
-        backgroundColor: '#F97316', 
-        color: 'white',
-        '&:hover': { 
-          backgroundColor: '#EA580C' 
-        },
-        textTransform: 'none',
-        borderRadius: 2
-      }}
-    >
-      Close
-    </Button>
-  </DialogActions>
-</Dialog>
+        open={conflictDialogOpen}
+        onClose={() => setConflictDialogOpen(false)}
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            backgroundColor: '#F5F5F5',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+          }
+        }}
+      >
+        <DialogTitle 
+          sx={{ 
+            backgroundColor: '#FEF3C7', 
+            color: '#78350F', 
+            fontWeight: 600,
+            padding: 2 
+          }}
+        >
+          Date Conflict
+        </DialogTitle>
+        <DialogContent sx={{ padding: 3 }}>
+          <DialogContentText sx={{ color: '#4B5563' }}>
+            You have already selected or booked a mock test on {conflictBatch && formatDate(conflictBatch.date)}.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ padding: 2 }}>
+          <Button 
+            onClick={() => setConflictDialogOpen(false)} 
+            variant="contained"
+            sx={{ 
+              backgroundColor: '#F97316', 
+              color: 'white',
+              '&:hover': { 
+                backgroundColor: '#EA580C' 
+              },
+              textTransform: 'none',
+              borderRadius: 2
+            }}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-      {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
         <Button
           startIcon={<ArrowBackIcon />}
@@ -212,19 +186,18 @@ const MtBatchSelector = ({
           Back
         </Button>
         <Typography variant="h5" sx={{ width: '80%', fontWeight: 400 }}>
-          Select {data.testType?.label} Mock Test for:  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+          Select {data.testType?.label} Mock Test for: <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
         </Typography>
       </Box>
 
-      {/* Batch list */}
       <Grid container spacing={2}>
         {data.batch.map((batch) => {
-          const isSelected = selectedBatch.some(b => b._id === batch._id);
+          const isSelected = (selectedBatch || []).some(b => b._id === batch._id);
           const isSelectable = isBatchSelectable(batch);
           const isAlreadyBought = alreadyBoughtBatch?.some(b => b._id === batch._id);
 
           return (
-            <Grid item xs={12} key={batch._id} >
+            <Grid item xs={12} key={batch._id}>
               <Paper
                 elevation={isSelected ? 3 : 1}
                 sx={{
@@ -245,7 +218,6 @@ const MtBatchSelector = ({
                 onClick={() => isSelectable && handleCheckboxChange(batch)}
               >
                 <Grid container spacing={2}>
-                  {/* Checkbox Column */}
                   <Grid item xs={1} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <IconButton 
                       disabled={!isSelectable}
@@ -256,12 +228,10 @@ const MtBatchSelector = ({
                     </IconButton>
                   </Grid>
 
-                  {/* Info Column */}
                   <Grid item xs={11}>
-                    <Grid container spacing={1} >
-                      {/* Date and Time */}
+                    <Grid container spacing={1}>
                       <Grid item xs={12} md={6}>
-                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                             <EventIcon sx={{ color: '#64748B' }} />
                             <Typography 
@@ -288,7 +258,6 @@ const MtBatchSelector = ({
                         </Box>
                       </Grid>
 
-                      {/* Seats and Price */}
                       <Grid item xs={12} md={6}>
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -298,10 +267,9 @@ const MtBatchSelector = ({
                                 color: '#1E293B',
                                 fontSize: '0.875rem',
                                 fontWeight: 700,
-
                               }}
                             >
-                               {batch.startTime} - {batch.endTime}
+                              {batch.startTime} - {batch.endTime}
                             </Typography>
                           </Box>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>    
@@ -313,7 +281,7 @@ const MtBatchSelector = ({
                                 mt: 1
                               }}
                             >
-                              {isSelectable? "Available" : isAlreadyBought ? `Already Booked for ${selectedChild.childName}` : 'Booking Full'}
+                              {isSelectable ? "Available" : isAlreadyBought ? `Already Booked for ${selectedChild.childName}` : 'Booking Full'}
                             </Typography>
                           </Box>
                         </Box>
@@ -327,7 +295,6 @@ const MtBatchSelector = ({
         })}
       </Grid>
 
-      {/* Sticky Payment Button */}
       <Box 
         sx={{
           position: 'fixed',
@@ -346,7 +313,7 @@ const MtBatchSelector = ({
           setSubmittedId={setSubmittedId}
           setTotalAmount={setTotalAmount}
           totalAmount={totalAmount}
-          selectedBatch={selectedBatch}
+          selectedBatch={selectedBatch || []}
           selectedChild={selectedChild}
         />
       </Box>

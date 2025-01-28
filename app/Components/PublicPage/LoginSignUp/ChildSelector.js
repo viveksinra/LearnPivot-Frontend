@@ -354,9 +354,11 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
       </Dialog>
 
       {(selectedChild && selectedChild._id) && (
-        <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }} onClick={() => setStep(3)}>
-         Proceed for {selectedChild.childName && `(${selectedChild.childName})`}
+        <AnimatedButton variant="contained" color="primary" disabled={!selectedChild} style={{ marginTop: 16 }} onClick={() => setStep(3)}>
+     {!selectedChild?"Select Child above": isMobile ? 'Proceed' : 'Proceed to Select Batch'}
         </AnimatedButton>
+
+
       )}
       <MySnackbar ref={snackRef} />
     </div>
