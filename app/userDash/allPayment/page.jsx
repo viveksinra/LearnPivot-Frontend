@@ -88,9 +88,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
             <Typography variant="subtitle1" className="font-semibold">
               {payment.courseName}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {payment.year}
-            </Typography>
+       
           </Box>
           {/* <StatusChip status={payment.paymentStatus} /> */}
         </Stack>

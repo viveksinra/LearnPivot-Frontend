@@ -150,7 +150,7 @@ const ChildSelector = ({ isMobile,title, selectedChild, setSelectedChild, setSte
   }, []);
 
   useEffect(() => {
-    if (allChildren.length > 0) {
+    if (allChildren.length > 0 && !selectedChild) {
       setSelectedChild(allChildren[0]);
     }
   }, [allChildren]);
