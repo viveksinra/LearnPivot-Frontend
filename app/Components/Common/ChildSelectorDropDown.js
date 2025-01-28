@@ -38,7 +38,15 @@ const ChildSelectorDropDown = ({ selectedChild, setSelectedChild }) => {
         <MenuItem value="all">All Children</MenuItem>
         {allChildren.map((child) => (
           <MenuItem key={child._id} value={child._id}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box
+  sx={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: 1,
+    whiteSpace: 'normal', // Allow wrapping
+    wordBreak: 'break-word', // Break words if necessary
+  }}
+>
               <PersonOutline color="primary" />
               {child.childName} - {child.childYear}
             </Box>
