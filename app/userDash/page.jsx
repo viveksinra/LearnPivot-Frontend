@@ -183,7 +183,7 @@ const Dashboard = () => {
             <QuickLinks />
           </Grid>
           <Grid item xs={12} md={8}>
-            {/* <UpcomingEvents selectedChild={selectedChild} /> */}
+            <UpcomingEvents selectedChild={selectedChild} />
           </Grid>
         </Grid>
 
