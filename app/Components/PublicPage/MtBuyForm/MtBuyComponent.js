@@ -14,7 +14,7 @@ const MtBuyComponent = ({data}) => {
   const [submitted, setSubmitted] = useState(false);
   const [selectedBatch, setSelectedBatch] = useState([]);
   const [totalAmount, setTotalAmount] = useState("");
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(true);
 
   const [submittedId, setSubmittedId] = useState("");
   const [selectedChild, setSelectedChild] = useState(null);
