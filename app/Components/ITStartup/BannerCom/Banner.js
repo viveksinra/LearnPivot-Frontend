@@ -14,7 +14,7 @@ const Banner = () => {
 
   return (
     <>
-      <div className="it-banner">
+      <div className="it-banner" style={{backgroundColor:"#f9f9f9"}}>
         <div className="d-table">
           <div className="d-table-cell">
             <div className="container mt-50">
@@ -114,7 +114,9 @@ const Banner = () => {
             display: block;
             margin-bottom: 15px;
           }
-
+          .it-banner {
+            background-color: #f9f9f9;
+          }
           .banner-btn a:last-child {
             margin-bottom: 0;
           }
