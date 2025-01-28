@@ -7,18 +7,12 @@ export const menus = [
     {
       label: "About Us",
       link: "/about/",
-      submenu: [
-        {
-          label: "About",
-          link: "/about/",
-        },         
-        {
-          label: "FAQ",
-          link: "/faq/",
-        },
-      ],
+
     },
-    
+    {
+      label: "FAQ",
+      link: "/faq/",
+    },
      {
       label: "11+ Courses",
       link: "/course/",

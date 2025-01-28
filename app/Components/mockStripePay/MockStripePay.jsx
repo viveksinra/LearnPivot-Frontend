@@ -213,7 +213,7 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
           ) : (
 
      <Elements options={options} stripe={stripePromise} style={{ width: '100%', backgroundColor:"green"}}>
-              <MockCheckoutForm data={data} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
+              <MockCheckoutForm data={data} isMobile={isMobile} setClientSecret={setClientSecret} selectedChild={selectedChild} buyMockId={buyMockId} totalAmount={totalAmount} />
             </Elements>
          
           )}
