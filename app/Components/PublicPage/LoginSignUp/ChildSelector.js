@@ -134,7 +134,7 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
 
   const handleGetAllChildren = async () => {
     try {
-      if (allChildren.length <=0) return;
+      if (allChildren.length >0) return;
       const response = await childService.getAll();
       if (response.data) {
         setAllChildren(response.data);

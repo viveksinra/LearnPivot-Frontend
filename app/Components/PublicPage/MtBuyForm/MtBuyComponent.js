@@ -36,7 +36,7 @@ const MtBuyComponent = ({data}) => {
       <Container maxWidth="xl" style={{   marginTop:"40px"  }}>
         <Grid container>
           <Grid style={{  paddingRight: isMobile? "0px":"20px"}} item xs={12} lg={6}>
-            <SmallOneMockTest data={data} selectedChild={selectedChild} totalAmount={totalAmount} selectedBatch={selectedBatch} />
+          {!isMobile && (  <SmallOneMockTest data={data} selectedChild={selectedChild} totalAmount={totalAmount} selectedBatch={selectedBatch} /> )}
           </Grid>
           {!isMobile && (
             <Grid item xs={12} lg={6}>
@@ -66,18 +66,27 @@ const MtBuyComponent = ({data}) => {
       </Container>
       {isMobile && (
         <>
-               <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }}  onClick={handleOpenDialog}>
+              <MockEnqForm 
+              isMobile={true}
+                  data={data} 
+                  setStep={setStep}
+                  step={step}
+                  submitted={submitted}
+                  setSubmitted={setSubmitted}
+                  submittedId={submittedId}
+                  setSubmittedId={setSubmittedId}
+                  setTotalAmount={setTotalAmount}                
+                  totalAmount={totalAmount} 
+                  selectedBatch={selectedBatch}
+                  setSelectedBatch={setSelectedBatch}
+                  selectedChild={selectedChild} 
+                  setSelectedChild={setSelectedChild} 
+                />
+               {/* <AnimatedButton variant="contained" color="primary" style={{ marginTop: 16 }}  onClick={handleOpenDialog}>
                Book Now
-        </AnimatedButton>
-          {/* <Button 
-            variant="contained" 
-            color="primary" 
-            style={{ position: 'fixed', bottom: '10px', width: '90%', left: '5%' }} 
-            onClick={handleOpenDialog}
-          >
-           
-          </Button> */}
-          <Dialog fullScreen open={openDialog} onClose={handleCloseDialog}>
+        </AnimatedButton> */}
+
+          {/* <Dialog fullScreen open={openDialog} onClose={handleCloseDialog}>
             <DialogTitle style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: 'darkblue', color: 'white' }}>
               {`Book Now`}
               <CloseIcon onClick={handleCloseDialog} style={{ cursor: 'pointer' }} />
@@ -101,7 +110,7 @@ const MtBuyComponent = ({data}) => {
                   setSelectedChild={setSelectedChild} 
                 />
             </DialogContent>
-          </Dialog>
+          </Dialog> */}
         </>
       )}
       <MySnackbar ref={snackRef} />
