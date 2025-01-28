@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import {
   TextField, MenuItem, Button, Dialog, DialogActions, DialogContent,
   DialogContentText, DialogTitle, Box, Typography, IconButton,
@@ -6,9 +6,7 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import AnimatedButton from '../../Common/AnimatedButton';
 import { childService } from '@/app/services';
-import MySnackbar from '../../MySnackbar/MySnackbar';
 
 const ChildContainer = styled(Box)(({ theme, selected }) => ({
   display: 'flex',
@@ -24,19 +22,7 @@ const ChildContainer = styled(Box)(({ theme, selected }) => ({
     border: `2px solid ${theme.palette.primary.main}`,
   },
   ...(selected && {
-    animation: 'pulse-border 1s infinite',
     transform: 'scale(1.02)',
-    '&::after': {
-      content: '""',
-      position: 'absolute',
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-      borderRadius: theme.shape.borderRadius,
-      border: `2px solid ${theme.palette.primary.main}`,
-      animation: 'pulse-border 1s infinite',
-    },
   }),
 }));
 
@@ -49,22 +35,25 @@ const CheckIconContainer = styled(Box)(({ theme }) => ({
   padding: 2,
 }));
 
-const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
-  const snackRef = useRef();
+const initialChildState = {
+  _id: '',
+  childName: '',
+  childDob: '',
+  childGender: '',
+  childYear: '',
+};
+
+const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [errors, setErrors] = useState({});
-  const [newChild, setNewChild] = useState({
-    _id: '',
-    childName: '',
-    childDob: '',
-    childGender: '',
-    childYear: '',
-  });
+  const [newChild, setNewChild] = useState(initialChildState);
+  const [isLoading, setIsLoading] = useState(false);
+  const isInitialMount = useRef(true);
+  const childrenLoaded = useRef(false);
 
-  // Utility function to format date
-  const formatDate = (dateString) => {
+  const formatDate = useCallback((dateString) => {
     if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-GB', {
@@ -72,119 +61,102 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
       month: 'short',
       year: 'numeric'
     });
-  };
+  }, []);
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     const newErrors = {};
+    const fields = ['childName', 'childDob', 'childGender', 'childYear'];
     
-    if (!newChild.childName.trim()) {
-      newErrors.childName = 'Name is required';
-    }
-    
-    if (!newChild.childDob) {
-      newErrors.childDob = 'Date of Birth is required';
-    }
-    
-    if (!newChild.childGender) {
-      newErrors.childGender = 'Gender is required';
-    }
-    
-    if (!newChild.childYear) {
-      newErrors.childYear = 'Year Group is required';
-    }
+    fields.forEach(field => {
+      if (!newChild[field]) {
+        newErrors[field] = `${field.replace('child', '')} is required`;
+      }
+    });
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
+  }, [newChild]);
 
-  const handleSelectChild = (child) => {
+  const handleSelectChild = useCallback((child) => {
     setSelectedChild(child);
     setSelectedBatch(null);
-  };
+  }, [setSelectedChild, setSelectedBatch]);
 
-  const handleOpenDialog = () => {
-    setOpen(true);
-    setErrors({});
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setErrors({});
-  };
-
-  const handleConfirmOpen = () => {
-    if (validateForm()) {
-      setConfirmOpen(true);
-    }
-  };
-
-  const handleConfirmClose = () => {
-    setConfirmOpen(false);
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setNewChild((prev) => ({ ...prev, [name]: value }));
+  const handleGetAllChildren = useCallback(async () => {
+    if (childrenLoaded.current || isLoading) return;
     
-    // Clear specific field error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: '' }));
-    }
-  };
-
-  const handleGetAllChildren = async () => {
     try {
-      if (allChildren.length >0) return;
+      setIsLoading(true);
       const response = await childService.getAll();
       if (response.data) {
         setAllChildren(response.data);
-      } else {
-        throw new Error('No data received');
+        childrenLoaded.current = true;
       }
     } catch (error) {
-      console.error('Error fetching data:', error);
-      snackRef.current.handleSnack({ message: 'Failed to fetch children.', variant: 'error' });
+      console.error('Error fetching children:', error);
+    } finally {
+      setIsLoading(false);
     }
-  };
-
-  useEffect(() => {
-    handleGetAllChildren();
   }, []);
 
   useEffect(() => {
-    if (allChildren.length > 0 && !selectedChild) {
-      setSelectedChild(allChildren[0]);
+    if (isInitialMount.current) {
+      handleGetAllChildren();
+      isInitialMount.current = false;
     }
-  }, [allChildren]);
+  }, [handleGetAllChildren]);
 
-  const handleAddChild = async () => {
+  const handleInputChange = useCallback((event) => {
+    const { name, value } = event.target;
+    setNewChild(prev => ({ ...prev, [name]: value }));
+    setErrors(prev => ({ ...prev, [name]: '' }));
+  }, []);
+
+  const handleAddChild = useCallback(async () => {
     try {
       const response = await childService.add(newChild._id, newChild);
-      snackRef.current.handleSnack(response);
       if (response.variant === 'success') {
-        handleClose();
+        setOpen(false);
+        setNewChild(initialChildState);
         handleGetAllChildren();
-        setNewChild({
-          _id: '',
-          childName: '',
-          childDob: '',
-          childGender: '',
-          childYear: '',
-        });
       }
     } catch (error) {
-      console.error('Error submitting data:', error);
-      snackRef.current.handleSnack({ message: 'Failed to submit data.', variant: 'error' });
+      console.error('Error adding child:', error);
     }
-  };
+  }, [newChild, handleGetAllChildren]);
 
-  const handleConfirmAddChild = async () => {
+  const handleConfirmAddChild = useCallback(() => {
     setConfirmOpen(false);
     handleAddChild();
-  };
+  }, [handleAddChild]);
+
+  const dialogActions = (
+    <DialogActions>
+      <Button 
+        variant="contained"
+        style={{ 
+          backgroundColor: '#FC7658', 
+          color: 'white',
+        }}
+        onClick={() => setOpen(false)}
+      >
+        Cancel
+      </Button>
+      <Button
+        variant="contained"
+        style={{ 
+          backgroundColor: '#4CAF50', 
+          color: 'white',
+        }}
+        onClick={() => validateForm() && setConfirmOpen(true)}
+      >
+        Add Child
+      </Button>
+    </DialogActions>
+  );
 
   return (
-    <div style={{ padding: isMobile? 20 : 0 }}>
+    <div style={{ padding: isMobile ? 20 : 0 }}>
       <Typography variant="h6" gutterBottom>
         Select a child for this {title}:
       </Typography>
@@ -192,7 +164,7 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
       {allChildren.map((child) => (
         <ChildContainer
           key={child._id}
-          selected={selectedChild === child}
+          selected={selectedChild?._id === child._id}
           onClick={() => handleSelectChild(child)}
         >
           {child.childImage && (
@@ -203,7 +175,7 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
             />
           )}
           <Typography variant="body1">{child.childName}</Typography>
-          {selectedChild === child && (
+          {selectedChild?._id === child._id && (
             <CheckIconContainer>
               <CheckCircleIcon style={{ color: '#fff' }} />
             </CheckIconContainer>
@@ -211,105 +183,84 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
         </ChildContainer>
       ))}
 
-      <ChildContainer onClick={handleOpenDialog}>
+      <ChildContainer onClick={() => setOpen(true)}>
         <AddIcon />
         <Typography variant="body1" style={{ marginLeft: 16 }}>
           Add A New Child
         </Typography>
       </ChildContainer>
 
-      <Dialog open={open} onClose={handleClose}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Add a New Child</DialogTitle>
         <DialogContent>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
           <Box component="form" sx={{ mt: 2 }}>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="childName"
-              label="Full Name"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={newChild.childName}
-              onChange={handleInputChange}
-              required
-              error={!!errors.childName}
-              helperText={errors.childName}
-            />
-            <TextField
-              style={{ marginTop: 16 }}
-              label="Date Of Birth"
-              variant="outlined"
-              name="childDob"
-              type="date"
-              fullWidth
-              value={newChild.childDob}
-              onChange={handleInputChange}
-              focused
-              required
-              error={!!errors.childDob}
-              helperText={errors.childDob}
-            />
-            <TextField
-              select
-              margin="dense"
-              name="childGender"
-              label="Gender"
-              fullWidth
-              variant="outlined"
-              value={newChild.childGender}
-              onChange={handleInputChange}
-              required
-              error={!!errors.childGender}
-              helperText={errors.childGender}
-            >
-              <MenuItem value="Boy">Boy</MenuItem>
-              <MenuItem value="Girl">Girl</MenuItem>
-            </TextField>
-            <TextField
-              select
-              margin="dense"
-              name="childYear"
-              label="Year Group"
-              fullWidth
-              variant="outlined"
-              value={newChild.childYear}
-              onChange={handleInputChange}
-              required
-              error={!!errors.childYear}
-              helperText={errors.childYear}
-            >
-              <MenuItem value="Year 5">Year 5</MenuItem>
-              <MenuItem value="Year 4">Year 4</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
-            </TextField>
+            {[
+              { name: 'childName', label: 'Full Name', type: 'text' },
+              { name: 'childDob', label: 'Date Of Birth', type: 'date' },
+              { 
+                name: 'childGender', 
+                label: 'Gender', 
+                type: 'select',
+                options: [
+                  { value: 'Boy', label: 'Boy' },
+                  { value: 'Girl', label: 'Girl' }
+                ]
+              },
+              {
+                name: 'childYear',
+                label: 'Year Group',
+                type: 'select',
+                options: [
+                  { value: 'Year 5', label: 'Year 5' },
+                  { value: 'Year 4', label: 'Year 4' },
+                  { value: 'Other', label: 'Other' }
+                ]
+              }
+            ].map(field => (
+              field.type === 'select' ? (
+                <TextField
+                  key={field.name}
+                  select
+                  fullWidth
+                  margin="dense"
+                  name={field.name}
+                  label={field.label}
+                  value={newChild[field.name]}
+                  onChange={handleInputChange}
+                  error={!!errors[field.name]}
+                  helperText={errors[field.name]}
+                >
+                  {field.options.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              ) : (
+                <TextField
+                  key={field.name}
+                  fullWidth
+                  margin="dense"
+                  name={field.name}
+                  label={field.label}
+                  type={field.type}
+                  value={newChild[field.name]}
+                  onChange={handleInputChange}
+                  error={!!errors[field.name]}
+                  helperText={errors[field.name]}
+                  focused={field.type === 'date'}
+                />
+              )
+            ))}
           </Box>
         </DialogContent>
-        <DialogActions>
-          <Button 
-                  variant="contained"
-                  style={{ 
-                    backgroundColor: '#FC7658', 
-                    color: 'white',
-                    '&:hover': { backgroundColor: '#E65B47' }
-                  }}
-          
-          onClick={handleClose}>Cancel</Button>
-          <Button
-           variant="contained"
-           style={{ 
-             backgroundColor: '#4CAF50', 
-             color: 'white',
-             '&:hover': { backgroundColor: '#45A049' }
-           }}
-          onClick={handleConfirmOpen}>Add Child</Button>
-        </DialogActions>
+        {dialogActions}
       </Dialog>
 
       <Dialog 
         open={confirmOpen} 
-        onClose={handleConfirmClose}
+        onClose={() => setConfirmOpen(false)}
         PaperProps={{
           style: { 
             backgroundColor: '#f0f0f0',
@@ -321,48 +272,44 @@ const ChildSelector = ({ isMobile,title, setSelectedBatch, selectedChild, setSel
         <DialogContent>
           <DialogContentText>Please confirm the details of the new child.</DialogContentText>
           <Box sx={{ mt: 2, mb: 2, p: 2, border: '1px solid', borderColor: 'grey.300', borderRadius: 2 }}>
-            <Typography variant="body1"><strong>Name:</strong> {newChild.childName}</Typography>
-            <Typography variant="body1"><strong>Date of Birth:</strong> {formatDate(newChild.childDob)}</Typography>
-            <Typography variant="body1"><strong>Gender:</strong> {newChild.childGender}</Typography>
-            <Typography variant="body1"><strong>Year Group:</strong> {newChild.childYear}</Typography>
+            <Typography><strong>Name:</strong> {newChild.childName}</Typography>
+            <Typography><strong>Date of Birth:</strong> {formatDate(newChild.childDob)}</Typography>
+            <Typography><strong>Gender:</strong> {newChild.childGender}</Typography>
+            <Typography><strong>Year Group:</strong> {newChild.childYear}</Typography>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button 
-            onClick={handleConfirmClose} 
+            onClick={() => setConfirmOpen(false)}
             variant="contained"
-            style={{ 
-              backgroundColor: '#FC7658', 
-              color: 'white',
-              '&:hover': { backgroundColor: '#E65B47' }
-            }}
+            style={{ backgroundColor: '#FC7658', color: 'white' }}
           >
             Cancel
           </Button>
           <Button 
-            onClick={handleConfirmAddChild} 
-            variant="contained"
-            style={{ 
-              backgroundColor: '#4CAF50', 
-              color: 'white',
-              '&:hover': { backgroundColor: '#45A049' }
-            }}
+            onClick={handleConfirmAddChild}
+            variant="contained" 
+            style={{ backgroundColor: '#4CAF50', color: 'white' }}
           >
-            Add Child
+            Confirm
           </Button>
         </DialogActions>
       </Dialog>
 
-      {(selectedChild && selectedChild._id) && (
-        <AnimatedButton variant="contained" color="primary" disabled={!selectedChild} style={{ marginTop: 16 }} onClick={() => setStep(3)}>
-     {!selectedChild?"Select Child above": isMobile ? 'Proceed' : 'Proceed to Select Batch'}
-        </AnimatedButton>
-
-
+      {selectedChild?._id && (
+        <Button
+          variant="contained"
+          color="primary"
+          style={{ marginTop: 16 }}
+          onClick={() => setStep(3)}
+        >
+          {isMobile ? 'Proceed' : 'Proceed to Select Batch'}
+        </Button>
       )}
-      <MySnackbar ref={snackRef} />
     </div>
   );
-};
+});
+
+ChildSelector.displayName = 'ChildSelector';
 
 export default ChildSelector;
