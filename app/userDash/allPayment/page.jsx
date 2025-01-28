@@ -92,7 +92,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
               {payment.year}
             </Typography>
           </Box>
-          <StatusChip status={payment.paymentStatus} />
+          {/* <StatusChip status={payment.paymentStatus} /> */}
         </Stack>
         
         <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -155,15 +155,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
               </Typography>
             </Box>
             {payment.invoiceLink && (
-              <Typography
-                component="a"
-                href={payment.invoiceLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
-              >
-                View Invoice
-              </Typography>
+              <DownReceipt data={payment.invoiceLink} />
             )}
           </Stack>
         </Collapse>
@@ -333,7 +325,7 @@ export default function PaymentsPage() {
             variant={isMobile ? "fullWidth" : "standard"}
             className="mb-4 border-b border-gray-200"
           >
-            <Tab label="Succeeded" value="succeeded" />
+            <Tab label="Completed" value="succeeded" />
             {/* <Tab label="All" value="all" /> */}
 
             {/* <Tab label="Other" value="other" /> */}
