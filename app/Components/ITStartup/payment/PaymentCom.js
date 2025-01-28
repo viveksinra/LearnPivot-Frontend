@@ -48,7 +48,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
   const paymentState = getPaymentState(data.status);
 
   const paymentDetails = {
-    amount: data.amount || "N/A",
+    amount: data.amount ? data.amount.toFixed(2) : "N/A",
     refNo: data.refNo || "N/A",
     paymentDate: data.paymentDate ? formatDateToShortMonth(data.paymentDate) : "N/A",
     status: data.status || "pending",
@@ -58,7 +58,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
   const stateConfig = {
     success: {
       title: "Payment Successful",
-      description: "Payment Successful description",
+      description: "Congratulations! Your payment was successful.",
       image: "/images/services/it-service1.png",
       imageAlt: "success image",
       imageWidth: 852,
@@ -126,7 +126,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
         </li>
         <li>
           <span>
-            <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status}
+            <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status === "succeeded" ? "Completed" : paymentDetails.status}
           </span>
         </li>
       </ul>

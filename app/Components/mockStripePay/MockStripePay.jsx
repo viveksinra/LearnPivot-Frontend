@@ -150,7 +150,7 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
                   border: '1px solid #e2e8f0'
                 }}>
                   <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                    Selected Batch
+                    Selected Batches
                   </Typography>
                   {selectedBatch.map((batch, index) => ( 
                        <Typography variant="body1" color="text.primary" sx={{ fontWeight: 500 }}>
