@@ -154,16 +154,16 @@ const MockTestCard = ({ data , totalAmount, selectedBatch}) => {
    
 
           {/* Action Buttons */}
-          <Box sx={{ display: 'flex', gap: 2, mt: 2, flexWrap: 'wrap' }}>
+{  selectedBatch && selectedBatch?.length > 0 &&        <Box sx={{ display: 'flex', gap: 2, mt: 2, flexWrap: 'wrap' }}>
             <ActionButton
               variant="secondary"
               startIcon={<CalendarMonthIcon />}
               onClick={() => setOpenBatchModal(true)}
             >
-              View Batches
+              Selected Batches
             </ActionButton>
 
-          </Box>
+          </Box>}
         </Box>
       </StyledCard>
 
