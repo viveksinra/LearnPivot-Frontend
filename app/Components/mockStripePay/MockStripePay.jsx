@@ -111,23 +111,24 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
                   padding: isMobile? "20px" : "1px"
                  }}>
           
-                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 3, gap: 2 }}>
-                 <Button
-                   startIcon={<ArrowBackIcon />}
-                   onClick={handleUpdateBatch}
-         
-                   sx={{ 
-                     width: isMobile?'30%':'20%',
-                     minWidth: 'auto',
-                     color: 'white', backgroundColor: '#fc7658', '&:hover': { backgroundColor: 'darkred' }
-                   }}
-                 >
-                   Back
-                 </Button>
-                 <Typography variant="h7" sx={{ width: '80%', fontWeight: 400 }}>
-                   Book {data.testType?.label} Mock Test for  <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
-                 </Typography>
-               </Box>
+          <Box sx={{ display: 'flex',  alignItems: 'center', mb: 3, gap: 2 }}>
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={() => setClientSecret("")}
+            sx={{ 
+              width: isMobile?"30%":'20%',
+              minWidth: 'auto',
+              color: 'white', 
+              backgroundColor: '#fc7658', 
+              '&:hover': { backgroundColor: 'darkred' }
+            }}
+          >
+            Back
+          </Button>
+          <Typography variant="h7" sx={{ width: isMobile?"70%":'80%', fontWeight: 400 }}>
+       Book {data.testType?.label} Mock Test for <span style={{ fontWeight: 'bold' }}>{selectedChild.childName}</span>
+          </Typography>
+        </Box>
                    <Box sx={{ 
                      display: "flex", 
                      justifyContent: "space-between", 
