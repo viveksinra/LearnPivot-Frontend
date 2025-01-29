@@ -23,7 +23,7 @@ import {
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import SchoolIcon from '@mui/icons-material/School';
-import QuizIcon from '@mui/icons-material/Quiz';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import moment from 'moment';
@@ -82,7 +82,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => (
           {payment.type === 'course' ? (
             <SchoolIcon color="primary" />
           ) : (
-            <QuizIcon color="secondary" />
+            <AssignmentIcon color="secondary" />
           )}
           <Box flex={1}>
             <Typography variant="subtitle1" className="font-semibold">
@@ -179,7 +179,7 @@ const columns = [
         {params.value === 'course' ? (
           <SchoolIcon color="primary" />
         ) : (
-          <QuizIcon color="secondary" />
+          <AssignmentIcon color="secondary" />
         )}
         <span>{params.value === 'course' ? 'Course' : 'Mock Test'}</span>
       </Stack>
@@ -205,7 +205,7 @@ const columns = [
   // },
   {
     field: 'courseName',
-    headerName: 'Course/Test Name',
+    headerName: 'Course/Test',
     width: 200,
     valueGetter: (params) => params.value || 'Mock Test',
   },
@@ -215,7 +215,8 @@ const columns = [
     width: 150,
     renderCell: (params) => (
       <Stack>
-        <Typography variant="body2">{params.value} {params.row.year}</Typography>
+        <Typography variant="body2">{params.value} </Typography>
+        {/* <Typography variant="body2">{params.value} {params.row.year}</Typography> */}
                 
                 {/* <Typography variant="caption" color="text.secondary">{params.row.parentName} • {params.row.email} </Typography> */}
       </Stack>

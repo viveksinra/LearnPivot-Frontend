@@ -100,7 +100,7 @@ const Enquiry = () => {
                         <TextField fullWidth value={email} required type="email" onChange={e=>setEmail(e.target.value)} label="Email" placeholder="Enter your Email" variant="outlined" />
                         </Grid>
                         <Grid item xs={12} md={6}> 
-                        <TextField fullWidth value={mobile} required onChange={e=>setMobile(e.target.value)} label="Phone" type="number" placeholder="Enter your Mobile No" variant="outlined" />
+                        <TextField fullWidth value={mobile} required onChange={e=>setMobile(e.target.value)} label="Mobile No" type="number" placeholder="Enter your Mobile No" variant="outlined" />
                         </Grid>
                         <Grid item xs={12} md={12}> 
                         <TextField fullWidth value={address} onChange={e=>setAddress(e.target.value)} label="Address" placeholder="Enter your Address" variant="outlined" />
