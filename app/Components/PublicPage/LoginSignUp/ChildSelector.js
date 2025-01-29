@@ -43,7 +43,7 @@ const initialChildState = {
   childYear: '',
 };
 
-const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
+const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -80,6 +80,7 @@ const ChildSelector = memo(({ isMobile, title, setSelectedBatch, selectedChild, 
   const handleSelectChild = useCallback((child) => {
     setSelectedChild(child);
     setSelectedBatch(null);
+    setTotalAmount('');
   }, [setSelectedChild, setSelectedBatch]);
 
   const handleGetAllChildren = useCallback(async () => {

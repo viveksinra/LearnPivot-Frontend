@@ -182,7 +182,7 @@ const MockTestCard = ({ data , selectedChild, totalAmount, selectedBatch}) => {
           justifyContent: 'space-between',
           alignItems: 'center'
         }}>
-          Batches
+         Selected Batches 
           <CloseIcon 
             onClick={() => setOpenBatchModal(false)} 
             sx={{ cursor: 'pointer', color: '#1F2937' }}
@@ -191,7 +191,8 @@ const MockTestCard = ({ data , selectedChild, totalAmount, selectedBatch}) => {
         <DialogContent>
           {selectedBatch && selectedBatch?.length > 0 && (  <Box sx={{ mt: 2 }}>
             {data.batch.map((batch, index) => (
-              <Box
+             <>
+             { (selectedBatch.some(selected => selected._id === batch._id) ) && <Box
                 key={index}
                 sx={{
                   display: 'flex',
@@ -227,7 +228,8 @@ const MockTestCard = ({ data , selectedChild, totalAmount, selectedBatch}) => {
                     Selected
                   </Typography>
                 )}
-              </Box>
+              </Box>}
+               </>
             ))}
           </Box> )}
         
