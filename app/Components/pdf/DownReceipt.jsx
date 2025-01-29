@@ -81,7 +81,7 @@ if (response.variant === 'success') {
       const pdfBytes = await pdfDoc.save();
 
       // Download the PDF with filled data
-      await download(pdfBytes, 'insofy_agreement.pdf', 'application/pdf');
+      await download(pdfBytes, 'chelmsford11plus-invoice.pdf', 'application/pdf');
     } catch (error) {
       console.log(error);
       alert('Failed to generate the certificate');
