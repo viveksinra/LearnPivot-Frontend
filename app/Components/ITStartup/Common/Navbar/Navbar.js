@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import MenuItem from "./MenuItem";
 import { menus } from "./menus";
-import { Avatar, Button, Menu, MenuItem as MuiMenuItem } from "@mui/material";
+import { Avatar, Button, Menu, MenuItem as MuiMenuItem, useMediaQuery, useTheme } from "@mui/material";
 import MainContext from "@/app/Components/Context/MainContext";
 import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
@@ -18,6 +18,9 @@ const Navbar = () => {
   };
   const currentUser = JSON.parse(Cookies.get("currentUser") || "{}");
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  
   const { state } = useContext(MainContext);
   const router = useRouter();
   const [anchorElProfile, setAnchorElProfile] = useState(null);
@@ -136,7 +139,7 @@ margin-right: 12px;
               </ul>
             </div>
 
-            <div className="others-options" style={{ marginTop: "-15px"}}>
+            <div className="others-options" style={{ marginTop: isMobile? "-15px" : "0px" }}>
               {state?.isAuthenticated && currentUser?.firstName ? (
                 <>
                   <Menu
