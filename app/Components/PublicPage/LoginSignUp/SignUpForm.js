@@ -95,7 +95,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       const res = await authService.sendOtp(emailOtpData);
       if (res.variant === "success") {
         setOtpSent(true);
-        setAlert({ message: "OTP Sent Successfully!", severity: "success" });
+        setAlert({ message: `OTP Sent to ${formData.email}`, severity: "success" });
       } else {
         setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
       }
@@ -149,11 +149,12 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     "Blog or Publication",
   ];
 
+
   return (
     <Container>
       {alert && (
         <Box mb={2}>
-          <Alert severity={alert.severity} onClose={() => setAlert(null)}>
+          <Alert severity={alert.severity} >
             {alert.message}
           </Alert>
         </Box>
@@ -173,6 +174,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 error={!!errors.firstName}
                 helperText={errors.firstName}
                 disabled={otpSent}
+                autoComplete="off"
               />
             </Grid>
 
@@ -187,6 +189,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 error={!!errors.lastName}
                 helperText={errors.lastName}
                 disabled={otpSent}
+                autoComplete="off"
               />
             </Grid>
 
@@ -202,6 +205,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 error={!!errors.email}
                 helperText={errors.email}
                 disabled={otpSent}
+                autoComplete="off"
               />
             </Grid>
 
@@ -216,6 +220,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 error={!!errors.mobile}
                 helperText={errors.mobile}
                 disabled={otpSent}
+                autoComplete="off"
               />
             </Grid>
 
@@ -227,6 +232,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 onChange={handleChange}
                 label="Address"
                 disabled={otpSent}
+                autoComplete="off"
               />
             </Grid>
 
@@ -241,6 +247,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 error={!!errors.password}
                 helperText={errors.password}
                 disabled={otpSent}
+                autoComplete="new-password"
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -265,6 +272,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 onChange={handleChange}
                 label="How did you hear about us?"
                 disabled={otpSent}
+                autoComplete="off"
               >
                 {allMarketing.map((option) => (
                   <MenuItem key={option} value={option}>
@@ -294,6 +302,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 onChange={(e) => setOtp(e.target.value)}
                 label="Enter Email OTP"
                 required
+                autoComplete="off"
               />
             </Grid>
 
