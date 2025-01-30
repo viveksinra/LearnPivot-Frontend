@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import LoginForm from "./LoginForm";
@@ -10,6 +10,11 @@ import ForgetPassword from "./ForgetPassword";
 function ComLogSigForm({ isRedirectToDashboard }) {
   const [isLogin, setIsLogin] = useState(true);
   const [isForget, setIsForget] = useState(false);
+
+  useEffect(() => {
+console.log("isForget",isForget)
+    console.log("isLogin",isLogin)
+  }, [isLogin,isForget]);
 
   return (
     <div style={{marginTop:"20px",justifyContent:"center"}}>

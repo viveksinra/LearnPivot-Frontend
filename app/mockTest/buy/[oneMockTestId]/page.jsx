@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { CircularProgress, Container } from '@mui/material';
 import NoResult from '@/app/Components/NoResult/NoResult';
 import { mockTestService } from "../../../services";
@@ -8,11 +8,12 @@ import Navbar from "../../../Components/ITStartup/Common/Navbar/Navbar";
 import MtBuyComponent from '@/app/Components/PublicPage/MtBuyForm/MtBuyComponent';
 // import "../styles/style.css";
 import "../../../../styles/style.css";
+import MySnackbar from '@/app/Components/MySnackbar/MySnackbar';
 
 export default function OneClassBuy({ params }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
-
+  const snackRef = useRef();
   useEffect(() => {
     // Getting date from Voucher in URL
     console.log("got loaded")
@@ -28,7 +29,7 @@ export default function OneClassBuy({ params }) {
       if (res.variant === "success") {
         setData(res.data)
         console.log(res.data)
-        snackRef.current.handleSnack(res);
+        // snackRef.current.handleSnack(res);
       } else {
         snackRef.current.handleSnack(res);
         console.log(res);
@@ -59,6 +60,7 @@ export default function OneClassBuy({ params }) {
               ) : <NoResult label="No Result Available" />}
     
     </Container>
+    <MySnackbar ref={snackRef} />
   
 
     </main>
