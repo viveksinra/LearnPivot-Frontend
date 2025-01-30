@@ -45,7 +45,7 @@ function LoginForm({ isRedirectToDashboard }) {
         }
       } else {
         snackRef.current.handleSnack({
-          message: "Invalid Login Credentials. Please enter correct credentials.",
+          message: "Invalid Login. Please enter correct credentials.",
           variant: "error",
         });
       }

@@ -109,7 +109,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
 
   const handleSignUpClick = async () => {
     if (!otp.trim()) {
-      setAlert({ message: "Please enter the OTP", severity: "error" });
+      setAlert({ message: "Please enter OTP sent to ${formData.email}", severity: "error" });
       return;
     }
 
