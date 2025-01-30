@@ -99,7 +99,11 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
         setOtpSent(true);
         setAlert({ message: `OTP Sent to ${formData.email}`, severity: "success" });
       } else {
+        if (res.message) {
+          setAlert({ message: res.message, severity: "error" });
+        } else {
         setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
+        }
       }
     } catch (error) {
       console.error("Error sending OTP:", error);

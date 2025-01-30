@@ -74,10 +74,17 @@ function ForgetPassword({ setIsForget }) {
           variant: "success",
         });
       } else {
+        if(res.message) {
+        snackRef.current.handleSnack({
+          message: res.message,
+          variant: "error",
+        });
+        } else {
         snackRef.current.handleSnack({
           message: "Failed to send OTP to Email. Try again later.",
           variant: "error",
         });
+      }
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
