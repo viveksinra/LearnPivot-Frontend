@@ -141,7 +141,7 @@ const faqData = [
   {
     id: "1",
     question: "What services do you provide for 11+ preparation?",
-    answer: "We offer expert tuition for students preparing for the 11+ exams, focusing on both CSSE and FSCE formats. Our services include group classes, mock exams, and personalised help for parents"
+    answer: "We offer expert tuition for students preparing for the 11+ exams, focusing on both CSSE and FSCE formats. Our services include group courses, mock exams, and personalised help for parents"
   },
   {
     id: "2",
@@ -156,12 +156,12 @@ const faqData = [
   {
     id: "4",
     question: "How does your tuition work?",
-    answer: "We offer: Group Courses: Small, focused groups where every child is involved. Mock Exams: Realistic practice under timed conditions, with detailed feedback within 24-48 hours. Practice Materials: Custom resources aligned with the FSCE and CSSE formats to help your child practice outside of our classes."
+    answer: "We offer: Group Courses: Small, focused groups where every child is involved. Mock Exams: Realistic practice under timed conditions, with detailed feedback within 24-48 hours. Practice Materials: Custom resources aligned with the FSCE and CSSE formats to help your child practice outside of our courses."
   },
   {
     id: "5",
     question: "When should my child start preparing?",
-    answer: "Every child and situations is different. Although we recommend starting preparation 12-18 months in advance, our classes range from Year 4, all the way through to the summer before the exam, ensuring your child is confident until the end."
+    answer: "Every child and situations is different. Although we recommend starting preparation 12-18 months in advance, our courses range from Year 4, all the way through to the summer before the exam, ensuring your child is confident until the end."
   },
   {
     id: "6",
@@ -175,8 +175,8 @@ const faqData = [
   },
   {
     id: "8",
-    question: "Where are your classes held?",
-    answer: "Our classes are conducted on Zoom. Each child will answer questions throughout the class with direct messaging available between our tutor and your child."
+    question: "Where are your courses held?",
+    answer: "Our courses are conducted on Zoom. Each child will answer questions throughout the class with direct messaging available between our tutor and your child."
   },
   {
     id: "9",
@@ -191,7 +191,7 @@ const faqData = [
   {
     id: "11",
     question: "Do you provide support for parents?",
-    answer: "Yes, we keep parents informed about their child's progress through regular updates, homework tasks and provide guidance on supporting 11+ preparation outside of our classes."
+    answer: "Yes, we keep parents informed about their child's progress through regular updates, homework tasks and provide guidance on supporting 11+ preparation outside of our courses."
   },
   {
     id: "12",

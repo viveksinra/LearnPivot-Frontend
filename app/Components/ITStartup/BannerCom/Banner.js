@@ -37,7 +37,7 @@ const Banner = () => {
                     >
                       Join our platform where I, as an experienced educator,
                       guide and inspire students on their journey of discovery.
-                      Parents can book classes and mock tests to help their
+                      Parents can book courses and mock tests to help their
                       children succeed on their journey to academic success.
                     </p>
 
