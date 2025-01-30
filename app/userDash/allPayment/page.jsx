@@ -318,25 +318,13 @@ export default function PaymentsPage() {
             </Grid>
           </Grid>
 
-          <Tabs
-            value={tabValue}
-            onChange={handleTabChange}
-            variant={isMobile ? "fullWidth" : "standard"}
-            className="mb-4 border-b border-gray-200"
-          >
-            <Tab label="Completed" value="succeeded" />
-            {/* <Tab label="All" value="all" /> */}
-
-            {/* <Tab label="Other" value="other" /> */}
-          </Tabs>
-
           {loading ? (
             <Box className="flex justify-center items-center p-8">
               <CircularProgress />
             </Box>
           ) : filteredPayments.length === 0 ? (
             <Alert severity="info" className="mt-4">
-              No payments found for the selected filter.
+              No payments found for the selected child.
             </Alert>
           ) : isMobile ? (
             <List className="p-0">
