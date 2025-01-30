@@ -114,7 +114,7 @@ export default function MockStripePay({isMobile, setStep,data,selectedChild, sel
           <Box sx={{ display: 'flex',  alignItems: 'center', mb: 3, gap: 2 }}>
           <Button
             startIcon={<ArrowBackIcon />}
-            onClick={() => setClientSecret("")}
+            onClick={() => {setSubmitted(false),setStep(3)}}
             sx={{ 
               width: isMobile?"30%":'20%',
               minWidth: 'auto',

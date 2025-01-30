@@ -174,7 +174,7 @@ const MtBatchSelector = ({
       <Box sx={{ display: 'flex',  alignItems: 'center', mb: 3, gap: 2 }}>
           <Button
             startIcon={<ArrowBackIcon />}
-            onClick={() => setClientSecret("")}
+            onClick={() => setStep(2)}
             sx={{ 
               width: isMobile?"30%":'20%',
               minWidth: 'auto',
