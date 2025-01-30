@@ -55,11 +55,13 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       newErrors.email = "Invalid email format";
     }
 
-    // Phone number validation
-    const phoneRegex = /^\d{10}$/;
-    if (formData.mobile && !phoneRegex.test(formData.mobile)) {
-      newErrors.mobile = "Phone number must be 10 digits";
-    }
+   // Updated phone number validation
+   const phoneRegex = /^0\d{10}$/;
+   if (formData.mobile) {
+     if (!phoneRegex.test(formData.mobile)) {
+       newErrors.mobile = "Phone number must be 11 digits and start with 0";
+     }
+   }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
