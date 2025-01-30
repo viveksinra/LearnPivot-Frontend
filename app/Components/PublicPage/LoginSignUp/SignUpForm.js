@@ -232,7 +232,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                label="Address"
+                label="Full Postal Address"
                 disabled={otpSent}
                 autoComplete="off"
               />
