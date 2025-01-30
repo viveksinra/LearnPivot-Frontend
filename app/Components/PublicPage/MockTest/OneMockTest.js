@@ -269,8 +269,8 @@ console.log(data)
                     </Typography>
                   </div>
                 </div>
-                <Typography variant="body1" sx={{ color: '#059669', fontWeight: 'bold' }}>
-                  £{batch.oneBatchprice}
+                <Typography variant="body1" sx={{ color: batch.filled ? '#DC2626' : '#059669', fontWeight: 'bold' }}>
+                  {batch.filled ? 'Booking Full' : `£${batch.oneBatchprice}`}
                 </Typography>
               </div>
             ))}
