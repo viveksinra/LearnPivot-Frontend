@@ -91,7 +91,7 @@ const ContentCard = ({ item, type, getSubjectColor }) => (
 
 export const MoreContent = ({ classes, tests, getSubjectColor }) => (
   <>
-    <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>More Classes</Typography>
+    <Typography variant="h5" sx={{ mb: 3, fontWeight: 700 }}>More Courses</Typography>
     <Grid container spacing={3} sx={{ mb: 5 }}>
       {classes.map((class_) => (
         <Grid item xs={12} md={6} lg={4} key={class_.id}>

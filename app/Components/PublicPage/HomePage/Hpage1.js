@@ -30,7 +30,7 @@ const Hpage1 = () => {
           <ul style={{ listStyle: "none", marginLeft: "10px" }}>
             <li className="ChoiceList">
               <Typography variant="subtitle1">
-                Engage in Online Classes: Join interactive sessions led by
+                Engage in Online Courses: Join interactive sessions led by
                 expert instructors, ensuring a dynamic and immersive learning
                 experience.
               </Typography>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 const quickLinks = [
   {
     id: 1,
-    title: 'Book New Classes',
+    title: 'Book New Courses',
     link: "/course",
     icon: <Book sx={{ fontSize: 28, color: 'white' }} />,
     bgColor: 'linear-gradient(135deg, #6A11CB 0%, #2575FC 100%)'

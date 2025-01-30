@@ -12,7 +12,7 @@ const quickLinks = [
       },
     {
       id: 2,
-      title: 'Add/ Update Classes',
+      title: 'Add/ Update Courses',
       link: "/dashboard/addCourse",
       icon: <Class sx={{ fontSize: 40, color: 'primary.main' }} /> // Updated icon to Class
     },
@@ -25,7 +25,7 @@ const quickLinks = [
     },
     {
       id: 4,
-      title: 'All Purchased Classes',
+      title: 'All Purchased Courses',
       link: "dashboard/allBuyCourse",
       icon: <Class sx={{ fontSize: 40, color: 'success.main' }} /> // Updated icon to Class
     },

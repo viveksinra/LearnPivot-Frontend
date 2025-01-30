@@ -64,7 +64,7 @@ const EmptyState = ({ type, onButtonClick }) => {
           }} />
         )}
         <Typography variant={isMobile ? "subtitle1" : "h6"} gutterBottom>
-          No Upcoming {isClass ? 'Classes' : 'Mock Tests'}
+          No Upcoming {isClass ? 'Courses' : 'Mock Tests'}
         </Typography>
         <Button
           variant="contained"
@@ -254,7 +254,7 @@ export const UpcomingEvents = ({ selectedChild }) => {
           fontWeight: 700,
           fontSize: isMobile ? '1.25rem' : '1.5rem'
         }}>
-          Upcoming Classes
+          Upcoming Courses
         </Typography>
         <LoadingSkeleton />
         
@@ -318,7 +318,7 @@ export const UpcomingEvents = ({ selectedChild }) => {
             fontSize: isMobile ? '1.25rem' : '1.5rem'
           }}
         >
-          Upcoming Classes
+          Upcoming Courses
         </Typography>
         {events.classes.length > 0 ? (
           <EventList 

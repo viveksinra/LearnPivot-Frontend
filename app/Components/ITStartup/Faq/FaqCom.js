@@ -156,7 +156,7 @@ const faqData = [
   {
     id: "4",
     question: "How does your tuition work?",
-    answer: "We offer: Group Classes: Small, focused groups where every child is involved. Mock Exams: Realistic practice under timed conditions, with detailed feedback within 24-48 hours. Practice Materials: Custom resources aligned with the FSCE and CSSE formats to help your child practice outside of our classes."
+    answer: "We offer: Group Courses: Small, focused groups where every child is involved. Mock Exams: Realistic practice under timed conditions, with detailed feedback within 24-48 hours. Practice Materials: Custom resources aligned with the FSCE and CSSE formats to help your child practice outside of our classes."
   },
   {
     id: "5",
