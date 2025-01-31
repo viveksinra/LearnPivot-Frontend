@@ -107,7 +107,7 @@ function ForgetPassword({ setIsForget }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your Email Id"
+              placeholder="Email Address"
               label="Email Address"
               variant="outlined"
               disabled={otpSent} // Disable email input after OTP is sent

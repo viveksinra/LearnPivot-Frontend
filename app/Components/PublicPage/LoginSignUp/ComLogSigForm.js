@@ -71,7 +71,7 @@ function ComLogSigForm({ isRedirectToDashboard }) {
         </Typography>
         <Link href="#" onClick={handleToggleLogin} passHref>
           <Typography color="secondary" variant="subtitle1" component="a">
-            {isLogin ? "Register New" : "Login"}
+            {isLogin ? "Register" : "Login"}
           </Typography>
         </Link>
       </Grid>

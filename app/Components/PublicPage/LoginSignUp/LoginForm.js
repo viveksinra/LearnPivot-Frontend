@@ -72,7 +72,7 @@ function LoginForm({ isRedirectToDashboard }) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value.toLowerCase())}
-              placeholder="Enter your Email Id"
+              placeholder="Email Address"
               label="Email Address"
               variant="outlined"
             />
