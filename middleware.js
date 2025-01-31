@@ -1,69 +1,75 @@
 import { NextResponse } from "next/server";
-import { authRoutes, protectedRoutes, userProtectedRoutes,publicRoutes } from "./app/router/routes";
+import { authRoutes, protectedRoutes, userProtectedRoutes, publicRoutes } from "./app/router/routes";
 
 export function middleware(request) {
-  const currentUser = request.cookies.get("currentUser")?.value;
+  const currentUser = parseCurrentUser(request);
+  const { pathname } = request.nextUrl;
+  
+  const routeChecks = {
+    isAdmin: currentUser?.jobRoleId === "admin",
+    isUser: currentUser?.jobRoleId === "user",
+    isProtectedRoute: protectedRoutes.includes(pathname),
+    isUserProtectedRoute: userProtectedRoutes.includes(pathname),
+    isAuthRoute: authRoutes.includes(pathname),
+    isPublicRoute: publicRoutes.includes(pathname)
+  };
 
-  // Parse the currentUser cookie if it exists
-  let user = null;
-  if (currentUser) {
-    try {
-      user = JSON.parse(currentUser);
-    } catch (e) {
-      console.error("Failed to parse currentUser cookie:", e);
-    }
+  // Handle authentication and route access
+  if ((routeChecks.isProtectedRoute || routeChecks.isUserProtectedRoute) && 
+      (!currentUser || Date.now() > currentUser.expiredAt)) {
+    return redirectToLogin(request);
   }
 
-  const isAdmin = user?.jobRoleId === "admin";
-  const isUser = user?.jobRoleId === "user";
-  const isProtectedRoute = protectedRoutes.includes(request.nextUrl.pathname);
-  const isUserProtectedRoute = userProtectedRoutes.includes(request.nextUrl.pathname);
-  const isAuthRoute = authRoutes.includes(request.nextUrl.pathname);
-  const isPublicRoutes = publicRoutes.includes(request.nextUrl.pathname);
-
-  // Check for protected routes and userProtectedRoutes
-  if ((isProtectedRoute || isUserProtectedRoute) && (!currentUser || Date.now() > user.expiredAt)) {
-    request.cookies.delete("currentUser");
-    const response = NextResponse.redirect(new URL("/login", request.url));
-    response.cookies.delete("currentUser");
-
-    return response;
+  // Handle auth routes when user is logged in
+  if (routeChecks.isAuthRoute && currentUser) {
+    return redirectBasedOnRole(currentUser);
   }
 
-
-
-  if (isAuthRoute && currentUser) {
-    if (isAdmin) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    } else if (isUser){
-      return NextResponse.redirect(new URL("/userDash", request.url));
-    }  else {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  // Handle user-specific route restrictions
+  if (routeChecks.isUserProtectedRoute && !routeChecks.isUser) {
+    return routeChecks.isAdmin 
+      ? NextResponse.redirect(new URL("/dashboard", request.url)) 
+      : redirectToLogin(request);
   }
 
-
-  if (isUserProtectedRoute && !isUser) {
-    if(isAdmin){
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    } else {
-    return NextResponse.redirect(new URL("/login", request.url));
-    }
-  }
-  if (isPublicRoutes) {
-    if(isAdmin){
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    } 
+  // Handle public routes for admin
+  if (routeChecks.isPublicRoute && routeChecks.isAdmin) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  // Handle admin-only route restrictions
+  if (routeChecks.isProtectedRoute && !routeChecks.isAdmin) {
+    return routeChecks.isUser
+      ? NextResponse.redirect(new URL("/userDash", request.url))
+      : redirectToLogin(request);
+  }
+}
 
+function parseCurrentUser(request) {
+  const currentUserCookie = request.cookies.get("currentUser")?.value;
+  if (!currentUserCookie) return null;
+  
+  try {
+    return JSON.parse(currentUserCookie);
+  } catch (e) {
+    console.error("Failed to parse currentUser cookie:", e);
+    return null;
+  }
+}
 
+function redirectToLogin(request) {
+  request.cookies.delete("currentUser");
+  const response = NextResponse.redirect(new URL("/login", request.url));
+  response.cookies.delete("currentUser");
+  return response;
+}
 
-  if (isProtectedRoute && !isAdmin) {
-    if(isUser){
-      return NextResponse.redirect(new URL("/userDash", request.url));
-    } else {
-    return NextResponse.redirect(new URL("/login", request.url));
-    }
+function redirectBasedOnRole(user) {
+  if (user.jobRoleId === "admin") {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  } else if (user.jobRoleId === "user") {
+    return NextResponse.redirect(new URL("/userDash", request.url));
+  } else {
+    return redirectToLogin(request);
   }
 }

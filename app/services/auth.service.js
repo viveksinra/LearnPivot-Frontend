@@ -81,10 +81,6 @@ export class AuthService {
       }))
       .catch((err) => err);
   };
-  
-
-
-
   get = async (url) => {
     return this.instance
       .get(`/${url}`, {
@@ -93,7 +89,6 @@ export class AuthService {
       .then((res) => res.data)
       .catch((err) => err);
   };
-
   post = async (url, data) => {
     return this.instance
       .post(`/${url}`, data, {
@@ -102,7 +97,6 @@ export class AuthService {
       .then((res) => res.data)
       .catch((err) => err);
   };
-
 
   getLoggedInUser = () => {
     const currentUser = Cookies.get("currentUser");
