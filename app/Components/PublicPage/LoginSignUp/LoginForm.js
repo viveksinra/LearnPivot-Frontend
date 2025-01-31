@@ -61,8 +61,8 @@ function LoginForm({ isRedirectToDashboard }) {
   };
 
   return (
-    <>
-      <form onSubmit={handleLogin} id="login-form" className="loginDataBox" style={{ width: "100%" }}>
+    <div style={{marginTop:"20px", justifyContent:"center", }}>
+      <form onSubmit={handleLogin} id="login-form" className="loginDataBox"  >
         <Grid container spacing={4}>
           <Grid item xs={12}>
             <TextField
@@ -126,7 +126,7 @@ function LoginForm({ isRedirectToDashboard }) {
       </form>
       <MySnackbar ref={snackRef} />
 
-    </>
+    </div>
   );
 }
 

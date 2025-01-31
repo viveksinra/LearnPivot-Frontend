@@ -21,7 +21,7 @@ function Login() {
     xs={12}
     md={6}
     className="center"
-    style={{ flexDirection: "column", padding: "20px" }}
+    style={{ flexDirection: "column", padding: "20px" , }}
   >
         <ComLogSigForm isRedirectToDashboard={true} />
         </Grid>
