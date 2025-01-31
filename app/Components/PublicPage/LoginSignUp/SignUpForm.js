@@ -277,7 +277,9 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             <Box mt={1} sx={{ background: "#f9f9f9", borderRadius: "5px", maxHeight: 200, overflowY: "auto" }}>
               {addressSuggestions.map((onesugest, index) => (
                 <MenuItem key={index} onClick={() => handleAddressSelect(onesugest.suggestion)}>
-                  {onesugest.suggestion}
+                  <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {onesugest.suggestion}
+                  </Box>
                 </MenuItem>
               ))}
             </Box>
