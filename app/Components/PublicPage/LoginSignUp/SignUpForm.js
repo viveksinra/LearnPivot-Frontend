@@ -10,13 +10,17 @@ import {
   InputAdornment,
   Box,
   Alert,
-} from "@mui/material/";
+  CircularProgress,
+} from "@mui/material/"; // Added CircularProgress import
 import { FcFeedback } from "react-icons/fc";
 import { authService } from "@/app/services";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import MainContext from "../../Context/MainContext";
 import { LOGIN_USER } from "../../Context/types";
+import axios from "axios";
+
+const API_KEY = "ak_m6kgz2ix8p1AE5DW6pLG78Hf9LE6L"; // Replace with your actual API key
 
 const SignUpForm = ({ isRedirectToDashboard }) => {
   const [formData, setFormData] = useState({
@@ -35,6 +39,9 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [errors, setErrors] = useState({});
+  const [alert, setAlert] = useState(null);
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   const { dispatch } = useContext(MainContext);
@@ -68,17 +75,40 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   };
 
   const handleChange = (e) => {
-    if (otpSent) return; // Prevent changes after OTP is sent
-    
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: name === "email" ? value.toLowerCase() : value,
-    }));
-    // Clear error when field is modified
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+
+    if (name === "address") {
+      fetchAddressSuggestions(value);
+    }
+  };
+
+  const fetchAddressSuggestions = async (query) => {
+    if (!query.trim()) {
+      setAddressSuggestions([]);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await axios.get(
+        `https://api.ideal-postcodes.co.uk/v1/autocomplete/addresses?api_key=${API_KEY}&query=${query}`
+      );
+      setAddressSuggestions(res.data?.result?.hits || []);
+    } catch (error) {
+      console.error("Error fetching address suggestions:", error);
+      setAddressSuggestions([]);
+    }
+    setLoading(false);
+  };
+
+  const handleAddressSelect = (selectedAddress) => {
+    setFormData((prev) => ({ ...prev, address: selectedAddress }));
+    setAddressSuggestions([]);
   };
 
   const handleSendOtpClick = async () => {
@@ -113,7 +143,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
 
   const handleSignUpClick = async () => {
     if (!otp.trim()) {
-      setAlert({ message: "Please enter OTP sent to ${formData.email}", severity: "error" });
+      setAlert({ message: `Please enter OTP sent to ${formData.email}`, severity: "error" }); // Fixed template literal
       return;
     }
 
@@ -143,7 +173,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     }
   };
 
-  const [alert, setAlert] = useState(null);
+
 
   const allMarketing = [
     "Web Search / Google",
@@ -231,16 +261,28 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                label="Full Postal Address"
-                disabled={otpSent}
-                autoComplete="off"
-              />
-            </Grid>
+          <TextField
+            fullWidth
+            name="address"
+            value={formData.address}
+            onChange={handleChange}
+            label="Address"
+            required
+            error={!!errors.address}
+            helperText={errors.address}
+            autoComplete="off"
+          />
+          {loading && <CircularProgress size={20} sx={{ marginLeft: 1 }} />}
+          {addressSuggestions.length > 0 && (
+            <Box mt={1} sx={{ background: "#f9f9f9", borderRadius: "5px", maxHeight: 200, overflowY: "auto" }}>
+              {addressSuggestions.map((onesugest, index) => (
+                <MenuItem key={index} onClick={() => handleAddressSelect(onesugest.suggestion)}>
+                  {onesugest.suggestion}
+                </MenuItem>
+              ))}
+            </Box>
+          )}
+        </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
