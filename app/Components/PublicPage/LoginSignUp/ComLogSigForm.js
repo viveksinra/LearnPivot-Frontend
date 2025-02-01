@@ -6,7 +6,6 @@ import Link from "next/link";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import ForgetPassword from "./ForgetPassword";
-import { useRouter } from 'next/router';
 
 function ComLogSigForm({ isRedirectToDashboard }) {
   // Use localStorage to persist the form state

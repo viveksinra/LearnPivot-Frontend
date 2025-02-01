@@ -22,7 +22,7 @@ export function middleware(request) {
 
   // Handle auth routes when user is logged in
   if (routeChecks.isAuthRoute && currentUser) {
-    return redirectBasedOnRole(currentUser);
+    return redirectBasedOnRole(currentUser, request);
   }
 
   // Handle user-specific route restrictions
@@ -64,7 +64,7 @@ function redirectToLogin(request) {
   return response;
 }
 
-function redirectBasedOnRole(user) {
+function redirectBasedOnRole(user, request) {
   if (user.jobRoleId === "admin") {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   } else if (user.jobRoleId === "user") {
