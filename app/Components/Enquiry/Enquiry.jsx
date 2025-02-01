@@ -81,7 +81,7 @@ const Enquiry = () => {
                         </Grid>
                         {submitted ? <Grid item xs={12} className="center" sx={{flexDirection:"column"}}>
                           <div id="thanks"/>
-                          <Typography color="teal" sx={{fontSize:{xs:"14px",md:"18px"}}}>Your message has been sent. We will get back you to very shortly.</Typography>
+                          <Typography color="teal" sx={{fontSize:{xs:"14px",md:"18px"}}}>Your message has been sent. We will get back to you very shortly.</Typography>
                           <br/>
                           <Fab variant="extended" size="medium" color="primary" onClick={()=>setSubmitted(false)} aria-label="Thank">
                           <FcFeedback style={{fontSize:24,marginRight:10}} sx={{ mr: 1 }} />
