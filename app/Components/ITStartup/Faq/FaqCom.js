@@ -209,7 +209,7 @@ const FaqCom = ({dataType}) => {
   <span className="sub-title">Answers to Common Questions</span>
   <h2>Frequently Asked Questions</h2>
   <p>
-    Have questions about our { dataType === "csseMockFaqData" ? "CSSE Mock Test" : dataType === "fsseMockFaqData" ? "FSSE Mock Test" : "teaching services"}. Find answers below, We believe
+    Have questions about our { dataType === "csseMockFaqData" ? "CSSE Mock Test" : dataType === "fsseMockFaqData" ? "FSSE Mock Test" : "teaching services"}. Find answers below. We believe
     that clear communication and understanding are vital for successful
     learning experiences.
   </p>

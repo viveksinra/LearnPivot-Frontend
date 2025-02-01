@@ -269,7 +269,14 @@ console.log(data)
                     </Typography>
                   </div>
                 </div>
-                <Typography variant="body1" sx={{ color: batch.filled ? '#DC2626' : '#059669', fontWeight: 'bold' }}>
+                <Typography 
+                  variant="body1" 
+                  sx={{ 
+                    color: batch.filled ? '#DC2626' : '#059669', 
+                    fontWeight: 'bold', 
+                    fontSize: batch.filled ? '0.875rem' : '1rem' 
+                  }}
+                >
                   {batch.filled ? 'Booking Full' : `£${batch.oneBatchprice}`}
                 </Typography>
               </div>
