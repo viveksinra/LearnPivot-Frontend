@@ -122,6 +122,15 @@ margin-right: 12px;
               aria-controls="navbarSupportedContent"
               aria-expanded="false"
               aria-label="Toggle navigation"
+              style={{ 
+                // padding: "0.75rem",
+                height: "45px",  // Add fixed height
+                width: "45px",   // Add fixed width
+                // display: "flex",
+                // flexDirection: "column",
+                // justifyContent: "space-around",
+                // alignItems: "center"
+              }}
             >
               <span className="icon-bar top-bar"></span>
               <span className="icon-bar middle-bar"></span>
