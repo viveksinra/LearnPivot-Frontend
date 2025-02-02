@@ -95,7 +95,7 @@ function MultiCoursePage() {
   return (
     <>
           <Grid container spacing={3}>
-        {fullScreen? (
+  {rows.length === 0 && <>      {fullScreen? (
        
         <FilterDialog filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
      
@@ -103,7 +103,7 @@ function MultiCoursePage() {
         <Grid item xs={2}>
         <FilterComponent filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
       </Grid>
-      )}
+      )}</>}
           <Grid item xs={fullScreen ? 12 : 10}>
 
         {loading ? 
