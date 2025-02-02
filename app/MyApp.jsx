@@ -36,7 +36,7 @@ const CookieNotice = () => {
       <p style={styles.noticeText}>
         <strong>Cookies Notice</strong><br />
         We use cookies to enhance your browsing experience. No personal information is stored. By continuing to use our website, you agree to our&nbsp;
-        <a href="/privacy-policy" style={styles.link}>use of cookies</a>.
+        <a href="/policy/privacyPolicy" style={styles.link}>use of cookies</a>.
       </p>
       <button style={styles.button} onClick={handleAccept}>Okay</button>
     </div>

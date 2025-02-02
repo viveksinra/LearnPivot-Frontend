@@ -40,6 +40,7 @@ function MyAbout() {
     <Fragment>
       <Navbar />
       <Suspense fallback={<Loading />}>
+      <div style={{marginTop:"80px"}} />
 
 
         <PrivacyPolicyCom />
