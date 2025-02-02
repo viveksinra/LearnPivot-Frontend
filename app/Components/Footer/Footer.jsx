@@ -15,10 +15,11 @@ const Footer = () => {
     "Inspiring Virtual Environment"
   ];
   
-  const links =[{label:"About Us",link:"about"},
-    // {label:"Pricing",link:"pricing"},
+  const links =[
+    {label:"About Us",link:"about"},
     {label:"Contact Us",link:"contact"},
-    // {label:"Privacy Policy",link:"privacy"}
+    {label:"Terms & Conditions",link:"policy/termandcondition"},
+    {label:"Privacy Policy",link:"policy/privacyPolicy"},
   ]
  
   return (

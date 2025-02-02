@@ -5,7 +5,7 @@ import { Grid, TextField, Typography, Box, Button, IconButton, InputAdornment, C
 import Footer from '@/app/Components/Footer/Footer';
 import Loading from '@/app/Components/Loading/Loading';
 import PageHeadCom from '@/app/Components/ITStartup/Common/PageHeader/PageHeadCom';
-import TermAndConditionCom from '@/app/Components/Policy/TermAndConditionCom';
+import PrivacyPolicyCom from '@/app/Components/Policy/PrivacyPolicyCom';
 import Navbar from '@/app/Components/ITStartup/Common/Navbar/Navbar';
 
 function MyAbout() {
@@ -40,9 +40,14 @@ function MyAbout() {
     <Fragment>
       <Navbar />
       <Suspense fallback={<Loading />}>
- <div style={{marginTop:"80px"}} />
+        <PageHeadCom
+          pageTitle="About Us"
+          breadcrumbTextOne="Home"
+          breadcrumbUrl="/"
+          breadcrumbTextTwo="About Us"
+        />
 
-        <TermAndConditionCom />
+        <PrivacyPolicyCom />
       
 
       
