@@ -68,7 +68,7 @@ if (response.variant === 'success') {
       // Fill in the fields with the fetched data
       receiptDate.setText(finalReceiptDate);
       toName.setText(`${payData?.user?.firstName}  ${payData?.user?.lastName}`);
-      address.setText(`${payData?.user?.address1} ${payData?.user?.address2} ${payData?.user?.address3} ${payData?.user?.city} ${payData?.user?.postcode}`|| 'N/A');
+      address.setText(`${payData?.user?.address1} ${payData?.user?.address2} ${payData?.user?.address3}, ${payData?.user?.city}, ${payData?.user?.postcode}`|| 'N/A');
       receipt.setText(payData?.invoiceNumber || 'N/A');
       product.setText(productName);
       totalAmount.setText(formatAmount(payData?.amount) || 'N/A');
