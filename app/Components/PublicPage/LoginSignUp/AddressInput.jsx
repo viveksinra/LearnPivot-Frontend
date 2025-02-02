@@ -61,7 +61,13 @@ const AddressSelect = ({ value, onChange, error, helperText, disabled }) => {
     const parts = [];
     if (addressObj.organisation_name) parts.push(addressObj.organisation_name);
     if (addressObj.building_number) parts.push(addressObj.building_number);
-    if (addressObj.thoroughfare) parts.push(addressObj.thoroughfare);
+    if (addressObj.thoroughfare) {
+      if (addressObj.building_number) {
+        parts[parts.length - 1] += ` ${addressObj.thoroughfare}`;
+      } else {
+        parts.push(addressObj.thoroughfare);
+      }
+    }
     if (addressObj.post_town) parts.push(addressObj.post_town);
     if (addressObj.postcode) parts.push(addressObj.postcode);
     return parts.join(", ");
