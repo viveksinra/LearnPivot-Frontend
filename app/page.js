@@ -1,12 +1,15 @@
 import React from 'react';
 import MyApp from "./MyApp";
-const MainLayout = () =>{
-  return(
-    <React.StrictMode>
-      <MyApp/>
-    </React.StrictMode>
-  )
-}
- 
+import { CookieNotice } from './CookieNotice';
 
-export default MainLayout
+
+
+const MainLayout = () => {
+  return (
+    <React.StrictMode>
+      <MyApp />
+    </React.StrictMode>
+  );
+}
+
+export default MainLayout;

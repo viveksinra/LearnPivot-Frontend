@@ -10,6 +10,7 @@ import { FaUserCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useLogout } from "@/app/hooks/auth/uselogout";
+import { CookieNotice } from "@/app/CookieNotice";
 
 const Navbar = () => {
   const [collapsed, setCollapsed] = useState(true);
@@ -53,6 +54,8 @@ const Navbar = () => {
 
   return (
     <div id="navbar" className="navbar-area">
+            <CookieNotice />
+      
       <style jsx>{`
         .navbar-toggler {
           border: none;

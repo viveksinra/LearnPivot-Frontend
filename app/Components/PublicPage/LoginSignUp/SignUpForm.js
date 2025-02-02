@@ -11,7 +11,9 @@ import {
   Box,
   Alert,
   CircularProgress,
-} from "@mui/material/"; // Added CircularProgress import
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material/";
 import { FcFeedback } from "react-icons/fc";
 import { authService } from "@/app/services";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
@@ -42,6 +44,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   const [alert, setAlert] = useState(null);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [acceptedTnC, setAcceptedTnC] = useState(false); // State for T&C checkbox
 
   const router = useRouter();
   const { dispatch } = useContext(MainContext);
@@ -62,13 +65,13 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       newErrors.email = "Invalid email format";
     }
 
-   // Updated phone number validation
-   const phoneRegex = /^0\d{10}$/;
-   if (formData.mobile) {
-     if (!phoneRegex.test(formData.mobile)) {
-       newErrors.mobile = "Phone number must be 11 digits and start with 0";
-     }
-   }
+    // Updated phone number validation
+    const phoneRegex = /^0\d{10}$/;
+    if (formData.mobile) {
+      if (!phoneRegex.test(formData.mobile)) {
+        newErrors.mobile = "Phone number must be 11 digits and start with 0";
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -112,6 +115,12 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   };
 
   const handleSendOtpClick = async () => {
+    // Ensure the user has accepted the Terms and Conditions
+    if (!acceptedTnC) {
+      setAlert({ message: "Please accept the Terms and Conditions", severity: "error" });
+      return;
+    }
+    
     if (!validateForm()) {
       return;
     }
@@ -132,7 +141,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
         if (res.message) {
           setAlert({ message: res.message, severity: "error" });
         } else {
-        setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
+          setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
         }
       }
     } catch (error) {
@@ -143,14 +152,14 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
 
   const handleSignUpClick = async () => {
     if (!otp.trim()) {
-      setAlert({ message: `Please enter OTP sent to ${formData.email}`, severity: "error" }); // Fixed template literal
+      setAlert({ message: `Please enter OTP sent to ${formData.email}`, severity: "error" });
       return;
     }
 
     const signUpData = {
       ...formData,
       password,
-      otp
+      otp,
     };
 
     try {
@@ -173,8 +182,6 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     }
   };
 
-
-
   const allMarketing = [
     "Web Search / Google",
     "Friend or colleague Recommendation",
@@ -185,12 +192,11 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     "Blog or Publication",
   ];
 
-
   return (
     <Container>
       {alert && (
         <Box mb={2}>
-          <Alert severity={alert.severity} >
+          <Alert severity={alert.severity}>
             {alert.message}
           </Alert>
         </Box>
@@ -261,30 +267,30 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             </Grid>
 
             <Grid item xs={12}>
-          <TextField
-            fullWidth
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            label="Address"
-            required
-            error={!!errors.address}
-            helperText={errors.address}
-            autoComplete="off"
-          />
-          {loading && <CircularProgress size={20} sx={{ marginLeft: 1 }} />}
-          {addressSuggestions.length > 0 && (
-            <Box mt={1} sx={{ background: "#f9f9f9", borderRadius: "5px", maxHeight: 200, overflowY: "auto" }}>
-              {addressSuggestions.map((onesugest, index) => (
-                <MenuItem key={index} onClick={() => handleAddressSelect(onesugest.suggestion)}>
-                  <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {onesugest.suggestion}
-                  </Box>
-                </MenuItem>
-              ))}
-            </Box>
-          )}
-        </Grid>
+              <TextField
+                fullWidth
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                label="Address"
+                required
+                error={!!errors.address}
+                helperText={errors.address}
+                autoComplete="off"
+              />
+              {loading && <CircularProgress size={20} sx={{ marginLeft: 1 }} />}
+              {addressSuggestions.length > 0 && (
+                <Box mt={1} sx={{ background: "#f9f9f9", borderRadius: "5px", maxHeight: 200, overflowY: "auto" }}>
+                  {addressSuggestions.map((onesugest, index) => (
+                    <MenuItem key={index} onClick={() => handleAddressSelect(onesugest.suggestion)}>
+                      <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                        {onesugest.suggestion}
+                      </Box>
+                    </MenuItem>
+                  ))}
+                </Box>
+              )}
+            </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
@@ -301,10 +307,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
                         {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
                       </IconButton>
                     </InputAdornment>
@@ -332,12 +335,29 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
               </TextField>
             </Grid>
 
+            {/* Terms & Conditions Checkbox */}
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={acceptedTnC}
+                    onChange={(e) => setAcceptedTnC(e.target.checked)}
+                    name="acceptedTnC"
+                  />
+                }
+                label={
+                  <span>
+                    I accept the{" "}
+                    <a href="/policy/termandcondition" target="_blank" rel="noopener noreferrer">
+                      Terms and Conditions
+                    </a>
+                  </span>
+                }
+              />
+            </Grid>
+
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <Fab
-                variant="extended"
-                color="primary"
-                onClick={handleSendOtpClick}
-              >
+              <Fab variant="extended" color="primary" onClick={handleSendOtpClick}>
                 <FcFeedback style={{ marginRight: 8 }} />
                 Send Email OTP
               </Fab>
@@ -363,11 +383,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             </Grid>
 
             <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <Fab
-                variant="extended"
-                color="primary"
-                onClick={handleSignUpClick}
-              >
+              <Fab variant="extended" color="primary" onClick={handleSignUpClick}>
                 <FcFeedback style={{ marginRight: 8 }} />
                 Register Now
               </Fab>
