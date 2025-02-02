@@ -25,11 +25,11 @@ const Footer = () => {
 
   return (
     <section className="footerBg" style={{ backgroundColor: "#f5f5f5" }}>
-      <Container maxWidth="xl" style={{ padding: "2rem 0" }}>
+      <Container maxWidth="xl" style={{ padding: "2rem 0",marginLeft:"20px" }}>
         <Grid container spacing={4}>
           <Grid item xs={12} md={1} />
 
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3} >
             <Link href="/">
               <Image
                 width={160}
