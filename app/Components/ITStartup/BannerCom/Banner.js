@@ -35,10 +35,7 @@ const Banner = () => {
                       data-aos-duration="800"
                       data-aos-delay="200"
                     >
-                      Join our platform where I, as an experienced educator,
-                      guide and inspire students on their journey of discovery.
-                      Parents can book courses and mock tests to help their
-                      children succeed on their journey to academic success.
+                      Join our platform where we, as experienced educators, guide and inspire students on their journey of discovery. Parents can book courses and mock tests to help their children succeed on their journey to academic success.
                     </p>
 
                     <div

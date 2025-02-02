@@ -23,7 +23,7 @@ const services = [
     },
     {
       title: "Curriculum Development",
-      description: "We believe in designing curricula that inspire and challenge students. Real innovation and positive curriculum experiences are the heart of success.",
+      description: "We believe in designing curricula that inspire and challenge students. Our approach focuses on fostering creativity, critical thinking, and a love for learning.",
       features: [
         "Customized Lesson Plans",
         "Integrated Technology",
@@ -41,7 +41,7 @@ const services = [
     },
     {
       title: "Student Support Services",
-      description: "We believe in providing comprehensive support to students to ensure their success. Real innovation and positive student experiences are the heart of our services.",
+      description: "We believe in providing comprehensive support to students to ensure their success. Our services are designed to foster growth, resilience, and a positive learning environment.",
       features: [
         "Academic Counseling",
         "Mentorship Programs",
