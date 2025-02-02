@@ -44,7 +44,7 @@ export const CookieNotice = () => {
             <br />
             We use cookies to enhance your browsing experience. By continuing
             to use our website, you agree to our{" "}
-            <Link href="/privacy-policy" color="primary" underline="hover">
+            <Link href="/policy/privacyPolicy" color="primary" underline="hover">
               use of cookies
             </Link>
             .
