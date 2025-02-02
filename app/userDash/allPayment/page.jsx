@@ -324,7 +324,7 @@ export default function PaymentsPage() {
             </Box>
           ) : filteredPayments.length === 0 ? (
             <Alert severity="info" className="mt-4">
-              No payments found for the selected child.
+              No payment History found.
             </Alert>
           ) : isMobile ? (
             <List className="p-0">
