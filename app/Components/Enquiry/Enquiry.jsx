@@ -54,7 +54,7 @@ const Enquiry = () => {
                 <Grid item xs={12} lg={6}>
                   <Grid container spacing={2} sx={{marginTop:{md:"50px"},width:"100%"}}>
                     <Grid item xs={12} sx={{display:"flex",alignItems:"center",flexDirection:"column"}}>
-                    <Typography color="#082952" gutterBottom sx={{fontSize:{xs:"18px",md:"30px"}, borderLeft:"2px solid #FF5400", paddingLeft:"10px", lineHeight:"1.2", fontWeight:300, fontFamily: "Adequate,Helvetica,\"sans-serif\""}}>Request More Information</Typography> 
+                    <Typography color="#082952" gutterBottom sx={{fontSize:{xs:"18px",md:"30px"},  paddingLeft:"10px", lineHeight:"1.2", fontWeight:300, fontFamily: "Adequate,Helvetica,\"sans-serif\""}}>Request More Information</Typography> 
                     <Typography sx={{fontSize:{xs:"14px"}}}>Have a doubt? Need some information? Reach us by E-mail</Typography>
                     <br/> 
                     </Grid>

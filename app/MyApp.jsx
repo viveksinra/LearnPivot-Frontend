@@ -11,7 +11,6 @@ import Loading from "./Components/Loading/Loading";
 import Navbar from './Components/ITStartup/Common/Navbar/Navbar';
 import Banner from './Components/ITStartup/BannerCom/Banner';
 import ServiceCom from './Components/ITStartup/ServiceOverview/ServiceCom';
-import FeedBackCom from './Components/ITStartup/Feedback/FeedBackCom';
 import FaqCom from './Components/ITStartup/Faq/FaqCom';
 import TawkToChat from './Components/Common/TawkToChat';
 

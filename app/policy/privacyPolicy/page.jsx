@@ -40,12 +40,7 @@ function MyAbout() {
     <Fragment>
       <Navbar />
       <Suspense fallback={<Loading />}>
-        <PageHeadCom
-          pageTitle="About Us"
-          breadcrumbTextOne="Home"
-          breadcrumbUrl="/"
-          breadcrumbTextTwo="About Us"
-        />
+
 
         <PrivacyPolicyCom />
       
