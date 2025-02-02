@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useContext } from "react";
+import { useState, useContext } from "react";
 import {
   Container,
   Grid,
@@ -10,19 +10,16 @@ import {
   InputAdornment,
   Box,
   Alert,
-  CircularProgress,
   Checkbox,
   FormControlLabel,
-} from "@mui/material/";
+} from "@mui/material";
 import { FcFeedback } from "react-icons/fc";
-import { authService } from "@/app/services";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
 import { useRouter } from "next/navigation";
 import MainContext from "../../Context/MainContext";
 import { LOGIN_USER } from "../../Context/types";
-import axios from "axios";
-
-const API_KEY = "ak_m6kgz2ix8p1AE5DW6pLG78Hf9LE6L"; // Replace with your actual API key
+import { authService } from "@/app/services";
+import AddressInput from "./AddressInput"; // Adjust the path as needed
 
 const SignUpForm = ({ isRedirectToDashboard }) => {
   const [formData, setFormData] = useState({
@@ -42,35 +39,30 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   const [otp, setOtp] = useState("");
   const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState(null);
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [acceptedTnC, setAcceptedTnC] = useState(false); // State for T&C checkbox
+  const [acceptedTnC, setAcceptedTnC] = useState(false);
 
   const router = useRouter();
   const { dispatch } = useContext(MainContext);
 
   const validateForm = () => {
     const newErrors = {};
-    
-    // Required field validation
+
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!formData.mobile.trim()) newErrors.mobile = "Phone number is required";
     if (!password.trim()) newErrors.password = "Password is required";
-    
+
     // Email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (formData.email && !emailRegex.test(formData.email)) {
       newErrors.email = "Invalid email format";
     }
 
-    // Updated phone number validation
+    // Phone number validation: must be 11 digits and start with 0
     const phoneRegex = /^0\d{10}$/;
-    if (formData.mobile) {
-      if (!phoneRegex.test(formData.mobile)) {
-        newErrors.mobile = "Phone number must be 11 digits and start with 0";
-      }
+    if (formData.mobile && !phoneRegex.test(formData.mobile)) {
+      newErrors.mobile = "Phone number must be 11 digits and start with 0";
     }
 
     setErrors(newErrors);
@@ -84,43 +76,15 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
-
-    if (name === "address") {
-      fetchAddressSuggestions(value);
-    }
-  };
-
-  const fetchAddressSuggestions = async (query) => {
-    if (!query.trim()) {
-      setAddressSuggestions([]);
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const res = await axios.get(
-        `https://api.ideal-postcodes.co.uk/v1/autocomplete/addresses?api_key=${API_KEY}&query=${query}`
-      );
-      setAddressSuggestions(res.data?.result?.hits || []);
-    } catch (error) {
-      console.error("Error fetching address suggestions:", error);
-      setAddressSuggestions([]);
-    }
-    setLoading(false);
-  };
-
-  const handleAddressSelect = (selectedAddress) => {
-    setFormData((prev) => ({ ...prev, address: selectedAddress }));
-    setAddressSuggestions([]);
   };
 
   const handleSendOtpClick = async () => {
-    // Ensure the user has accepted the Terms and Conditions
+    // Ensure Terms & Conditions are accepted
     if (!acceptedTnC) {
       setAlert({ message: "Please accept the Terms and Conditions", severity: "error" });
       return;
     }
-    
+
     if (!validateForm()) {
       return;
     }
@@ -138,11 +102,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
         setOtpSent(true);
         setAlert({ message: `OTP Sent to ${formData.email}`, severity: "success" });
       } else {
-        if (res.message) {
-          setAlert({ message: res.message, severity: "error" });
-        } else {
-          setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
-        }
+        setAlert({ message: res.message || "Failed to send OTP. Please try again later.", severity: "error" });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -201,7 +161,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
           </Alert>
         </Box>
       )}
-      
+
       <Grid container spacing={2}>
         {!otpSent ? (
           <>
@@ -267,29 +227,13 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             </Grid>
 
             <Grid item xs={12}>
-              <TextField
-                fullWidth
-                name="address"
+              <AddressInput
                 value={formData.address}
                 onChange={handleChange}
-                label="Address"
-                required
-                error={!!errors.address}
+                error={errors.address}
                 helperText={errors.address}
-                autoComplete="off"
+                disabled={otpSent}
               />
-              {loading && <CircularProgress size={20} sx={{ marginLeft: 1 }} />}
-              {addressSuggestions.length > 0 && (
-                <Box mt={1} sx={{ background: "#f9f9f9", borderRadius: "5px", maxHeight: 200, overflowY: "auto" }}>
-                  {addressSuggestions.map((onesugest, index) => (
-                    <MenuItem key={index} onClick={() => handleAddressSelect(onesugest.suggestion)}>
-                      <Box sx={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                        {onesugest.suggestion}
-                      </Box>
-                    </MenuItem>
-                  ))}
-                </Box>
-              )}
             </Grid>
 
             <Grid item xs={12} md={6}>
@@ -335,7 +279,6 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
               </TextField>
             </Grid>
 
-            {/* Terms & Conditions Checkbox */}
             <Grid item xs={12}>
               <FormControlLabel
                 control={
@@ -356,7 +299,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
               />
             </Grid>
 
-            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+            <Grid item xs={12} sx={{ textAlign: "center" }}>
               <Fab variant="extended" color="primary" onClick={handleSendOtpClick}>
                 <FcFeedback style={{ marginRight: 8 }} />
                 Send Email OTP
@@ -365,7 +308,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
           </>
         ) : (
           <>
-            <Grid item xs={12} md={6} sx={{ mx: 'auto' }}>
+            <Grid item xs={12} md={6} sx={{ mx: "auto" }}>
               <TextField
                 fullWidth
                 value={otp}
@@ -377,12 +320,12 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
             </Grid>
 
             <Grid item xs={12}>
-              <Box sx={{ textAlign: 'center', color: 'text.secondary', mb: 2 }}>
+              <Box sx={{ textAlign: "center", color: "text.secondary", mb: 2 }}>
                 Check your email spam/junk folder if OTP is not received in inbox.
               </Box>
             </Grid>
 
-            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+            <Grid item xs={12} sx={{ textAlign: "center" }}>
               <Fab variant="extended" color="primary" onClick={handleSignUpClick}>
                 <FcFeedback style={{ marginRight: 8 }} />
                 Register Now
