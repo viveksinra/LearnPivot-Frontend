@@ -19,16 +19,24 @@ import { useRouter } from "next/navigation";
 import MainContext from "../../Context/MainContext";
 import { LOGIN_USER } from "../../Context/types";
 import { authService } from "@/app/services";
-import AddressInput from "./AddressInput"; // Adjust the path as needed
+import AddressInput from "./AddressInput"; // Ensure AddressInput is updated per your address suggestion code
 
 const SignUpForm = ({ isRedirectToDashboard }) => {
+  // Updated initial state with separate address fields:
   const [formData, setFormData] = useState({
     enquiryFor: "self",
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
-    address: "",
+    // 'address1' is the searchable field used by AddressInput.
+    address1: "",
+    // These fields will be populated when a suggestion is selected
+    // but remain visible and editable.
+    address2: "",
+    address3: "",
+    city: "",
+    postcode: "",
     marketing: "",
     message: "",
     selectedDates: [],
@@ -44,6 +52,22 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
   const router = useRouter();
   const { dispatch } = useContext(MainContext);
 
+  // Modified handleChange: It merges any extra keys coming from the AddressInput
+  // so that when AddressInput returns { name:"address1", value:"...", address2:"...", city:"...", ... }
+  // all those keys get merged into formData.
+  const handleChange = (e) => {
+    const { name, value, ...extra } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      ...extra,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
   const validateForm = () => {
     const newErrors = {};
 
@@ -51,6 +75,9 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
     if (!formData.mobile.trim()) newErrors.mobile = "Phone number is required";
+    if (!formData.address1.trim()) newErrors.address1 = "Address is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.postcode.trim()) newErrors.postcode = "PostCode is required";
     if (!password.trim()) newErrors.password = "Password is required";
 
     // Email format validation
@@ -67,15 +94,6 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
-    }
   };
 
   const handleSendOtpClick = async () => {
@@ -102,7 +120,10 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
         setOtpSent(true);
         setAlert({ message: `OTP Sent to ${formData.email}`, severity: "success" });
       } else {
-        setAlert({ message: res.message || "Failed to send OTP. Please try again later.", severity: "error" });
+        setAlert({
+          message: res.message || "Failed to send OTP. Please try again later.",
+          severity: "error",
+        });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
@@ -156,9 +177,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     <Container>
       {alert && (
         <Box mb={2}>
-          <Alert severity={alert.severity}>
-            {alert.message}
-          </Alert>
+          <Alert severity={alert.severity}>{alert.message}</Alert>
         </Box>
       )}
 
@@ -226,37 +245,68 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
               />
             </Grid>
 
+            {/* Address Section */}
             <Grid item xs={12}>
+              {/* Address Line 1: Searchable field via AddressInput */}
               <AddressInput
-                value={formData.address}
+                name="address1"
+                value={formData.address1}
                 onChange={handleChange}
-                error={errors.address}
-                helperText={errors.address}
+                error={errors.address1}
+                helperText={errors.address1}
                 disabled={otpSent}
+              />
+            </Grid>
+
+            {/* Other address fields remain visible and editable */}
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                
+                name="address2"
+                value={formData.address2}
+                onChange={handleChange}
+                label="Address Line 2"
+                autoComplete="off"
               />
             </Grid>
 
             <Grid item xs={12} md={6}>
               <TextField
                 fullWidth
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                label="Password"
+                name="address3"
+                value={formData.address3}
+                onChange={handleChange}
+                label="Address Line 3"
+                autoComplete="off"
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                name="city"
                 required
-                error={!!errors.password}
-                helperText={errors.password}
-                disabled={otpSent}
-                autoComplete="new-password"
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                        {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
+                value={formData.city}
+                onChange={handleChange}
+                label="City/Town"
+                autoComplete="off"
+                error={errors.city}
+                helperText={errors.city}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                required
+                name="postcode"
+                value={formData.postcode}
+                onChange={handleChange}
+                label="Postcode"
+                autoComplete="off"
+                error={errors.postcode}
+                helperText={errors.postcode}
               />
             </Grid>
 
@@ -291,7 +341,11 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 label={
                   <span>
                     I accept the{" "}
-                    <a href="/policy/termandcondition" target="_blank" rel="noopener noreferrer">
+                    <a
+                      href="/policy/termandcondition"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       Terms and Conditions
                     </a>
                   </span>
