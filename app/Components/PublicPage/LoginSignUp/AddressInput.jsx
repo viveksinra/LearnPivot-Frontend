@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { TextField, CircularProgress, Box, MenuItem } from "@mui/material";
+import React, { useState, useEffect, useRef } from "react";
+import { Autocomplete, TextField, CircularProgress } from "@mui/material";
 import axios from "axios";
 
 const API_KEY = "ak_m6kgz2ix8p1AE5DW6pLG78Hf9LE6L"; // Replace with your actual API key
 
-const AddressInput = ({ value, onChange, error, helperText, disabled }) => {
-  const [addressSuggestions, setAddressSuggestions] = useState([]);
+const AddressSelect = ({ value, onChange, error, helperText, disabled }) => {
+  const [addressOptions, setAddressOptions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [loadingFullAddress, setLoadingFullAddress] = useState(false);
+  // inputValue holds the string currently typed in the field.
+  const [inputValue, setInputValue] = useState(value || "");
+  // Using a ref to debounce API calls.
+  const debounceRef = useRef(null);
 
-  // Fetch address suggestions (autocomplete) based on the input query.
+  // Fetch autocomplete suggestions for the address.
   const fetchAddressSuggestions = async (query) => {
     if (!query.trim()) {
-      setAddressSuggestions([]);
+      setAddressOptions([]);
       return;
     }
     setLoadingSuggestions(true);
@@ -23,16 +27,17 @@ const AddressInput = ({ value, onChange, error, helperText, disabled }) => {
           params: { api_key: API_KEY, query },
         }
       );
-      // Expect an array of objects in res.data.result.hits
-      setAddressSuggestions(res.data?.result?.hits || []);
+      // Expected suggestions are in res.data.result.hits (or an empty array).
+      setAddressOptions(res.data?.result?.hits || []);
     } catch (err) {
       console.error("Error fetching address suggestions:", err);
-      setAddressSuggestions([]);
+      setAddressOptions([]);
+    } finally {
+      setLoadingSuggestions(false);
     }
-    setLoadingSuggestions(false);
   };
 
-  // Use the UDPRN to fetch the full address details.
+  // Fetch the full address details using the UDPRN.
   const fetchFullAddress = async (udprn) => {
     setLoadingFullAddress(true);
     try {
@@ -42,7 +47,6 @@ const AddressInput = ({ value, onChange, error, helperText, disabled }) => {
           params: { api_key: API_KEY },
         }
       );
-      // The full address details are returned under res.data.result
       return res.data?.result || null;
     } catch (err) {
       console.error("Error fetching full address:", err);
@@ -52,8 +56,7 @@ const AddressInput = ({ value, onChange, error, helperText, disabled }) => {
     }
   };
 
-  // Helper function to format the address object into a single string.
-  // You can adjust which fields to display.
+  // Format the address object into a single, readable string.
   const formatAddress = (addressObj) => {
     const parts = [];
     if (addressObj.organisation_name) parts.push(addressObj.organisation_name);
@@ -64,74 +67,98 @@ const AddressInput = ({ value, onChange, error, helperText, disabled }) => {
     return parts.join(", ");
   };
 
-  // Handle changes in the text field: update parent and fetch new suggestions.
-  const handleInputChange = (e) => {
-    onChange(e);
-    fetchAddressSuggestions(e.target.value);
-  };
+  // Debounce the input changes to reduce API calls.
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      fetchAddressSuggestions(inputValue);
+    }, 300);
 
-  // When a suggestion is clicked, use its UDPRN to retrieve the full address.
-  // Then, format the address and send it to the parent.
-  const handleAddressSelect = async (suggestionObj) => {
-    const fullAddress = await fetchFullAddress(suggestionObj.udprn);
-    if (fullAddress) {
-      const formattedAddress = formatAddress(fullAddress);
-      // Pass both the formatted string and the full address object if needed.
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [inputValue]);
+
+  // When the text input changes, update the state and propagate the value.
+  const handleInputChange = (event, newInputValue, reason) => {
+    if (reason === "input") {
+      setInputValue(newInputValue);
+      // Propagate raw input change if needed.
       onChange({
         target: {
           name: "address",
-          value: formattedAddress,
-          fullAddress, // Optional: include the entire address object for further processing.
+          value: newInputValue,
         },
       });
-    } else {
-      // Fallback: use the suggestion text if lookup fails.
-      onChange({ target: { name: "address", value: suggestionObj.suggestion } });
     }
-    setAddressSuggestions([]);
+  };
+
+  // When a suggestion is selected, fetch the full address details.
+  const handleChange = async (event, selectedOption) => {
+    if (selectedOption && selectedOption.udprn) {
+      const fullAddress = await fetchFullAddress(selectedOption.udprn);
+      if (fullAddress) {
+        const formattedAddress = formatAddress(fullAddress);
+        onChange({
+          target: {
+            name: "address",
+            value: formattedAddress,
+            fullAddress, // Optionally, pass the entire address object.
+          },
+        });
+        setInputValue(formattedAddress);
+      } else {
+        // Fallback: use the suggestion text if the lookup fails.
+        onChange({
+          target: {
+            name: "address",
+            value: selectedOption.suggestion,
+          },
+        });
+        setInputValue(selectedOption.suggestion);
+      }
+      // Clear suggestions after selection.
+      setAddressOptions([]);
+    }
   };
 
   return (
-    <>
-      <TextField
-        fullWidth
-        name="address"
-        value={value}
-        onChange={handleInputChange}
-        label="Address"
-        required
-        error={!!error}
-        helperText={helperText}
-        autoComplete="off"
-        disabled={disabled || loadingFullAddress}
-      />
-      {loadingSuggestions && (
-        <CircularProgress size={20} sx={{ marginLeft: 1 }} />
-      )}
-      {addressSuggestions.length > 0 && (
-        <Box
-          mt={1}
-          sx={{
-            background: "#f9f9f9",
-            borderRadius: "5px",
-            maxHeight: 200,
-            overflowY: "auto",
+    <Autocomplete
+      freeSolo
+      options={addressOptions}
+      // Provide a label for each option.
+      getOptionLabel={(option) => option.suggestion || ""}
+      loading={loadingSuggestions}
+      inputValue={inputValue}
+      onInputChange={handleInputChange}
+      onChange={handleChange}
+      disabled={disabled || loadingFullAddress}
+      noOptionsText="Start typing to get address suggestions..."
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Address"
+          error={!!error}
+          helperText={helperText}
+          InputProps={{
+            ...params.InputProps,
+            endAdornment: (
+              <>
+                {(loadingSuggestions || loadingFullAddress) && (
+                  <CircularProgress color="inherit" size={20} />
+                )}
+                {params.InputProps.endAdornment}
+              </>
+            ),
           }}
-        >
-          {addressSuggestions.map((suggestion, index) => (
-            <MenuItem
-              key={index}
-              onClick={() => handleAddressSelect(suggestion)}
-            >
-              <Box sx={{ whiteSpace: "normal", wordWrap: "break-word" }}>
-                {suggestion.suggestion}
-              </Box>
-            </MenuItem>
-          ))}
-        </Box>
+        />
       )}
-    </>
+    />
   );
 };
 
-export default AddressInput;
+export default AddressSelect;
