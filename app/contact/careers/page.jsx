@@ -2,7 +2,6 @@
 import "../contactStyle.css";
 import { TopAbstract } from "../../MyApp";
 import { Container, } from "@mui/material";
-import {NewFooter} from "../../Components/Footer/Footer";
 import Enquiry from "../../Components/Enquiry/Enquiry";
 import Navbar from "@/app/Components/ITStartup/Common/Navbar/Navbar";
 
@@ -18,7 +17,6 @@ function Careers() {
         <br/>
       </Container>
       <Enquiry/>
-      <NewFooter/>
     </main>
   )
 }
