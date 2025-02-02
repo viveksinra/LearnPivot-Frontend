@@ -1,10 +1,11 @@
 "use client";
 import "./footerStyle.css";
-import {Container,Divider,Grid,Typography } from '@mui/material/';
+import { Container, Divider, Grid, Typography, Box } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaAccessibleIcon,FaHospitalAlt,FaFacebook  } from "react-icons/fa";
+import { FaAccessibleIcon, FaHospitalAlt, FaFacebook } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+
 const Footer = () => {
   const amenities = [
     "Expert Instructor Team",
@@ -15,57 +16,85 @@ const Footer = () => {
     "Inspiring Virtual Environment"
   ];
   
-  const links =[
-    {label:"About Us",link:"about"},
-    {label:"Contact Us",link:"contact"},
-    {label:"Terms & Conditions",link:"policy/termandcondition"},
-    {label:"Privacy Policy",link:"policy/privacyPolicy"},
-  ]
- 
+  const links = [
+    { label: "About Us", link: "about" },
+    { label: "Contact Us", link: "contact" },
+    { label: "Terms & Conditions", link: "policy/termandcondition" },
+    { label: "Privacy Policy", link: "policy/privacyPolicy" },
+  ];
+
   return (
-    <section className="footerBg">
-        <Container maxWidth="xl">
-          <Grid container>
-          <Grid item xs={12} md={1}>
-            </Grid>
-            <Grid item xs={12} md={3}>
+    <section className="footerBg" style={{ padding: '2rem 0', backgroundColor: '#f5f5f5' }}>
+      <Container maxWidth="xl">
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={1} />
+
+          <Grid item xs={12} md={3}>
             <Link href="/">
-            <Image width={160} height={60} src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg" alt="Chelmsford" loading="lazy"/>
-        </Link><br/><br/>
-        <Typography color="black" variant="subtitle1">Embark on a journey of knowledge, innovation, and personal growth with our cutting-edge e-learning platform. Here, empowerment flourishes, and your educational aspirations take center stage.</Typography>
-<br />
-<Typography variant="body2" color="secondary">Our Platform - Igniting Minds, Shaping Futures</Typography>
-
-            </Grid>
-            <Grid item xs={12} md={1}>
-            </Grid>
-            <Grid item xs={12} md={3}>
-            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}>Our Amenities :-</Typography>
-            <ul id="amenitiesUl">
-                {amenities.map(d=><li key={d}>{d}</li>)}
-              </ul>
-            </Grid>
-            {/* <Grid item xs={12} md={3}>
-            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> Quick Links :- </Typography>
-            <ul id="quickUl">
-              {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
-            </ul>   
-            </Grid> */}
-            <Grid item xs={12} md={3}>
-            <Typography variant="h5" color="primary" style={{fontFamily: 'Courgette'}}> Quick Links :- </Typography>
-            <ul id="quickUl">
-              {links.map(l=><li key={l.label}><Link href={`/${l.link}`} >{l.label} ↠</Link></li> )}
-            </ul>   
-            </Grid>
-            <Grid item xs={12} md={1}>
-            </Grid>
+              <Image
+                width={160}
+                height={60}
+                src="https://res.cloudinary.com/qualifier/image/upload/v1706185907/Logo/chelmsford-high-resolution-logo_vc9ewh.svg"
+                alt="Chelmsford"
+                loading="lazy"
+              />
+            </Link>
+            <br /><br />
+            <Typography color="black" variant="subtitle1">
+              Embark on a journey of knowledge, innovation, and personal growth with our cutting-edge e-learning platform. Here, empowerment flourishes, and your educational aspirations take center stage.
+            </Typography>
+            <br />
+            <Typography variant="body2" color="secondary">
+              Our Platform - Igniting Minds, Shaping Futures
+            </Typography>
           </Grid>
-        </Container>
+
+          <Grid item xs={12} md={1} />
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="h5" color="primary" style={{ fontFamily: 'Courgette' }}>
+              Our Amenities:
+            </Typography>
+            <ul id="amenitiesUl">
+              {amenities.map(item => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </Grid>
+
+          <Grid item xs={12} md={3}>
+            <Typography variant="h5" color="primary" style={{ fontFamily: 'Courgette' }}>
+              Quick Links:
+            </Typography>
+            <ul id="quickUl">
+              {links.map(linkItem => (
+                <li key={linkItem.label}>
+                  <Link href={`/${linkItem.link}`}>
+                    {linkItem.label} ↠
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Grid>
+
+          <Grid item xs={12} md={1} />
+        </Grid>
+
+        {/* Divider and Copyright */}
+        <Box mt={4}>
+          <Divider />
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            align="center"
+            style={{ marginTop: '1rem' }}
+          >
+            © 2025 Chelmsford 11 Plus. All Rights Reserved.
+          </Typography>
+        </Box>
+      </Container>
     </section>
-  )
-}
+  );
+};
 
-
-
-
-export default Footer
+export default Footer;
