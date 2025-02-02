@@ -37,6 +37,7 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     address3: "",
     city: "",
     postcode: "",
+   
     marketing: "",
     message: "",
     selectedDates: [],
@@ -62,15 +63,15 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
       [name]: value,
       ...extra,
     }));
-
+  
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
+  
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required";
     if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
     if (!formData.email.trim()) newErrors.email = "Email is required";
@@ -91,43 +92,47 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
     if (formData.mobile && !phoneRegex.test(formData.mobile)) {
       newErrors.mobile = "Phone number must be 11 digits and start with 0";
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSendOtpClick = async () => {
     // Ensure Terms & Conditions are accepted
+console.log("got clocked")
+
     if (!acceptedTnC) {
       setAlert({ message: "Please accept the Terms and Conditions", severity: "error" });
       return;
     }
-
+console.log("i passed this point")
     if (!validateForm()) {
       return;
     }
+    console.log("i passed this point2")
 
     const emailOtpData = {
-      ...formData,
-      password,
       email: formData.email,
+      mobile: formData.mobile,
+      password:password,
+
       purpose: "signup",
     };
 
     try {
       const res = await authService.sendOtp(emailOtpData);
+      console.log(res)
       if (res.variant === "success") {
         setOtpSent(true);
         setAlert({ message: `OTP Sent to ${formData.email}`, severity: "success" });
       } else {
         setAlert({
-          message: res.message || "Failed to send OTP. Please try again later.",
+          message: res?.message? res.message : "Failed to send you OTP. Please try again later.",
           severity: "error",
         });
       }
     } catch (error) {
       console.error("Error sending OTP:", error);
-      setAlert({ message: "Failed to send OTP. Please try again later.", severity: "error" });
+      setAlert({ message: "System Failed to send OTP. Please try again later.", severity: "error" });
     }
   };
 
@@ -307,6 +312,32 @@ const SignUpForm = ({ isRedirectToDashboard }) => {
                 autoComplete="off"
                 error={errors.postcode}
                 helperText={errors.postcode}
+              />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <TextField
+                fullWidth
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                label="Password"
+                required
+                error={!!errors.password}
+                helperText={errors.password}
+                disabled={otpSent}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                  <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                        aria-label={showPassword ? "Hide password" : "Show password"} // Added accessible label
+                      >
+                        {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
               />
             </Grid>
 

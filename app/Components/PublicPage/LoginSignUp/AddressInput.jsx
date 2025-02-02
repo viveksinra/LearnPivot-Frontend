@@ -4,19 +4,23 @@ import axios from "axios";
 
 const API_KEY = "ak_m6kgz2ix8p1AE5DW6pLG78Hf9LE6L"; // Replace with your actual API key
 
+
 /**
  * AddressSelect Component
  *
+ * This component renders a searchable Autocomplete field for Address Line 1.
+ * When a suggestion is selected, it fetches the full address details and
+ * propagates additional fields (address2, address3, city, and postcode) via onChange.
+ *
  * Props:
- * - value: The current value of the address first line (controlled input).
- * - onChange: Callback to propagate changes. When a suggestion is selected,
- *   it sends an event with target properties:
- *     - name: "address"
- *     - value: addressFirstLine (string)
- *     - addressFirstLine, addressSecondLine, addressThirdLine, city, postcode: full address fields.
- * - error: Flag to indicate error state.
- * - helperText: Helper text for the input.
- * - disabled: Boolean to disable the input.
+ * - value: The current value for Address Line 1.
+ * - onChange: Callback that receives an event with target containing:
+ *     - name: "address1"
+ *     - value: the Address Line 1 string (searchable value)
+ *     - address2, address3, city, postcode: the additional address fields.
+ * - error: Boolean flag for error state.
+ * - helperText: Helper text to display.
+ * - disabled: Disables the input when true.
  */
 const AddressSelect = ({
   value,
@@ -28,7 +32,7 @@ const AddressSelect = ({
   const [addressOptions, setAddressOptions] = useState([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [loadingFullAddress, setLoadingFullAddress] = useState(false);
-  // The inputValue holds the searchable address first line.
+  // inputValue holds the searchable address (Address Line 1)
   const [inputValue, setInputValue] = useState(value || "");
   // Ref used for debouncing API calls.
   const debounceRef = useRef(null);
@@ -100,14 +104,15 @@ const AddressSelect = ({
 
   /**
    * When the text input changes, update the state and propagate the raw input value.
+   * Note: The field name is now "address1" (the searchable address).
    */
   const handleInputChange = (event, newInputValue, reason) => {
     if (reason === "input") {
       setInputValue(newInputValue);
-      // Propagate the raw input change if needed.
+      // Propagate the raw input change using name "address1"
       onChange({
         target: {
-          name: "address",
+          name: "address1",
           value: newInputValue,
         },
       });
@@ -115,43 +120,42 @@ const AddressSelect = ({
   };
 
   /**
-   * When a suggestion is selected, fetch the full address details
-   * and propagate all required address fields.
+   * When a suggestion is selected, fetch the full address details and propagate all required address fields.
    */
   const handleChange = async (event, selectedOption) => {
     if (selectedOption && selectedOption.udprn) {
       const fullAddress = await fetchFullAddress(selectedOption.udprn);
       if (fullAddress) {
-        // Map the API response to your desired fields.
+        // Map the API response to the desired fields.
         const addressFields = {
-          addressFirstLine: fullAddress.line_1 || "",
-          addressSecondLine: fullAddress.line_2 || "",
-          addressThirdLine: fullAddress.line_3 || "",
+          address1: fullAddress.line_1 || "",
+          address2: fullAddress.line_2 || "",
+          address3: fullAddress.line_3 || "",
           city: fullAddress.post_town || "",
           postcode: fullAddress.postcode || "",
         };
 
-        // Propagate the fields using onChange.
+        // Propagate the fields using onChange with field name "address1".
         onChange({
           target: {
-            name: "address",
-            value: addressFields.addressFirstLine, // searchable value
-            ...addressFields, // additional address fields for your form
+            name: "address1",
+            value: addressFields.address1, // searchable value
+            ...addressFields, // additional address fields
             fullAddress, // optionally, pass the full address object as well
           },
         });
-        setInputValue(addressFields.addressFirstLine);
+        setInputValue(addressFields.address1);
       } else {
         // Fallback: use the suggestion text if the full address lookup fails.
         onChange({
           target: {
-            name: "address",
+            name: "address1",
             value: selectedOption.suggestion,
           },
         });
         setInputValue(selectedOption.suggestion);
       }
-      // Clear suggestions after a selection.
+      // Clear suggestions after selection.
       setAddressOptions([]);
     }
   };
@@ -159,8 +163,6 @@ const AddressSelect = ({
   return (
     <Autocomplete
       freeSolo
-      required
-
       options={addressOptions}
       // Display the suggestion text.
       getOptionLabel={(option) => option.suggestion || ""}
@@ -173,11 +175,10 @@ const AddressSelect = ({
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Address"
+          label="Address Line 1"
           error={!!error}
           helperText={helperText}
           required
-
           InputProps={{
             ...params.InputProps,
             endAdornment: (
