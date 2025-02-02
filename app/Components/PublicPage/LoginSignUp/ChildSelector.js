@@ -83,8 +83,8 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
     setTotalAmount('');
   }, [setSelectedChild, setSelectedBatch]);
 
-  const handleGetAllChildren = useCallback(async () => {
-    if (childrenLoaded.current || isLoading) return;
+  const handleGetAllChildren = useCallback(async (forceRefresh = false) => {
+    if (!forceRefresh && (childrenLoaded.current || isLoading)) return;
     
     try {
       setIsLoading(true);
@@ -116,15 +116,17 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
   const handleAddChild = useCallback(async () => {
     try {
       const response = await childService.add(newChild._id, newChild);
+      console.log('response:', response.variant);
       if (response.variant === 'success') {
+        handleGetAllChildren(true); // Move this inside the success condition
+
         setOpen(false);
-        setNewChild(initialChildState);
-        handleGetAllChildren();
+        // setNewChild(initialChildState);
       }
     } catch (error) {
       console.error('Error adding child:', error);
     }
-  }, [newChild, handleGetAllChildren]);
+  }, [newChild, handleGetAllChildren]); // Ensure handleGetAllChildren is in the dependency array
 
   const handleConfirmAddChild = useCallback(() => {
     setConfirmOpen(false);
