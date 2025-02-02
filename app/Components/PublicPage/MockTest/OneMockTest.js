@@ -107,7 +107,9 @@ const OneMockTest = ({ data }) => {
         <Grid item xs={12} md={8} sx={{ p: 3 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px' }}>
             {/* Title and Highlight Text */}
+
             <div style={{ flex: 1 }}>
+            <Link href={"/mockTest/buy/" + data._id}>
               <Typography
                 variant="h5"
                 sx={{
@@ -118,7 +120,7 @@ const OneMockTest = ({ data }) => {
                 }}
               >
                 {data.mockTestTitle}
-              </Typography>
+              </Typography></Link>
               {data.highlightedText && (
                 <Typography
                   sx={{
@@ -287,14 +289,32 @@ const OneMockTest = ({ data }) => {
             ))}
           </div>
         </DialogContent>
-        <DialogActions sx={{ padding: '16px' }}>
+        <DialogActions sx={{ padding: '16px', display: 'flex', justifyContent: 'space-between' }}>
           <Button 
             onClick={() => setOpenBatchModal(false)}
-            sx={{ color: 'white', backgroundColor: 'red', '&:hover': { backgroundColor: 'darkred' } }}
-
+            sx={{ 
+              color: 'white', 
+              backgroundColor: 'red', 
+              '&:hover': { backgroundColor: 'darkred' },
+              flex: 1,
+              marginRight: '8px'
+            }}
           >
             Close
           </Button>
+          <Link href={"/mockTest/buy/" + data._id} style={{ flex: 1 }}>
+            <Button 
+              onClick={() => setOpenBatchModal(false)}
+              sx={{ 
+                color: 'white', 
+                backgroundColor: 'green', 
+                '&:hover': { backgroundColor: 'darkred' },
+                width: '100%'
+              }}
+            >
+              Buy Now
+            </Button>
+          </Link>
         </DialogActions>
       </Dialog>
 
