@@ -141,7 +141,7 @@ const faqData = [
   {
     id: "1",
     question: "What services do you provide for 11+ preparation?",
-    answer: "We offer expert tuition for students preparing for the 11+ exams, focusing on both CSSE and FSCE formats. Our services include group courses, mock exams, and personalised help for parents"
+    answer: "We offer expert tuition for students preparing for the 11+ exams, focusing on both CSSE and FSCE formats. Our services include group courses, mock exams, and personalised help for parents."
   },
   {
     id: "2",
@@ -206,7 +206,7 @@ const FaqCom = ({dataType}) => {
     <div className="faq-area ptb-100">
       <div className="container">
       <div className="section-title">
-  <span className="sub-title">Answers to Common Questions</span>
+  {/* <span className="sub-title">Answers to Common Questions</span> */}
   <h2>Frequently Asked Questions</h2>
   <p>
     Have questions about our { dataType === "csseMockFaqData" ? "CSSE Mock Test" : dataType === "fsseMockFaqData" ? "FSSE Mock Test" : "teaching services"}. Find answers below. We believe

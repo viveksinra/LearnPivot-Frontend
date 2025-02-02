@@ -28,7 +28,7 @@ const Banner = () => {
                       className="animated-text"
                       style={{textSize:"10px"}}
                     >
-                      Empowering young Minds 
+                      Empowering Young Minds 
                     </h1>
                     <p
                       data-aos="fade-up"
