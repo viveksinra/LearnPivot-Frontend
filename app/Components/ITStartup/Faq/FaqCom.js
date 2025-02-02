@@ -270,7 +270,7 @@ const faqData = [
       answer: `<p>At Chelmsford 11 Plus, we take your privacy seriously. Any personal information you provide is kept strictly confidential and used only for the purpose of delivering our services.</p>
       <p>We do not share, sell, or disclose your data to third parties without your consent, except where required by law.</p>
       <p>We implement industry-standard security measures to protect your information from unauthorized access, misuse, or disclosure.</p>
-      <p>For more details on how we handle your data, please refer to our <a href='#'>Privacy Policy</a>.</p>`
+      <p>For more details on how we handle your data, please refer to our <a href='/policy/privacyPolicy'>Privacy Policy</a>.</p>`
   }
 ];
   
