@@ -37,7 +37,7 @@ function MultiMockPage() {
   ]);
 
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [sortBy, setSort]= useState("newToOld");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -64,7 +64,7 @@ function MultiMockPage() {
 
   return (
     <>
-            <Grid container spacing={3}>
+            <Grid container  >
             {fullScreen? (
        
        <FilterDialog filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
@@ -74,7 +74,7 @@ function MultiMockPage() {
        <FilterComponent filterData={filterData} selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter}/>
      </Grid>
      )}
-          <Grid item xs={fullScreen ? 12 : 10}>
+          <Grid item xs={fullScreen ? 12 : 10} >
       
         {/* <Typography style={{marginBottom:"10px"}} variant="h3" component="h5" color="#000945">
         Mock Test
@@ -83,7 +83,7 @@ function MultiMockPage() {
         <div className="center" style={{flexDirection:"column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading Courses...</Typography>  </div> : rows.length === 0 ? <NoResult label="No Courses Available"/> :  
             rows &&
               rows.map((p, j) => (
-                <OneMockTest data={p} key={p._id} />
+                <OneMockTest  data={p} key={p._id} />
               ))
           }
 </Grid>

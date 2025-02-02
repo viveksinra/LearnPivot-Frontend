@@ -8,7 +8,9 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Button
+  Button,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
 import Link from "next/link";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
@@ -66,7 +68,6 @@ const BatchButton = styled(Button)({
 const OneMockTest = ({ data }) => {
   const [openBatchModal, setOpenBatchModal] = useState(false);
   const [openFAQModal, setOpenFAQModal] = useState(false);
-console.log(data)
   // Format date for display
   const formatDateDisplay = (dateString) => {
     return moment(dateString).format('Do MMM YYYY');
@@ -79,6 +80,9 @@ console.log(data)
 
   // Get lowest price from all batches
   const lowestPrice = Math.min(...data.batch.map(b => b.oneBatchprice));
+    const theme = useTheme();
+  
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <>
@@ -87,7 +91,7 @@ console.log(data)
         borderRadius: '12px',
         boxShadow: '4px 4px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        marginTop: "16px",
+        marginTop: fullScreen ?"1px":"16px",
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
 
       }}>
