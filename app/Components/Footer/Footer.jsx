@@ -46,10 +46,7 @@ const Footer = () => {
               with our cutting-edge e-learning platform. Here, empowerment
               flourishes, and your educational aspirations take center stage.
             </Typography>
-            <br />
-            <Typography variant="body2" color="secondary">
-              Our Platform - Igniting Minds, Shaping Futures
-            </Typography>
+           
           </Grid>
 
           <Grid item xs={12} md={1} />
@@ -60,7 +57,7 @@ const Footer = () => {
               color="primary"
               style={{ fontFamily: "Courgette" }}
             >
-              Our Amenities:
+              Learning Features:
             </Typography>
             <ul id="amenitiesUl">
               {amenities.map((item) => (
