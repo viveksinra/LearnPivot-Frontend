@@ -263,6 +263,14 @@ const faqData = [
     id: "12",
     question: "How do I find out more?",
     answer: `<p>Feel free to reach out to us directly through our website or by emailing us at <a href="mailto:info@chelmsford11plus.com">info@chelmsford11plus.com</a>. We're here to discuss your child's needs and how we can support them in their 11+ journey to success.</p>`
+  },
+  {
+      id: "13",
+      question: "Privacy & Data Protection",
+      answer: `<p>At Chelmsford 11 Plus, we take your privacy seriously. Any personal information you provide is kept strictly confidential and used only for the purpose of delivering our services.</p>
+      <p>We do not share, sell, or disclose your data to third parties without your consent, except where required by law.</p>
+      <p>We implement industry-standard security measures to protect your information from unauthorized access, misuse, or disclosure.</p>
+      <p>For more details on how we handle your data, please refer to our <a href='#'>Privacy Policy</a>.</p>`
   }
 ];
   
@@ -291,7 +299,8 @@ const FaqCom = ({dataType}) => {
                       <AccordionItemButton>{faq.question}</AccordionItemButton>
                     </AccordionItemHeading>
                     <AccordionItemPanel>
-                      <p className="accordion-content">{faq.answer}</p>
+                    <p className="accordion-content" dangerouslySetInnerHTML={{ __html: faq.answer }}></p>
+
                     </AccordionItemPanel>
                   </AccordionItem>
                 ))}
