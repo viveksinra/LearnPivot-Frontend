@@ -446,7 +446,7 @@ console.log("i passed this point")
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
+          <Button onClick={handleDialogClose} color="primary" style={{ backgroundColor: "#3f51b5", color: "#fff" }}>
             Login
           </Button>
         </DialogActions>
