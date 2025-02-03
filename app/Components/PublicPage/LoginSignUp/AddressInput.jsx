@@ -171,13 +171,14 @@ const AddressSelect = ({
       onInputChange={handleInputChange}
       onChange={handleChange}
       disabled={disabled || loadingFullAddress}
-      noOptionsText="Start typing to get address suggestions..."
+      noOptionsText="Begin typing to search for your address..."
       renderInput={(params) => (
         <TextField
           {...params}
           label="Address Line 1"
           error={!!error}
           helperText={helperText}
+          placeholder="Start typing to get address suggestions..."
           required
           InputProps={{
             ...params.InputProps,

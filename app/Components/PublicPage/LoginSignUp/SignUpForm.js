@@ -242,6 +242,7 @@ console.log("i passed this point")
                 value={formData.mobile}
                 onChange={handleChange}
                 label="Phone"
+                placeholder="e.g. 07123456789"
                 required
                 error={!!errors.mobile}
                 helperText={errors.mobile}
