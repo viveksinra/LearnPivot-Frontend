@@ -300,6 +300,7 @@ console.log("i passed this point")
                 autoComplete="off"
                 error={errors.city}
                 helperText={errors.city}
+
               />
             </Grid>
 
@@ -314,6 +315,7 @@ console.log("i passed this point")
                 autoComplete="off"
                 error={errors.postcode}
                 helperText={errors.postcode}
+
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -327,6 +329,8 @@ console.log("i passed this point")
                 error={!!errors.password}
                 helperText={errors.password}
                 disabled={otpSent}
+                autoComplete="off"
+
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
