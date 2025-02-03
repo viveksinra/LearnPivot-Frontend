@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -6,13 +6,15 @@ import {
 } from "@stripe/react-stripe-js";
 import "./stripePayStyle.css";
 import { FRONT_ENDPOINT } from "@/app/utils";
-export default function CheckoutForm({buyCourseId}) {
+
+export default function CheckoutForm({ buyCourseId }) {
   const stripe = useStripe();
   const elements = useElements();
 
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Retrieve payment intent status on component mount/update
   useEffect(() => {
     if (!stripe) {
       return;
@@ -44,12 +46,27 @@ export default function CheckoutForm({buyCourseId}) {
     });
   }, [stripe]);
 
+  // Prevent user from leaving the page while loading
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isLoading) {
+        // Standard message is shown by the browser; custom messages are ignored.
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [isLoading]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
 
@@ -63,36 +80,46 @@ export default function CheckoutForm({buyCourseId}) {
       },
     });
 
-    // This point will only be reached if there is an immediate error when
-    // confirming the payment. Otherwise, your customer will be redirected to
-    // your `return_url`. For some payment methods like iDEAL, your customer will
-    // be redirected to an intermediate site first to authorize the payment, then
-    // redirected to the `return_url`.
-    if (error.type === "card_error" || error.type === "validation_error") {
-      setMessage(error.message);
-    } else {
-      setMessage("An unexpected error occurred.");
+    // Handle immediate errors
+    if (error) {
+      if (error.type === "card_error" || error.type === "validation_error") {
+        setMessage(error.message);
+      } else {
+        setMessage("An unexpected error occurred.");
+      }
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
+    // When there is no error, Stripe will redirect to the return_url.
   };
 
   const paymentElementOptions = {
     layout: "tabs"
-    
-  }
+  };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-
       <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button disabled={isLoading || !stripe || !elements} id="submit">
+      <button
+        disabled={isLoading || !stripe || !elements}
+        id="submit"
+        type="submit"
+      >
         <span id="button-text">
-          {isLoading ? <div className="spinner" id="spinner"></div> : "Pay now"}
+          {isLoading ? (
+            <div className="spinner" id="spinner"></div>
+          ) : (
+            "Pay now"
+          )}
         </span>
       </button>
-      {/* Show any error or success messages */}
+      {/* Show payment status message */}
       {message && <div id="payment-message">{message}</div>}
+      {/* Extra instruction when payment is loading */}
+      {isLoading && (
+        <div className="loading-instruction" style={{ marginTop: "1rem", color: "#555" }}>
+          Please do not close the window or press the back button while your payment is processing.
+        </div>
+      )}
     </form>
   );
 }
