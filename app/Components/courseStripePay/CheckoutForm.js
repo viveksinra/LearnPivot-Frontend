@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -50,7 +50,6 @@ export default function CheckoutForm({ buyCourseId }) {
   useEffect(() => {
     const handleBeforeUnload = (e) => {
       if (isLoading) {
-        // Standard message is shown by the browser; custom messages are ignored.
         e.preventDefault();
         e.returnValue = "";
       }
@@ -66,7 +65,6 @@ export default function CheckoutForm({ buyCourseId }) {
     e.preventDefault();
 
     if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
       return;
     }
 
@@ -75,12 +73,11 @@ export default function CheckoutForm({ buyCourseId }) {
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
-        // Make sure to change this to your payment completion page
+        // Redirect URL after payment confirmation
         return_url: `${FRONT_ENDPOINT}/payment/verify/${buyCourseId}`,
       },
     });
 
-    // Handle immediate errors
     if (error) {
       if (error.type === "card_error" || error.type === "validation_error") {
         setMessage(error.message);
@@ -89,7 +86,7 @@ export default function CheckoutForm({ buyCourseId }) {
       }
       setIsLoading(false);
     }
-    // When there is no error, Stripe will redirect to the return_url.
+    // If no error, Stripe handles redirection.
   };
 
   const paymentElementOptions = {
@@ -97,29 +94,50 @@ export default function CheckoutForm({ buyCourseId }) {
   };
 
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
-      <button
-        disabled={isLoading || !stripe || !elements}
-        id="submit"
-        type="submit"
-      >
-        <span id="button-text">
-          {isLoading ? (
-            <div className="spinner" id="spinner"></div>
-          ) : (
-            "Pay now"
-          )}
-        </span>
-      </button>
-      {/* Show payment status message */}
-      {message && <div id="payment-message">{message}</div>}
-      {/* Extra instruction when payment is loading */}
+    <div style={{ position: "relative" }}>
+      <form id="payment-form" onSubmit={handleSubmit}>
+        <PaymentElement id="payment-element" options={paymentElementOptions} />
+        <button
+          disabled={isLoading || !stripe || !elements}
+          id="submit"
+          type="submit"
+        >
+          <span id="button-text">
+            {isLoading ? (
+              <div className="spinner" id="spinner"></div>
+            ) : (
+              "Pay now"
+            )}
+          </span>
+        </button>
+        {/* Show payment status message */}
+        {message && <div id="payment-message">{message}</div>}
+      </form>
+
+      {/* Full-screen overlay splash screen during payment processing */}
       {isLoading && (
-        <div className="loading-instruction" style={{ marginTop: "1rem", color: "#555" }}>
-          Please do not close the window or press the back button while your payment is processing.
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(255, 255, 255, 0.9)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+            textAlign: "center",
+            padding: "1rem",
+          }}
+        >
+          <div style={{ fontSize: "1.5rem", color: "#555" }}>
+            Please do not close the window or press the back button while your
+            payment is processing.
+          </div>
         </div>
       )}
-    </form>
+    </div>
   );
 }
