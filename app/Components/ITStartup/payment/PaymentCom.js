@@ -111,7 +111,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
       <ul className="features-list">
         <li>
           <span>
-            <i className="bx bxs-badge-check"></i> Amount: {paymentDetails.amount}
+            <i className="bx bxs-badge-check"></i> Amount: £{paymentDetails.amount}
           </span>
         </li>
         <li>
