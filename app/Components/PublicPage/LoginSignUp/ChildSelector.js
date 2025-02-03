@@ -202,7 +202,7 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
         <DialogTitle>Add a New Child</DialogTitle>
         <DialogContent >
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
-          <Box component="form" sx={{ mt: 2, maxWidth: 800 }} >
+          <Box component="form" sx={{ mt: 2, maxWidth: 500 }} >
             {[
               { name: 'childName', label: 'Full Name', type: 'text' },
               { name: 'childDob', label: 'Date Of Birth', type: 'date' },
