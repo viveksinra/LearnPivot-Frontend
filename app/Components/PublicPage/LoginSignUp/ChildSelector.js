@@ -200,7 +200,7 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
         keepMounted
       >
         <DialogTitle>Add a New Child</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ maxWidth: 500 }}>
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
           <Box component="form" sx={{ mt: 2 }}>
             {[
