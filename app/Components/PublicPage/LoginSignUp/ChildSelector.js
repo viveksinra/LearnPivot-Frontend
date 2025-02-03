@@ -119,9 +119,8 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
       console.log('response:', response.variant);
       if (response.variant === 'success') {
         handleGetAllChildren(true); // Move this inside the success condition
-
         setOpen(false);
-        // setNewChild(initialChildState);
+        setNewChild(initialChildState); // Clear the fields
       }
     } catch (error) {
       console.error('Error adding child:', error);
