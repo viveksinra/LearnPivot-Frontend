@@ -197,7 +197,16 @@ margin-right: 12px;
                 </>
               ) : (
                 <Link href="/login">
-                  <Button startIcon={<FaUserCircle />}>Login</Button>
+                  <Button 
+                    startIcon={<FaUserCircle />} 
+                    onClick={() => {
+                      if (router.pathname === "/login") {
+                        router.reload();
+                      }
+                    }}
+                  >
+                    Login
+                  </Button>
                 </Link>
               )}
             </div>

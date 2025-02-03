@@ -9,13 +9,14 @@ import ForgetPassword from "./ForgetPassword";
 
 function ComLogSigForm({ isRedirectToDashboard }) {
   // Use localStorage to persist the form state
-  const [isLogin, setIsLogin] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedState = localStorage.getItem('mockTestFormState');
-      return savedState ? JSON.parse(savedState).isLogin : true;
-    }
-    return true;
-  });
+  // const [isLogin, setIsLogin] = useState(() => {
+  //   if (typeof window !== 'undefined') {
+  //     const savedState = localStorage.getItem('mockTestFormState');
+  //     return savedState ? JSON.parse(savedState).isLogin : true;
+  //   }
+  //   return true;
+  // });
+  const [isLogin, setIsLogin] = useState(true);
 
   const [isForget, setIsForget] = useState(() => {
     if (typeof window !== 'undefined') {
