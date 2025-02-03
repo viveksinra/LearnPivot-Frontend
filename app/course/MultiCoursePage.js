@@ -107,7 +107,7 @@ function MultiCoursePage() {
           <Grid item xs={fullScreen ? 12 : 10}>
 
         {loading ? 
-        <div className="center" style={{flexDirection:"column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading Courses...</Typography>  </div> : rows.length === 0 ? <NoResult label="Currently, there are no courses available. Please Contact Us for updates."/> :  
+        <div className="center" style={{flexDirection:"column"}}><CircularProgress size={30}/> <Typography color="slateblue" style={{fontFamily: 'Courgette'}} variant='h6' align='center'>Loading Courses...</Typography>  </div> : rows.length === 0 ? <NoResult label="Currently, there are no courses available."/> :  
             rows &&
               rows.map((p, j) => (
                 <OneClass data={p} key={p._id} />
