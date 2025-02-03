@@ -79,7 +79,7 @@ const TermsAndConditions = () => {
 
         <Grid container spacing={4}>
           {/* Table of Contents for larger screens */}
-          {isMdUp && (
+          {/* {isMdUp && (
             <Grid item md={3}>
               <StyledPaper elevation={2}>
                 <Typography variant="h6" gutterBottom>
@@ -97,10 +97,12 @@ const TermsAndConditions = () => {
                 ))}
               </StyledPaper>
             </Grid>
-          )}
+          )} */}
 
           {/* Main Content */}
-          <Grid item xs={12} md={isMdUp ? 9 : 12}>
+          <Grid item xs={12} 
+          // md={isMdUp ? 9 : 12}
+          >
             <StyledPaper elevation={2}>
               {/* Section 1: Introduction */}
               <StyledSection id="introduction">
