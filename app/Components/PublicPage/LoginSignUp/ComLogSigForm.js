@@ -94,7 +94,7 @@ function ComLogSigForm({ isRedirectToDashboard }) {
           </Grid>
         </>
       ) : (
-        <SignUpForm isRedirectToDashboard={isRedirectToDashboard} />
+        <SignUpForm isRedirectToDashboard={isRedirectToDashboard} setIsLogin={setIsLogin} />
       )}
     </div>
   );

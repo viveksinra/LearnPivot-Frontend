@@ -21,7 +21,7 @@ import { LOGIN_USER } from "../../Context/types";
 import { authService } from "@/app/services";
 import AddressInput from "./AddressInput"; // Ensure AddressInput is updated per your address suggestion code
 
-const SignUpForm = ({ isRedirectToDashboard }) => {
+const SignUpForm = ({ isRedirectToDashboard, setIsLogin }) => {
   // Updated initial state with separate address fields:
   const [formData, setFormData] = useState({
     enquiryFor: "self",
@@ -151,6 +151,7 @@ console.log("i passed this point")
     try {
       const res = await authService.signUp(signUpData);
       if (res.success && res.token) {
+        setIsLogin(true);
         dispatch({ type: LOGIN_USER, payload: res });
         setAlert({ message: "Registration successful!", severity: "success" });
         if (isRedirectToDashboard) {
