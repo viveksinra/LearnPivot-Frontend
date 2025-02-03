@@ -12,6 +12,12 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
 } from "@mui/material";
 import { FcFeedback } from "react-icons/fc";
 import { BsEyeFill, BsEyeSlashFill } from "react-icons/bs";
@@ -49,6 +55,7 @@ const SignUpForm = ({ isRedirectToDashboard, setIsLogin }) => {
   const [errors, setErrors] = useState({});
   const [alert, setAlert] = useState(null);
   const [acceptedTnC, setAcceptedTnC] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const router = useRouter();
   const { dispatch } = useContext(MainContext);
@@ -151,21 +158,26 @@ console.log("i passed this point")
     try {
       const res = await authService.signUp(signUpData);
       if (res.success && res.token) {
-        setIsLogin(true);
-        dispatch({ type: LOGIN_USER, payload: res });
-        setAlert({ message: "Registration successful!", severity: "success" });
-        if (isRedirectToDashboard) {
-          router.push("/userDash");
-          window.location.reload();
-        } else {
-          router.refresh();
-        }
+        setOpenDialog(true);
       } else {
         setAlert({ message: res.message || "Registration failed. Please try again.", severity: "error" });
       }
     } catch (error) {
       console.error("Error submitting data:", error);
       setAlert({ message: "Registration failed. Please try again.", severity: "error" });
+    }
+  };
+
+  const handleDialogClose = () => {
+    setOpenDialog(false);
+    setIsLogin(true);
+    dispatch({ type: LOGIN_USER, payload: res });
+    setAlert({ message: "Registration successful!", severity: "success" });
+    if (isRedirectToDashboard) {
+      router.push("/userDash");
+      window.location.reload();
+    } else {
+      router.refresh();
     }
   };
 
@@ -425,6 +437,20 @@ console.log("i passed this point")
           </>
         )}
       </Grid>
+
+      <Dialog open={openDialog} onClose={handleDialogClose}>
+        <DialogTitle>Registration Successful!</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Your registration was successful. Click the button below to login.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Login
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };
