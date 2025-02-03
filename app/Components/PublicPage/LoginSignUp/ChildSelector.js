@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
+import React, { useState, useEffect, useRef, useCallbainitialChildStateck, memo } from 'react';
 import {
   TextField, MenuItem, Button, Dialog, DialogActions, DialogContent,
   DialogContentText, DialogTitle, Box, Typography, IconButton,
@@ -200,9 +200,9 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
         keepMounted
       >
         <DialogTitle>Add a New Child</DialogTitle>
-        <DialogContent sx={{ maxWidth: 500 }}>
+        <DialogContent >
           <DialogContentText>Please fill in the details of the new child.</DialogContentText>
-          <Box component="form" sx={{ mt: 2 }}>
+          <Box component="form" sx={{ mt: 2, maxWidth: 800 }} >
             {[
               { name: 'childName', label: 'Full Name', type: 'text' },
               { name: 'childDob', label: 'Date Of Birth', type: 'date' },
