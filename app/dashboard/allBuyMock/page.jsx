@@ -201,49 +201,49 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       field: 'mockTestTitle',
       headerName: 'Mock Test Title',
       width: 200,
-      valueGetter: (params) => params.row.mockTestId.mockTestTitle,
+      valueGetter: (params) => params?.row?.mockTestId?.mockTestTitle,
       filterable: true,
     },
     {
       field: 'parentName',
       headerName: 'Parent Name',
       width: 150,
-      valueGetter: (params) => `${params.row.user.firstName} ${params.row.user.lastName}`,
+      valueGetter: (params) => `${params?.row?.user?.firstName} ${params?.row?.user?.lastName}`,
       filterable: true,
     },
     {
       field: 'email',
       headerName: 'Email',
       width: 200,
-      valueGetter: (params) => params.row.user.email,
+      valueGetter: (params) => params?.row?.user?.email,
       filterable: true,
     },
     {
       field: 'childName',
       headerName: 'Child Name',
       width: 150,
-      valueGetter: (params) => params.row.childId.childName,
+      valueGetter: (params) => params?.row?.childId?.childName,
       filterable: true,
     },
     {
       field: 'childGender',
       headerName: 'Child Gender',
       width: 120,
-      valueGetter: (params) => params.row.childId.childGender,
+      valueGetter: (params) => params?.row?.childId?.childGender,
       filterable: true,
     },
     {
       field: 'batchDates',
       headerName: 'Batch Dates',
       width: 120,
-      valueGetter: (params) => formatDateToShortMonth(params.row.selectedBatch.date),
+      valueGetter: (params) => formatDateToShortMonth(params?.row?.selectedBatch?.date),
       filterable: true,
     },
     {
       field: 'batchTimes',
       headerName: 'Batch Times',
       width: 150,
-      valueGetter: (params) => `${params.row.selectedBatch.startTime}-${params.row.selectedBatch.endTime}`,
+      valueGetter: (params) => `${params?.row?.selectedBatch?.startTime}-${params?.row?.selectedBatch?.endTime}`,
       filterable: true,
     },
     {
@@ -252,13 +252,13 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       width: 120,
       valueGetter: (params) => {
         // Store the original date for sorting
-        const originalDate = new Date(params.row.date);
+        const originalDate = new Date(params?.row?.date);
         return {
           sort: originalDate.getTime(), // Use timestamp for sorting
-          formatted: formatDateToShortMonth(params.row.date) // Use formatted date for display
+          formatted: formatDateToShortMonth(params?.row?.date) // Use formatted date for display
         };
       },
-      valueFormatter: (params) => params.value.formatted, // Display the formatted date
+      valueFormatter: (params) => params?.value?.formatted, // Display the formatted date
       sortComparator: (v1, v2) => v1.sort - v2.sort, // Compare using timestamps
       filterable: true,
     },
@@ -268,8 +268,8 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       width: 120,
       renderCell: (params) => (
         <Chip
-          label={params.row.status}
-          color={params.row.status === 'succeeded' ? 'success' : 'default'}
+          label={params?.row?.status}
+          color={params?.row?.status === 'succeeded' ? 'success' : 'default'}
           variant="outlined"
           size="small"
         />
@@ -281,14 +281,14 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       field: 'address',
       headerName: 'Address',
       width: 120,
-      valueGetter: (params) => params.row.user.address,
+      valueGetter: (params) => params?.row?.user?.address,
       filterable: true,
     },
     {
       field: 'mobileNo',
       headerName: 'Mobile Number',
       width: 120,
-      valueGetter: (params) => params.row.user.mobile,
+      valueGetter: (params) => params?.row?.user?.mobile,
       filterable: true,
     },
 
@@ -462,7 +462,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                     showQuickFilter: true,
                   },
                 }}
-                getRowClassName={(params) => `status-${params.row.status}`}
+                getRowClassName={(params) => `status-${params?.row?.status}`}
                 autoHeight
                 disableExtendRowFullWidth={false}
                 sx={{
