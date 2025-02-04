@@ -8,6 +8,7 @@ import "./mockStripePayStyle.css";
 import { FRONT_ENDPOINT } from "@/app/utils";
 import { Box, Button, Typography } from "@mui/material";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { mockTestService } from "@/app/services";
 
 // Internal styles
 const styles = {
@@ -101,6 +102,35 @@ export default function MockCheckoutForm({data, setClientSecret, selectedChild, 
     }
 
     setIsLoading(true);
+
+      async function checkIfAllBatchFree() {
+        try {
+          let res = await mockTestService.isFullByBuyMock({
+            id: `${buyMockId}`
+          });
+        console.log(res);
+          if (res.variant === "success") {
+
+            return res?.isFree;
+          } else {
+
+            return false;
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+
+          return false;
+
+        }   
+      }
+
+    const isAllFree = await checkIfAllBatchFree()
+
+    if(!isAllFree) {
+      setMessage("Some Batches got full. Refresh and try again later.");
+      setIsLoading(false);
+      return;
+    }
 
     const { error } = await stripe.confirmPayment({
       elements,

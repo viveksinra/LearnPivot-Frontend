@@ -116,7 +116,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
         </li>
         <li>
           <span>
-            <i className="bx bxs-badge-check"></i> Ref No.: {paymentDetails.refNo}
+            <i className="bx bxs-badge-check"></i> Ref : {paymentDetails.refNo}
           </span>
         </li>
         <li>
