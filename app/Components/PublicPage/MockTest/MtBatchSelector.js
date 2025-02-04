@@ -119,6 +119,28 @@ const MtBatchSelector = ({
     }   
     setLoading(false);
   }
+  async function getBoughtBatch() {
+    setLoading(true);
+    try {
+      let res = await mockTestService.alreadyBoughtMock({
+        childId: selectedChild._id, 
+        id: `${data._id}`
+      });
+    
+      if (res.variant === "success") {
+        setAlreadyBoughtBatch(res.data);
+        if (!selectedBatch) {
+          setSelectedBatch([]);
+        }
+      } else {
+        alert(res);
+        console.log(res);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }   
+    setLoading(false);
+  }
 
   useEffect(() => {
     getBoughtBatch();

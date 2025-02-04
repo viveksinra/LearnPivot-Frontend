@@ -32,6 +32,12 @@ export class MockTestService {
       })
       .then((res) => res.data);
   };
+  mockBookingCount = async ({id}) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/mockTest/getMockTest/isBookingFull/${id}`, {
+      })
+      .then((res) => res.data);
+  };
 
   buyMockStepOne = async (data) => {
     return this.instance
