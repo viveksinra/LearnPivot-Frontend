@@ -287,7 +287,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     {
       field: 'mobileNo',
       headerName: 'Mobile Number',
-      width: 120,
+      width: 250,
       valueGetter: (params) => params?.row?.user?.mobile,
       filterable: true,
     },
