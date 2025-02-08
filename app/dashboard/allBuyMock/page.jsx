@@ -1,6 +1,7 @@
 'use client';
 import "./addMockTestStyle.css";
-import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
+import React, { lazy, Suspense, useEffect, useState, useRef, useCallback } from 'react';
+import { debounce } from 'lodash';
 import {
   Typography, 
   Fab, 
@@ -16,7 +17,9 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Chip,
-  Button
+  Button,
+  Slider,
+  Box,
 } from '@mui/material/';
 import { 
   DataGrid, 
@@ -26,7 +29,7 @@ import {
   useGridApiContext,
   useGridSelector
 } from '@mui/x-data-grid';
-import { MdModeEdit, MdOutlineMail, MdOutlineClose } from "react-icons/md";
+import { MdModeEdit, MdOutlineMail, MdOutlineClose, MdRestartAlt, MdRemove, MdAdd } from "react-icons/md";
 import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline } from "react-icons/fc";
 import { BsTable } from "react-icons/bs";
 import Loading from "../../Components/Loading/Loading";
@@ -190,6 +193,31 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [selectedMockTests, setSelectedMockTests] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(true);
+  const [containerWidth, setContainerWidth] = useState(1250);
+
+  // Debounced width update
+  const debouncedWidthUpdate = useCallback(
+    debounce((newWidth) => {
+      setContainerWidth(newWidth);
+    }, 100),
+    []
+  );
+
+  const handleWidthChange = (_, value) => {
+    debouncedWidthUpdate(value);
+  };
+
+  const handleWidthReset = () => {
+    setContainerWidth(1250);
+  };
+
+  const incrementWidth = () => {
+    setContainerWidth(prev => Math.min(prev + 50, 2000));
+  };
+
+  const decrementWidth = () => {
+    setContainerWidth(prev => Math.max(prev - 50, 1000));
+  };
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({
     address: false,
@@ -346,9 +374,73 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       justifyContent: "center",
       alignSelf: "center",
       marginRight: 20,
-      maxWidth: 1250,
+      maxWidth: containerWidth,
     }}>
       <Grid container spacing={3}>
+        <Grid item xs={12} sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: 1,
+          backgroundColor: '#f5f5f5',
+          padding: '8px',
+          borderRadius: '4px',
+        }}>
+          <Tooltip title="Decrease width">
+            <IconButton 
+              onClick={decrementWidth}
+              disabled={containerWidth <= 1000}
+              size="small"
+            >
+              <MdRemove />
+            </IconButton>
+          </Tooltip>
+
+          <Box sx={{ 
+            width: 200,
+            mx: 2,
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <Slider
+              value={containerWidth}
+              min={1000}
+              max={2000}
+              step={50}
+              onChange={handleWidthChange}
+              valueLabelDisplay="auto"
+              valueLabelFormat={value => `${value}px`}
+              sx={{
+                '& .MuiSlider-thumb': {
+                  transition: 'left 0.1s ease-out'
+                }
+              }}
+            />
+          </Box>
+
+          <Tooltip title="Increase width">
+            <IconButton 
+              onClick={incrementWidth}
+              disabled={containerWidth >= 2000}
+              size="small"
+            >
+              <MdAdd />
+            </IconButton>
+          </Tooltip>
+
+          <Typography variant="body2" sx={{ mx: 1, minWidth: 80 }}>
+            {containerWidth}px
+          </Typography>
+
+          <Tooltip title="Reset width">
+            <IconButton 
+              onClick={handleWidthReset}
+              color="primary"
+              size="small"
+            >
+              <MdRestartAlt />
+            </IconButton>
+          </Tooltip>
+        </Grid>
         <Grid item xs={12} md={6}>
           <Typography 
             color="primary" 

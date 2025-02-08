@@ -144,7 +144,7 @@ const SendEmailCom = forwardRef((props, ref) => {
                         label="Subject"
                         value={emailSubject}
                         onChange={(e) => setEmailSubject(e.target.value)}
-                        inputProps={{ minLength: "2", maxLength: "30" }}
+                        inputProps={{ minLength: "2", maxLength: "250" }}
                         placeholder='Subject'
                         variant="outlined"
                         required
