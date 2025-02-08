@@ -277,22 +277,22 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       filterable: true,
       sortable: true,
     },
-    {
-      field: 'address',
-      headerName: 'Address',
-      width: 120,
-      valueGetter: (params) => params?.row?.user?.address,
-      filterable: true,
-    },
+
     {
       field: 'mobileNo',
       headerName: 'Mobile Number',
-      width: 250,
+      width: 150,
       valueGetter: (params) => params?.row?.user?.mobile,
       filterable: true,
     },
 
-
+    {
+      field: 'address',
+      headerName: 'Address',
+      width: 420,
+      valueGetter: (params) => params?.row?.user?.address,
+      filterable: true,
+    },
   ];
 
   useEffect(() => {
