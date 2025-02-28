@@ -82,9 +82,20 @@ export class MyCourseService {
       .catch((err) => err);
   };
 
+  checkIfSeatAvailable = async (id) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/course/getCourse/checkIfSeatAvailable/${id}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
 
-
-
+  alreadyBoughtDate = async ({childId,id}) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/course/getCourse/alreadyBoughtCourseDate/${childId}/${id}`, {
+      })
+      .then((res) => res.data);
+  };
 
 
 

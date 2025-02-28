@@ -192,16 +192,9 @@ const columns = [
   },
   {
     field: 'paymentDate',
-    headerName: 'Date',
-    width: 160,
-    valueGetter: (params) => moment(params.value).format('DD MMM YYYY'),
-  },
-  {
-    field: 'paymentTime',
-    headerName: 'Time',
-    width: 160,
-    valueGetter: (params) => 
-  moment(params.value).format('HH:mm:ss')
+    headerName: 'Date & Time',
+    width: 180,
+    valueGetter: (params) => moment(params.value).format('DD MMM YYYY, HH:mm:ss'),
   },
   {
     field: 'amountPaid',
@@ -218,7 +211,7 @@ const columns = [
   {
     field: 'courseName',
     headerName: 'Course/Test Name',
-    width: 200,
+    width: 250,
     valueGetter: (params) => params.value || 'Mock Test',
   },
   {
@@ -364,8 +357,12 @@ export default function PaymentsPage() {
               <DataGrid
                 rows={filteredPayments}
                 columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
+                initialState={{
+                  pagination: {
+                    paginationModel: { pageSize: 25, page: 0 },
+                  },
+                }}
+                pageSizeOptions={[10, 25, 50, 100]}
                 disableSelectionOnClick
                 className="border-none"
                 sx={{

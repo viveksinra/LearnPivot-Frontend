@@ -7,6 +7,94 @@ import {
   AccordionItemButton
 } from "react-accessible-accordion";
 
+// courseFaqData = [{
+  //     id: "1",
+  //     question: "",
+  //     answer: ``
+  // },]
+const courseFaqData = [ 
+  {
+      id: "1",
+      question: "When are the courses held?",
+      answer: `<p>Please refer to the course information for specific dates and times.</p>`
+  },
+  {
+      id: "2",
+      question: "Where are the courses held?",
+      answer: `<p>All courses are conducted online via the Zoom platform.</p>
+               <p>This ensures an interactive learning environment with personalized attention and support for every student.</p>`
+  },
+  {
+      id: "3",
+      question: "Can participants leave the course at any time?",
+      answer: `<p><strong>Withdrawal Policy</strong></p>
+               <p>Yes, participants can withdraw from the course at any time with a 6-working-day notice. 
+               A refund will be issued for all remaining classes. However, breaks in between the course are not permitted.</p>`
+  },
+  {
+      id: "4",
+      question: "What are the rules for the courses?",
+      answer: `<p>To maintain a productive and interactive learning environment, the following rules apply:</p>
+               <ul>
+                 <li><strong>Device Requirement:</strong> Students must log in using a laptop. Tablets and phones are strictly prohibited.</li>
+                 <li><strong>Internet Connectivity:</strong> A stable and high-speed internet connection is required.</li>
+                 <li><strong>Camera & Microphone:</strong> Both must be fully functional to ensure active participation.</li>
+                 <li><strong>Quiet Environment:</strong> Students should be seated alone in a quiet room, free from background noise.</li>
+                 <li><strong>Punctuality:</strong> Students must join on time as the Zoom classes will be locked after the scheduled start.</li>
+               </ul>`
+  },
+  {
+      id: "4.5",
+      question: "Can my child continue with other tuitions?",
+      answer: `<p>No. Children should not attend other tuition for the following reasons:</p>
+               <ul>
+                 <li><strong>Conflict in methods:</strong> Every tutor has a different style of teaching. Putting the child in multiple tuition would have a severe impact in learning ability as it will cause confusion.</li>
+                 <li><strong>Excessive workload:</strong> You don't want to overload your child with work.</li>
+                 <li><strong>Our confidence:</strong> We are very confident that our teaching methods, resources, guidance and support are more than enough for a child to excel to full potential.</li>
+               </ul>`
+  },
+  {
+      id: "5",
+      question: "What are the weekly responsibilities for parents?",
+      answer: `<p>To ensure a smooth learning experience, parents are responsible for:</p>
+               <ul>
+                 <li><strong>Checking Equipment:</strong> Ensure the laptop and internet connection are functioning properly.</li>
+                 <li><strong>Printing Materials:</strong> Print the required worksheets posted in the WhatsApp group a day before class.</li>
+                 <li><strong>Monitoring Homework:</strong> Ensure homework is completed on time and submit the child’s score within 3 days.</li>
+                 <li><strong>Communication:</strong> General questions should be posted in the WhatsApp group; personal concerns should be directed to the tutor privately.</li>
+               </ul>`
+  },
+  {
+      id: "6",
+      question: "Whom and where should I contact in case of questions related to the course?",
+      answer: `<p>Once the course starts, parents will be added to a designated WhatsApp group where they can post questions.</p>
+               <p>For personal concerns, parents can reach out to the tutor privately.</p>`
+  },
+  {
+      id: "7",
+      question: "Privacy & Data Protection",
+      answer: `<p>At Chelmsford 11 Plus, we prioritize your privacy and the security of your personal information.</p>
+               <ul>
+                 <li>Any personal data collected is strictly confidential and used only for service delivery.</li>
+                 <li>We do not share, sell, or disclose your data to third parties unless required by law.</li>
+                 <li>Industry-standard security measures are in place to prevent unauthorized access, misuse, or disclosure.</li>
+               </ul>
+               <p>For further details, please refer to our <a href='/policy/privacyPolicy'>Privacy Policy</a>.</p>`
+  },
+  {
+      id: "8",
+      question: "Copyright Policy",
+      answer: `<p>To protect our educational materials, all participants must sign a Copyright Agreement.</p>
+               <p>Any violation of our copyright policies will result in legal action and severe penalties.</p>
+               <p>A declaration form will be provided, which must be printed, signed, and returned before the course begins.</p>`
+  }
+];
+
+// csseMockFaqData = [{
+  //     id: "1",
+  //     question: "",
+  //     answer: ``
+  // },]
 const csseMockFaqData = [
   {
       id: "1",
@@ -96,6 +184,11 @@ const csseMockFaqData = [
   }
 ];
 
+// fsseMockFaqData = [{
+  //     id: "1",
+  //     question: "",
+  //     answer: ``
+  // },]
 const fsseMockFaqData = [
   {
       id: "1",
@@ -178,7 +271,11 @@ const fsseMockFaqData = [
   }
 ];
 
-
+// faqData = [{
+  //     id: "1",
+  //     question: "",
+  //     answer: ``
+  // },]
 const faqData = [
   {
     id: "1",
@@ -262,7 +359,7 @@ const faqData = [
   {
     id: "12",
     question: "How do I find out more?",
-    answer: `<p>Feel free to reach out to us directly through our website or by emailing us at <a href="mailto:info@chelmsford11plus.com">info@chelmsford11plus.com</a>. We're here to discuss your child's needs and how we can support them in their 11+ journey to success.</p>`
+    answer: `<p>Feel free to reach out to us directly through our website or by emailing us at <a href="mailto:support@chelmsford11plus.com">support@chelmsford11plus.com</a>. We're here to discuss your child's needs and how we can support them in their 11+ journey to success.</p>`
   },
   {
       id: "13",
@@ -293,6 +390,17 @@ const FaqCom = ({dataType}) => {
           <div className="col-lg-12">
             <div className="faq-accordion">
               <Accordion allowZeroExpanded preExpanded={["a"]}>
+                {dataType === "courseFaqData" && courseFaqData.map((faq) => (
+                  <AccordionItem key={faq.id} uuid={faq.id}>
+                    <AccordionItemHeading>
+                      <AccordionItemButton>{faq.question}</AccordionItemButton>
+                    </AccordionItemHeading>
+                    <AccordionItemPanel>
+                    <p className="accordion-content" dangerouslySetInnerHTML={{ __html: faq.answer }}></p>
+
+                    </AccordionItemPanel>
+                  </AccordionItem>
+                ))}
                 {dataType === "faqData" && faqData.map((faq) => (
                   <AccordionItem key={faq.id} uuid={faq.id}>
                     <AccordionItemHeading>

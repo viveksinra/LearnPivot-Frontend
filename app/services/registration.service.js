@@ -42,6 +42,27 @@ export class RegistrationService {
       })
       .then((res) => res.data);
   };
+  getMockTestNumbersApi = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/admin/getMockTestNumbers`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  getCourseTestNumbersApi = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/admin/getCourseTestNumbers`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  getCourseParentNumbersApi = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/admin/getCourseParentNumbers`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
   
   
 

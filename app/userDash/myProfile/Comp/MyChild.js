@@ -1,0 +1,515 @@
+import React, { useEffect, useState } from 'react';
+import {
+  Card,
+  CardContent,
+  Typography,
+  Stack,
+  Box,
+  Avatar,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Button,
+  IconButton,
+  Skeleton
+} from '@mui/material';
+import { School, Cake, Person } from '@mui/icons-material';
+import { format, parseISO, isValid } from 'date-fns';
+import { myProfileService } from '@/app/services';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import PasswordConfirmDialog from './PasswordConfirmDialog';
+import ChildDialog from './ChildDialog';
+
+const ChildCard = ({ child, onEdit, onDelete }) => {
+  const formatDate = (dateString) => {
+    try {
+      // First try to parse the ISO string
+      const date = parseISO(dateString);
+      if (isValid(date)) {
+        return format(date, 'dd MMM yyyy');
+      }
+      // If parsing ISO fails, try creating a new Date object
+      const fallbackDate = new Date(dateString);
+      if (isValid(fallbackDate)) {
+        return format(fallbackDate, 'dd MMM yyyy');
+      }
+      // If all parsing fails, return an informative message
+      return 'Invalid Date';
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return 'Invalid Date';
+    }
+  };
+
+  return (
+    <Card
+      elevation={0}
+      sx={{
+        mb: 2,
+        borderRadius: 3,
+        border: '1px solid',
+        borderColor: 'divider',
+        transition: 'all 0.3s ease',
+        bgcolor: (theme) => theme.palette.mode === 'dark' ? 'grey.800' : 'grey.50',
+        '&:hover': {
+          transform: { xs: 'none', md: 'translateY(-4px)' },
+          boxShadow: (theme) => theme.shadows[4],
+          borderColor: 'primary.main'
+        }
+      }}
+    >
+      <CardContent sx={{ p: { xs: 2, md: 3 } }}>
+        {/* Main Content Stack */}
+        <Stack 
+          direction="column" 
+          spacing={2}
+        >
+          {/* Header with Avatar and Actions */}
+          <Stack 
+            direction="row" 
+            justifyContent="space-between" 
+            alignItems="center"
+            spacing={2}
+          >
+            <Stack direction="row" spacing={2} alignItems="center">
+              <Avatar
+                sx={{
+                  width: { xs: 48, md: 56 },
+                  height: { xs: 48, md: 56 },
+                  bgcolor: 'primary.main',
+                  fontSize: { xs: '1.25rem', md: '1.5rem' },
+                  fontWeight: 'bold'
+                }}
+              >
+                {child.childName.charAt(0)}
+              </Avatar>
+              <Typography 
+                variant="h6" 
+                sx={{ 
+                  fontWeight: 600,
+                  fontSize: { xs: '1.1rem', md: '1.25rem' }
+                }}
+              >
+                {child.childName}
+              </Typography>
+            </Stack>
+
+            {/* Action Buttons */}
+            <Stack 
+              direction="row" 
+              spacing={1}
+              sx={{
+                '& .MuiIconButton-root': {
+                  width: { xs: 40, md: 44 },
+                  height: { xs: 40, md: 44 }
+                }
+              }}
+            >
+              <IconButton 
+                onClick={() => onEdit(child)}
+                sx={{ 
+                  bgcolor: 'action.selected',
+                  '&:hover': { bgcolor: 'action.hover' }
+                }}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+              <IconButton 
+                onClick={() => onDelete(child)} 
+                color="error"
+                sx={{ 
+                  bgcolor: 'error.lighter',
+                  '&:hover': { bgcolor: 'error.light' }
+                }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Stack>
+          </Stack>
+
+          {/* Info Chips */}
+          <Stack 
+            direction={{ xs: 'column', md: 'row' }} 
+            spacing={{ xs: 1, md: 2 }}
+            sx={{ mt: { xs: 2, md: 1 } }}
+          >
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                bgcolor: 'primary.lighter',
+                color: 'primary.main',
+                py: 1,
+                px: 2,
+                borderRadius: 2,
+                fontSize: '0.875rem',
+                width: { xs: '100%', md: 'auto' }
+              }}
+            >
+              <School fontSize="small" />
+              {child.childYear}
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                bgcolor: 'grey.100',
+                color: 'grey.700',
+                py: 1,
+                px: 2,
+                borderRadius: 2,
+                fontSize: '0.875rem',
+                width: { xs: '100%', sm: 'auto' }
+              }}
+            >
+              <Cake fontSize="small" />
+              {formatDate(child.childDob)}
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 1,
+                bgcolor: 'grey.100',
+                color: 'grey.700',
+                py: 1,
+                px: 2,
+                borderRadius: 2,
+                fontSize: '0.875rem',
+                width: { xs: '100%', sm: 'auto' }
+              }}
+            >
+              <Person fontSize="small" />
+              {child.childGender}
+            </Box>
+          </Stack>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
+
+const LoadingState = () => (
+  <Card
+    elevation={0}
+    sx={{
+      borderRadius: 4,
+      border: '1px solid',
+      borderColor: 'divider',
+      height: '100%'
+    }}
+  >
+    <CardContent sx={{ p: 4 }}>
+      <Typography variant="h5" sx={{ fontWeight: 600, mb: 3 }}>
+        <Skeleton width={120} />
+      </Typography>
+      <Box sx={{ textAlign: 'right', mb: 2 }}>
+        <Skeleton width={100} height={36} sx={{ ml: 'auto' }} />
+      </Box>
+      {[1, 2].map((item) => (
+        <Card
+          key={item}
+          elevation={0}
+          sx={{
+            mb: 2,
+            borderRadius: 3,
+            border: '1px solid',
+            borderColor: 'divider'
+          }}
+        >
+          <CardContent>
+            <Stack direction="row" spacing={3} alignItems="center">
+              <Skeleton variant="circular" width={56} height={56} />
+              <Box flex={1}>
+                <Skeleton width={200} height={32} sx={{ mb: 1 }} />
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+                  <Skeleton width={100} height={32} />
+                  <Skeleton width={120} height={32} />
+                  <Skeleton width={80} height={32} />
+                </Stack>
+              </Box>
+              <Stack direction="row" spacing={1}>
+                <Skeleton width={40} height={40} />
+                <Skeleton width={40} height={40} />
+              </Stack>
+            </Stack>
+          </CardContent>
+        </Card>
+      ))}
+    </CardContent>
+  </Card>
+);
+
+const ErrorState = ({ message }) => (
+  <Card
+    elevation={0}
+    sx={{
+      borderRadius: 4,
+      border: '1px solid',
+      borderColor: 'divider',
+      height: '100%'
+    }}
+  >
+    <CardContent sx={{ p: 4, textAlign: 'center' }}>
+      <Typography color="error">{message}</Typography>
+    </CardContent>
+  </Card>
+);
+
+const ChildrenList = () => {
+  const [children, setChildren] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: '',
+    severity: 'info'
+  });
+  const [childDialogOpen, setChildDialogOpen] = useState(false);
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [currentChild, setCurrentChild] = useState(null);
+
+  useEffect(() => {
+    fetchChildren();
+  }, []);
+
+  const fetchChildren = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      const response = await myProfileService.getMyAllChild();
+      if (response.variant !== 'success') {
+        throw new Error(response.message || 'Failed to fetch children');
+      }
+
+      setChildren(response.data || []);
+    } catch (err) {
+      setError(err.message);
+      setSnackbar({
+        open: true,
+        message: err.message || 'Failed to fetch children',
+        severity: 'error'
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOpenChildDialog = (child = null) => {
+    setEditMode(!!child);
+    setCurrentChild(child);
+    setChildDialogOpen(true);
+  };
+
+  const handleCloseChildDialog = () => {
+    setChildDialogOpen(false);
+    setEditMode(false);
+    setCurrentChild(null);
+  };
+
+  const handleChildSubmit = (childData) => {
+    if (editMode) {
+      // For edit mode, preserve the original ID and update state
+      const updatedChildData = {
+        ...childData,
+        _id: currentChild._id // Keep the original ID
+      };
+      setCurrentChild(updatedChildData);
+      setChildDialogOpen(false);
+      // Open password confirmation dialog before updating
+      setPasswordDialogOpen(true);
+    } else {
+      addChild(childData);
+    }
+  };
+
+  const addChild = async (childData) => {
+    try {
+      const res = await myProfileService.addChild(childData);
+      if (res.variant !== 'success') {
+        throw new Error(res.message || 'Failed to add child');
+      }
+      // Refresh the children list after successful addition
+      await fetchChildren();
+      setChildDialogOpen(false);
+      setPasswordDialogOpen(false);
+      setSnackbar({
+        open: true,
+        message: 'Child Profile added successfully',
+        severity: 'success'
+      });
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || 'Failed to add child',
+        severity: 'error'
+      });
+    }
+  };
+
+  const handleDeleteChild = (child) => {
+    setCurrentChild(child);
+    setDeleteMode(true);
+    setPasswordDialogOpen(true);
+  };
+
+  const handleConfirmPassword = async (password) => {
+    const childId = currentChild?._id || currentChild?.id;
+    if (!childId) {
+      setSnackbar({
+        open: true,
+        message: 'No child ID found. Unable to process request.',
+        severity: 'error'
+      });
+      return;
+    }
+
+    if (deleteMode) {
+      try {
+        const res = await myProfileService.deleteMyOneChild(childId, { password });
+        if (res.variant !== 'success') {
+          throw new Error(res.message || 'Failed to delete child');
+        }
+        await fetchChildren();
+        setSnackbar({
+          open: true,
+          message: 'Child Profile deleted successfully',
+          severity: 'success'
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to delete child',
+          severity: 'error'
+        });
+      }
+    } else {
+      // Existing update logic
+      const updatedChildData = { ...currentChild, password };
+      try {
+        const res = await myProfileService.updateMyOneChild(childId, updatedChildData);
+        if (res.variant !== 'success') {
+          throw new Error(res.message || 'Failed to update child');
+        }
+        // Refresh the children list after a successful update
+        await fetchChildren();
+        setPasswordDialogOpen(false);
+        setSnackbar({
+          open: true,
+          message: 'Child Profile updated successfully',
+          severity: 'success'
+        });
+      } catch (error) {
+        setSnackbar({
+          open: true,
+          message: error.message || 'Failed to update child',
+          severity: 'error'
+        });
+      }
+    }
+    setPasswordDialogOpen(false);
+    setDeleteMode(false);
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar((prev) => ({ ...prev, open: false }));
+  };
+
+  if (isLoading) {
+    return <LoadingState />;
+  }
+
+  if (error) {
+    return <ErrorState message={error} />;
+  }
+
+  return (
+    <>
+      <Card
+        elevation={0}
+        sx={{
+          borderRadius: 4,
+          border: '1px solid',
+          borderColor: 'divider',
+          height: '100%',
+          bgcolor: (theme) => theme.palette.mode === 'dark' ? 'grey.800' : 'grey.50'
+        }}
+      >
+        <CardContent sx={{ p: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: 600, mb: 3, color: 'primary.main' }}>
+           My Children
+          </Typography>
+          <Box sx={{ textAlign: 'right', mb: 2 }}>
+            <Button
+              variant="contained"
+              onClick={() => handleOpenChildDialog()}
+              sx={{
+                borderRadius: 2,
+                textTransform: 'none',
+                px: 3,
+                py: 1,
+                bgcolor: 'primary.main',
+                '&:hover': {
+                  bgcolor: 'primary.dark',
+                }
+              }}
+            >
+              Add Child
+            </Button>
+          </Box>
+          {children.length > 0 ? (
+            children.map((child) => (
+              <ChildCard 
+                key={child._id} 
+                child={child} 
+                onEdit={handleOpenChildDialog}
+                onDelete={handleDeleteChild}
+              />
+            ))
+          ) : (
+            <Box sx={{ textAlign: 'center', py: 8 }}>
+              <Typography color="text.secondary">No children registered</Typography>
+            </Box>
+          )}
+        </CardContent>
+      </Card>
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+      <ChildDialog
+        open={childDialogOpen}
+        editMode={editMode}
+        initialData={currentChild}
+        onClose={handleCloseChildDialog}
+        onSubmit={handleChildSubmit}
+      />
+      <PasswordConfirmDialog
+        open={passwordDialogOpen}
+        onConfirm={handleConfirmPassword}
+        onCancel={() => {
+          setPasswordDialogOpen(false);
+          setDeleteMode(false);
+        }}
+        title={deleteMode ? "Confirm Delete" : "Confirm Update"}
+        message={deleteMode ? "Please enter your password to confirm deletion" : "Please enter your password to confirm update"}
+      />
+    </>
+  );
+};
+
+export default ChildrenList;

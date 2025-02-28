@@ -1,7 +1,7 @@
 'use client';
 import "./addMockTestStyle.css";
 import React, { lazy, Suspense, useEffect, useState, useRef, useCallback } from 'react';
-import { debounce } from 'lodash';
+import { debounce, max, set } from 'lodash';
 import {
   Typography, 
   Fab, 
@@ -24,10 +24,14 @@ import {
 import { 
   DataGrid, 
   GridToolbar,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
   gridPageCountSelector,
   gridPageSelector,
   useGridApiContext,
-  useGridSelector
+  useGridSelector,
+  gridClasses
 } from '@mui/x-data-grid';
 import { MdModeEdit, MdOutlineMail, MdOutlineClose, MdRestartAlt, MdRemove, MdAdd } from "react-icons/md";
 import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline } from "react-icons/fc";
@@ -39,31 +43,30 @@ import { registrationService } from "@/app/services";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 import MulSelCom from "./MulSelCom";
 import { TabContext, TabList } from "@mui/lab";
+import EmptyContent from '@/app/Components/EmptyContent';
 
 const SendEmailCom = lazy(() => import("./SendEmailCom"));
 
 // Custom Pagination Component
-function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
 
+
+// Updated Custom Toolbar Component
+function CustomToolbar() {
   return (
-    <ButtonGroup variant="text" color="primary" aria-label="pagination button group">
-      <Button
-        onClick={() => apiRef.current.setPage(page - 1)}
-        disabled={page === 0}
-      >
-        Previous
-      </Button>
-      <Button disabled>Page {page + 1} of {pageCount}</Button>
-      <Button
-        onClick={() => apiRef.current.setPage(page + 1)}
-        disabled={page >= pageCount - 1}
-      >
-        Next
-      </Button>
-    </ButtonGroup>
+    <GridToolbar 
+      sx={{
+        p: 1,
+        display: 'flex',
+        gap: 1,
+        flexWrap: 'wrap',
+        '& .MuiButton-root': {
+          color: 'primary.main',
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+          },
+        },
+      }}
+    />
   );
 }
 
@@ -186,26 +189,83 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     { label: "Old First", value: "oldToNew" }
   ];
   const [sortBy, setSort] = useState("newToOld");
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchText, setSearchText] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [selectedMockTests, setSelectedMockTests] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(true);
   const [containerWidth, setContainerWidth] = useState(1250);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+  const [filterButtonEl, setFilterButtonEl] = useState(null);
 
-  // Debounced width update
-  const debouncedWidthUpdate = useCallback(
-    debounce((newWidth) => {
-      setContainerWidth(newWidth);
-    }, 100),
-    []
-  );
+  function CustomPagination() {
+    const pageCount = totalCount / pageSize;
+    const handleChangeRowsPerPage = (event) => {
+      const newPageSize = parseInt(event.target.value, 10);
+      setPageSize(newPageSize);
+      setPage(0);
+    };
+  
+    return (
+      <Box sx={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: 2,
+        padding: '8px'
+      }}>
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body2" sx={{ mr: 2 }}>Rows per page:</Typography>
+          <select
+            value={pageSize}
+            onChange={handleChangeRowsPerPage}
+            style={{
+              padding: '4px 8px',
+              borderRadius: '4px',
+              border: '1px solid #ccc'
+            }}
+          >
+            {[ 10, 25, 50, 100].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
+        </Box>
+        <ButtonGroup variant="outlined" size="small">
+          <Button
+            onClick={() => setPage(0)}
+            disabled={page === 0}
+          >
+            First
+          </Button>
+          <Button
+            onClick={() => setPage(Math.max(page - 1, 0))}
+            disabled={page === 0}
+          >
+            Previous
+          </Button>
+          <Button disabled>
+            Page {page + 1} of {Math.ceil(pageCount)}
+          </Button>
+          <Button
+            onClick={() => setPage(Math.min(page + 1, pageCount))}
+            disabled={page >= Math.ceil(pageCount) - 1}
+          >
+            Next
+          </Button>
+          <Button
+            onClick={() => setPage(Math.ceil(pageCount) - 1)}
+            disabled={page >= Math.ceil(pageCount) - 1}
+          >
+            Last
+          </Button>
+        </ButtonGroup>
+      </Box>
+    );
+  }
 
-  const handleWidthChange = (_, value) => {
-    debouncedWidthUpdate(value);
-  };
+
 
   const handleWidthReset = () => {
     setContainerWidth(1250);
@@ -220,8 +280,10 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   };
 
   const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+    email: false,
+    bookingDate: false,
+    status: false,
     address: false,
-    mobileNo: false
   });
 
   const columns = [
@@ -278,16 +340,9 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       field: 'bookingDate',
       headerName: 'Booking Date',
       width: 120,
-      valueGetter: (params) => {
-        // Store the original date for sorting
-        const originalDate = new Date(params?.row?.date);
-        return {
-          sort: originalDate.getTime(), // Use timestamp for sorting
-          formatted: formatDateToShortMonth(params?.row?.date) // Use formatted date for display
-        };
-      },
-      valueFormatter: (params) => params?.value?.formatted, // Display the formatted date
-      sortComparator: (v1, v2) => v1.sort - v2.sort, // Compare using timestamps
+      valueGetter: (params) => params.row.date, // Return raw date value
+      valueFormatter: (params) => formatDateToShortMonth(params.value), // Format display
+      sortComparator: (v1, v2) => new Date(v1) - new Date(v2), // Compare actual dates
       filterable: true,
     },
     {
@@ -315,6 +370,13 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     },
 
     {
+      field: 'address2',
+      headerName: 'Print Add',
+      width: 420,
+      valueGetter: (params) => params?.row?.user?.address,
+      filterable: true,
+    },
+    {
       field: 'address',
       headerName: 'Address',
       width: 420,
@@ -329,8 +391,8 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       try {
         let response = await registrationService.getMockWithFilter({ 
           sortBy, 
-          rowsPerPage, 
-          page, 
+          rowsPerPage: pageSize, 
+          page: page + 1, // backend expects 1-based page numbers
           searchText, 
           selectedMockTests, 
           selectedBatches, 
@@ -354,7 +416,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       }
     }
     fetchAllData();
-  }, [rowsPerPage, page, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
+  }, [page, pageSize, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
 
   const handleSelectionChange = (newSelectionModel) => {
     console.log("newSelectionModel", newSelectionModel);
@@ -363,6 +425,11 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     );
     setSelectedItems(selectedRows);
   };
+
+  // Function to get toggleable columns
+  const getTogglableColumns = useCallback(() => {
+    return columns.filter(column => column.field !== 'actions');
+  }, []);
 
   return (
     <main style={{ 
@@ -394,28 +461,10 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
               <MdRemove />
             </IconButton>
           </Tooltip>
+          <Typography variant="body2" sx={{ mx: 1, minWidth: 80 }}>
+            {containerWidth}px
+          </Typography>
 
-          <Box sx={{ 
-            width: 200,
-            mx: 2,
-            display: 'flex',
-            alignItems: 'center'
-          }}>
-            <Slider
-              value={containerWidth}
-              min={1000}
-              max={2000}
-              step={50}
-              onChange={handleWidthChange}
-              valueLabelDisplay="auto"
-              valueLabelFormat={value => `${value}px`}
-              sx={{
-                '& .MuiSlider-thumb': {
-                  transition: 'left 0.1s ease-out'
-                }
-              }}
-            />
-          </Box>
 
           <Tooltip title="Increase width">
             <IconButton 
@@ -427,9 +476,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
             </IconButton>
           </Tooltip>
 
-          <Typography variant="body2" sx={{ mx: 1, minWidth: 80 }}>
-            {containerWidth}px
-          </Typography>
+      
 
           <Tooltip title="Reset width">
             <IconButton 
@@ -450,24 +497,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
             All Mock Tests
           </Typography>
         </Grid>
-        <Grid item xs={12} md={6}>
-          <Search 
-            onChange={e => setSearchText(e.target.value)} 
-            value={searchText} 
-            fullWidth 
-            placeholder="Search mock tests..."
-            endAdornment={
-              searchText && (
-                <IconButton 
-                  size="small" 
-                  onClick={() => setSearchText("")}
-                >
-                  <MdOutlineClose />
-                </IconButton>
-              )
-            } 
-          />
-        </Grid>
+       
         <Grid item xs={12}>
           <MulSelCom 
             selectedMockTests={selectedMockTests} 
@@ -503,7 +533,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       ) : rows.length === 0 ? (
         <NoResult label="No Mock Tests Available" />
       ) : (
-        <div style={{ height: 600, width: '99.9%', marginTop: 20 }}>
+        <div style={{  width: '99.9%', marginTop: 20 }}>
           <Grid container>
             <Grid item xs={12} style={{ overflowX: 'auto' }}>
               <StyledDataGrid
@@ -511,25 +541,33 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                 columns={columns}
                 getRowId={(row) => row._id}
                 pagination
-                pageSize={rowsPerPage}
-                rowsPerPageOptions={[5, 10, 25, 50]}
-                rowCount={totalCount}
                 paginationMode="server"
+                rowCount={totalCount}
+                page={page}
                 onPageChange={(newPage) => setPage(newPage)}
+                pageSize={pageSize}
                 onPageSizeChange={(newPageSize) => {
-                  setRowsPerPage(newPageSize);
+                  setPageSize(newPageSize);
                   setPage(0);
                 }}
+                pageSizeOptions={[ 10, 25, 50, 100]}
                 checkboxSelection
   disableRowSelectionOnClick // updated from disableSelectionOnClick
   rowSelectionModel={selectedItems.map(item => item._id)} // updated from selectionModel
   onRowSelectionModelChange={handleSelectionChange} 
                 loading={loading}
                 initialState={{
+                  filter: {
+                    filterModel: {
+                      items: [],
+                    },
+                  },
                   columns: {
                     columnVisibilityModel: {
+                      email: false,
+                      bookingDate: false,
+                      status: false,
                       address: false,
-                      mobileNo: false,
                     }
                   }
                 }}
@@ -538,26 +576,35 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   setColumnVisibilityModel(newModel);
                 }}
                 components={{
-                  Toolbar: GridToolbar,
-                  Pagination: CustomPagination,
+                  noRowsOverlay: () => <EmptyContent title="No Mock Tests Available" />,
+                  noResultsOverlay: () => <EmptyContent title="No results found" />,
                 }}
-                componentsProps={{
+                slots={{ 
+                  toolbar: GridToolbar,
+                  pagination: CustomPagination, // Add back the custom pagination
+                }}
+                slotProps={{
                   toolbar: {
-                    csvOptions: { 
-                      allColumns: true,
-                      fileName: 'MockTests_Export'
-                    },
-                    printOptions: { 
-                      disableToolbarButton: true 
-                    },
-                    filterButton: true,
                     showQuickFilter: true,
+                    quickFilterProps: { debounceMs: 500 },
                   },
+                }}
+                filterModel={{
+                  items: [],
                 }}
                 getRowClassName={(params) => `status-${params?.row?.status}`}
                 autoHeight
                 disableExtendRowFullWidth={false}
+                filterMode="server"
+                sortingMode="server"
+                disableColumnFilter={false}
+                disableColumnSelector={false}
+                disableDensitySelector={false}
                 sx={{
+                  [`& .${gridClasses.cell}`]: { 
+                    alignItems: 'center', 
+                    display: 'inline-flex' 
+                  },
                   '& .MuiDataGrid-columnHeaders': {
                     backgroundColor: '#f5f5f5',
                   },
@@ -568,6 +615,22 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   '& .MuiDataGrid-root': {
                     maxWidth: '99.9%',
                   },
+                  '& .MuiDataGrid-virtualScroller': {
+                    minHeight: 200,
+                  },
+                  '& .MuiDataGrid-footerContainer': {
+                    borderTop: '1px solid rgba(224, 224, 224, 1)',
+                  },
+                  '& .MuiDataGrid-row': {
+                    '&:nth-of-type(odd)': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.02)',
+                    },
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                    },
+                  },
+                  borderRadius: 2,
+                  border: '1px solid rgba(224, 224, 224, 1)',
                 }}
               />
             </Grid>

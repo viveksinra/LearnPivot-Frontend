@@ -1,10 +1,12 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
-import { Container, Grid } from '@mui/material/';
+import { useMediaQuery, Container, useTheme, Grid, Dialog, DialogContent, DialogTitle } from '@mui/material/';
+import CloseIcon from '@mui/icons-material/Close';
 import SmallOneClass from "../Classes/SmallOneClass";
-import StripePay from "../../courseStripePay/StripePay";
 import MySnackbar from "../../MySnackbar/MySnackbar";
 import CourseEnqForm from "./CourseEnqForm";
+import CourseStripePay from "../../courseStripePay/CourseStripePay";
+import AnimatedButton from "../../Common/AnimatedButton";
 
 const BuyComponent = ({ data }) => {
   const snackRef = useRef();  
@@ -13,34 +15,122 @@ const BuyComponent = ({ data }) => {
   const [totalAmount, setTotalAmount] = useState("");
   const [submittedId, setSubmittedId] = useState("");
   const [selectedChild, setSelectedChild] = useState(null);
+  const [step, setStep] = useState(1);
+  const [openDialog, setOpenDialog] = useState(true);
+  const [selectedBatches, setSelectedBatches] = useState([]);
+  const [startDate, setStartDate] = useState("");
+  const [availableDates, setAvailableDates] = useState([]);
+  const [frontEndTotal, setFrontEndTotal] = useState(null);
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
-    <section style={{ backgroundColor: "#fff", marginBottom: "10px", paddingTop:"20px" }} id="enquiry">
-      <Container maxWidth="xl">
-        <Grid container >
-     
-          <Grid item xs={12} lg={6}  >
-            <SmallOneClass data={data} totalAmount={totalAmount} selectedDates={selectedDates} />
-          </Grid>
-          <Grid item xs={12} lg={6}  >
-            {submitted ? (
-              <StripePay submittedId={submittedId} />
-            ) : (
-              <CourseEnqForm 
+    <section style={{ marginBottom: "10px", paddingTop: isMobile ? "0px" : "20px" , paddingBottom:150 }} id="enquiry">
+      <Container maxWidth="xl" style={{ marginTop: "40px" }}>
+        <Grid container>
+          <Grid style={{ paddingRight: isMobile ? "0px" : "20px" }} item xs={12} lg={6}>
+            {!isMobile && (
+              <SmallOneClass 
                 data={data} 
-                setSubmitted={setSubmitted}
-                setSubmittedId={setSubmittedId}
-                setTotalAmount={setTotalAmount}                
-                totalAmount={totalAmount} 
-                selectedDates={selectedDates}
-                setSelectedDates={setSelectedDates}
-                selectedChild={selectedChild} 
-                setSelectedChild={setSelectedChild} 
+                selectedChild={selectedChild}
+                totalAmount={frontEndTotal || totalAmount} 
+                selectedDates={selectedDates} 
               />
             )}
           </Grid>
+          {!isMobile && (
+            <Grid item xs={12} lg={6}>
+              {submitted ? (
+                <CourseStripePay 
+                  isMobile={isMobile}
+                  data={data} 
+                  setSubmitted={setSubmitted}
+                  setSubmittedId={setSubmittedId}
+                  setStep={setStep}
+                  selectedChild={selectedChild}
+                  selectedDates={selectedDates}
+                  submittedId={submittedId} 
+                  totalAmount={totalAmount}
+                />
+              ) : (
+                <CourseEnqForm 
+                  isMobile={false}
+                  data={data} 
+                  setStep={setStep}
+                  step={step}
+                  submitted={submitted}
+                  setSubmitted={setSubmitted}
+                  setSubmittedId={setSubmittedId}
+                  setTotalAmount={setTotalAmount}                
+                  totalAmount={totalAmount} 
+                  selectedDates={selectedDates}
+                  setSelectedDates={setSelectedDates}
+                  selectedChild={selectedChild} 
+                  setSelectedChild={setSelectedChild}
+                  selectedBatches={selectedBatches}
+                  setSelectedBatches={setSelectedBatches}
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                  availableDates={availableDates}
+                  setAvailableDates={setAvailableDates}
+                  frontEndTotal={frontEndTotal}
+                  setFrontEndTotal={setFrontEndTotal}
+                />
+              )}
+            </Grid>
+          )}
         </Grid>
       </Container>
+      {isMobile && (
+        <>
+          {submitted ? (
+            <CourseStripePay 
+              isMobile={isMobile}
+              data={data} 
+              setSubmitted={setSubmitted}
+              setSubmittedId={setSubmittedId}
+              setStep={setStep}
+              selectedChild={selectedChild}
+              selectedDates={selectedDates}
+              submittedId={submittedId} 
+              totalAmount={totalAmount}
+            />
+          ) : (
+            <CourseEnqForm 
+              isMobile={true}
+              data={data} 
+              setStep={setStep}
+              step={step}
+              submitted={submitted}
+              setSubmitted={setSubmitted}
+              setSubmittedId={setSubmittedId}
+              setTotalAmount={setTotalAmount}                
+              totalAmount={totalAmount} 
+              selectedDates={selectedDates}
+              setSelectedDates={setSelectedDates}
+              selectedChild={selectedChild} 
+              setSelectedChild={setSelectedChild}
+              selectedBatches={selectedBatches}
+              setSelectedBatches={setSelectedBatches}
+              startDate={startDate}
+              setStartDate={setStartDate}
+              availableDates={availableDates}
+              setAvailableDates={setAvailableDates}
+              frontEndTotal={frontEndTotal}
+              setFrontEndTotal={setFrontEndTotal}
+            />
+          )}
+        </>
+      )}
       <MySnackbar ref={snackRef} />
     </section>
   );

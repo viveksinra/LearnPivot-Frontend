@@ -1,18 +1,27 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
-import { TextField, Grid, ButtonGroup, Button, Typography, Accordion, AccordionSummary, AccordionDetails, IconButton, InputAdornment, CircularProgress, Stack, Checkbox, FormControlLabel, FormControl, InputLabel, OutlinedInput, FilledInput } from '@mui/material';
+import { TextField, Grid, ButtonGroup, Button, Typography, Accordion, AccordionSummary, AccordionDetails, IconButton, InputAdornment, CircularProgress, Stack, Checkbox, FormControlLabel, FormControl, InputLabel, OutlinedInput, FilledInput, Switch } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { FcNoIdea, FcOk, FcExpand } from "react-icons/fc";
 import { MdDeleteForever } from "react-icons/md";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
-import { myCourseService } from "../../services";
+import { dashboardService, myCourseService } from "../../services";
 import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
 import DateSelector from './dateSelector';
 import MultiImageUpload from '@/app/Components/Common/MultiImageUpload';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import { FiCopy } from "react-icons/fi"; // Add this import at the top
 
 const EntryArea = forwardRef((props, ref) => {
     const snackRef = useRef();
     const [isPublished, setIsPublished] = useState(false);
-    const [dates, setDates] = useState([['']]);
+    const [allBatch, setAllBatch] = useState([{
+        oneBatch: [''],
+        hide: false,
+        bookingFull: false
+    }]);
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [courseTitle, setCourseTitle] = useState("");
@@ -24,25 +33,52 @@ const EntryArea = forwardRef((props, ref) => {
     const [courseType, setCourseType] = useState(null);
     const [duration, setDuration] = useState(null);
     const [fullDescription, setFullDescription] = useState("");
-    const [totalSeat, setTotalSeat] = useState("");
+    const [totalSeat, setTotalSeat] = useState("0");
     const [filledSeat, setFilledSeats] = useState("");
     const [showRemaining, setShowRemaining] = useState(false);
     const [imageUrls, setImageUrls] = useState([""]); // Start with one empty slot
+    const [selectedUser, setSelectedUser] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
+    const [onlySelectedParent, setOnlySelectedParent] = useState(false);
+    const [restrictOnTotalSeat, setRestrictOnTotalSeat] = useState(false);
+    const [viewMode, setViewMode] = useState('editor'); // 'editor', 'html', or 'preview'
+    const [restrictStartDateChange, setRestrictStartDateChange] = useState(false);
+    const [forcefullBuyCourse, setForcefullBuyCourse] = useState(false);
+    const [sortDate, setSortDate] = useState("");
+    const [allowBackDateBuy, setAllowBackDateBuy] = useState(false);
+    const [backDayCount, setBackDayCount] = useState("0");
+    const [stopSkipSet, setStopSkipSet] = useState(false);
 
-    const [PAccordion, setPAccordion] = useState(false);
-    const allClass = [
-        { label: "Class 4", id: "4" },
-         { label: "Class 5", id: "5" },
+    const getAllUsers = async () => {
+        let res = await dashboardService.getAllUserForDropDown();
+        if (res.variant === "success") {
+            setAllUsers(res.data);
+        } else {
+            snackRef.current.handleSnack(res);
+        }
+    };
+
+    useEffect(() => {
+        getAllUsers();
+    }, []);
+
+    const [privateAccordion, setPrivateAccordion] = useState(false);
+    const [descriptionAccordion, setDescriptionAccordion] = useState(false);
+    const allYear = [
+        { label: "Year 4", id: "4" },
+        { label: "Year 5", id: "5" },
+        { label: "Year 6", id: "6" },
         ];
     const allCourseType = [
         { label: "Full Course", id: "fullCourse" },
          { label: "Crash Course", id: "crashCourse" },
         ];
     const allDuration = [
-        { label: "3 Months", id: "3months" },
-         { label: "6 Months", id: "6months" },
-         { label: "1 Years", id: "1years" },
-        ];
+        { label: "< 1 Month", id: "lessThan1Month" },
+        { label: "1-3 Months", id: "1to3Months" },
+        { label: "3-6 Months", id: "3to6Months" },
+        { label: "6+ Months", id: "moreThan6Months" },
+    ];
     
     const [loadingDoc, setLoadingDoc] = useState(false);
     function convertToSlug(text) {
@@ -59,13 +95,18 @@ const EntryArea = forwardRef((props, ref) => {
             try {
                 let res = await myCourseService.getOne(props.id);
                 if (res.variant === "success") {
-                    const { _id, isPublished,dates,startTime,
-                        endTime,courseTitle,courseLink,shortDescription,oneClassPrice,discountOnFullClass,
-                        courseClass,courseType,duration,imageUrls,fullDescription,totalSeat,filledSeat,showRemaining,
-                         } = res.data;
+                    const { _id, isPublished, allBatch, startTime,sortDate,
+                        endTime, courseTitle, courseLink, shortDescription, oneClassPrice, discountOnFullClass,
+                        courseClass, courseType, duration, imageUrls, fullDescription, totalSeat, filledSeat, showRemaining,
+                        onlySelectedParent: selectedParent, selectedUsers, restrictOnTotalSeat: restrictSeat, restrictStartDateChange, forcefullBuyCourse, allowBackDateBuy: backDateBuy, backDayCount: days,stopSkipSet } = res.data;
                     props.setId(_id);
                     setIsPublished(isPublished);
-                    setDates(dates);               
+                    setAllBatch(allBatch || [{
+                        oneBatch: [''],
+                        hide: false,
+                        bookingFull: false
+                    }]);     
+                    setSortDate(sortDate);          
                     setStartTime(startTime);               
                     setEndTime(endTime);   
                     setCourseTitle(courseTitle);
@@ -81,7 +122,16 @@ const EntryArea = forwardRef((props, ref) => {
                     setTotalSeat(totalSeat);
                     setFilledSeats(filledSeat);
                     setShowRemaining(showRemaining);
-                    setPAccordion(true);
+                    setPrivateAccordion(true);
+                    setOnlySelectedParent(selectedParent || false);
+                    setSelectedUser(selectedUsers || []);
+                    setRestrictOnTotalSeat(restrictSeat || false);
+                    setRestrictStartDateChange(restrictStartDateChange || false);
+                    setForcefullBuyCourse(forcefullBuyCourse || false);
+                    setAllowBackDateBuy(backDateBuy || false);
+                    setBackDayCount(days || "0");
+                    setStopSkipSet(stopSkipSet || false);
+                    setPrivateAccordion(true);
                     snackRef.current.handleSnack(res);
                 } else {
                     snackRef.current.handleSnack(res);
@@ -97,9 +147,18 @@ const EntryArea = forwardRef((props, ref) => {
     }, [props.id]);
 
     const handleClear = () => {
+        if (props.id || courseTitle || shortDescription || imageUrls.some(url => url !== "")) {
+            let yes = window.confirm("Are you sure you want to clear all fields? This will reset the form.");
+            if (!yes) return;
+        }
         props.setId("");
         setIsPublished(false);
-        setDates([['']]);
+        setAllBatch([{
+            oneBatch: [''],
+            hide: false,
+            bookingFull: false
+        }]);
+        setSortDate("");
         setStartTime("");
         setEndTime("");
         setCourseTitle("");
@@ -111,11 +170,19 @@ const EntryArea = forwardRef((props, ref) => {
         setCourseType(null);
         setDuration(null);
         setFullDescription("");
-        setTotalSeat("");
+        setTotalSeat("0");
         setFilledSeats("");
         setShowRemaining(false);
         setImageUrls([""]);
-        setPAccordion(true);
+        setPrivateAccordion(true);
+        setSelectedUser([]);
+        setOnlySelectedParent(false);
+        setRestrictOnTotalSeat(false);
+        setRestrictStartDateChange(false);
+        setForcefullBuyCourse(false);
+        setAllowBackDateBuy(false);
+        setBackDayCount("0");
+        setStopSkipSet(false);
     };
     
 
@@ -124,7 +191,8 @@ const EntryArea = forwardRef((props, ref) => {
             try {
                 let myCourseData = {
                     _id: props.id,
-                    dates,
+                    allBatch,
+                    sortDate,  // Remove the override, use the user-set date
                     startTime,
                     endTime,
                     courseTitle,
@@ -136,17 +204,30 @@ const EntryArea = forwardRef((props, ref) => {
                     courseType,
                     duration,
                     fullDescription,
-                    totalSeat,filledSeat,showRemaining,
+                    totalSeat,
+                    restrictOnTotalSeat,
+                    filledSeat,
+                    showRemaining,
                     imageUrls,
-                    isPublished
+                    isPublished,
+                    onlySelectedParent,
+                    selectedUsers: selectedUser, // Add selected users to the submission
+                    restrictStartDateChange,
+                    forcefullBuyCourse,
+                    allowBackDateBuy,
+                    backDayCount,
+                    stopSkipSet,
                 };
                 let response = await myCourseService.add(props.id, myCourseData);
                               
                 if (response.variant === "success") {
                     snackRef.current.handleSnack(response);
                     handleClear();
+                    // Call the onSaveSuccess callback after successful save
+                    if (props.onSaveSuccess) {
+                        props.onSaveSuccess();
+                    }
                 } else {              
-
                     snackRef.current.handleSnack(response);
                 }
             } catch (error) {
@@ -156,30 +237,21 @@ const EntryArea = forwardRef((props, ref) => {
         },
         handleClear: () => handleClear()
     }));
-    const imgUpload  = async (e) => {
-        setLoadingDoc(true);
-        let url = await useImgUpload(e);
-        if (url) {
-          setImageUrls(url);
-          setLoadingDoc(false);
-        } else {
-          snackRef.current.handleSnack({
-            message: "Image Not Selected",
-            info: "warning",
-          });
-          setLoadingDoc(false);
-        }
-      };
 
 
     const handleDelete = async () => {
         try {
-            let yes = window.confirm(`Do you really want to permanently delete ${courseTitle}?`);
+            let courseDisplayName = courseTitle || 'this course'; // Fallback if title is empty
+            let yes = window.confirm(`Are you sure you want to permanently delete "${courseDisplayName}"?\n\nThis action cannot be undone.`);
             if (yes) {
-                let response = await myCourseService.deleteCourse(`api/v1/publicMaster/myCourse/addMyCourse/deleteOne/${props.id}`);
+                let response = await myCourseService.deleteClass(`api/v1/publicMaster/course/addCourse/deleteOne/${props.id}`);
                 if (response.variant === "success") {
                     snackRef.current.handleSnack(response);
                     handleClear();
+                    // Call the onSaveSuccess callback after successful deletion
+                    if (props.onSaveSuccess) {
+                        props.onSaveSuccess();
+                    }
                 } else {
                     snackRef.current.handleSnack(response?.response?.data);
                 }
@@ -190,15 +262,123 @@ const EntryArea = forwardRef((props, ref) => {
         }
     };
 
-    const deleteImage = () => {
-        // Your delete image logic here
-        setImageUrls([""]); // Clear the URL to remove the image from display
+
+
+    // Replace the findUserDetails function
+    const findUserDetails = (userId) => {
+        const user = allUsers.find(user => user._id === userId);
+        return user || { 
+            firstName: 'User',
+            lastName: 'not found', 
+            email: 'No email', 
+            mobile: 'No mobile',
+            _id: userId 
+        };
     };
 
-    const showImage = () => {
-        if (imageUrls) {
-            window.open(imageUrls, '_blank'); // Open the image URL in a new tab
-        }
+    // Replace the renderUserSelect function
+    const renderUserSelect = () => {
+        if (!onlySelectedParent) return null;
+
+        // Sort users by firstName
+        const sortedUsers = [...allUsers].sort((a, b) => {
+            const nameA = (a.firstName || '').toLowerCase();
+            const nameB = (b.firstName || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
+        return (
+            <Grid item xs={12} md={8}>
+                <Autocomplete
+                    multiple
+                    id="user-select"
+                    options={sortedUsers}
+                    value={selectedUser.map(userId => findUserDetails(userId))
+                        .sort((a, b) => (a.firstName || '').localeCompare(b.firstName || ''))}
+                    onChange={(event, newValue) => {
+                        setSelectedUser(newValue.map(user => user._id));
+                    }}
+                    getOptionLabel={(option) => 
+                        `${option.firstName || ''} ${option.lastName || ''} (${option.email || ''}) (${option.mobile || ''})`
+                    }
+                    disableCloseOnSelect
+                    filterOptions={(options, { inputValue }) => {
+                        const searchTerms = inputValue.toLowerCase().split(' ');
+                        return options.filter(option => 
+                            searchTerms.every(term =>
+                                option.firstName?.toLowerCase().includes(term) ||
+                                option.lastName?.toLowerCase().includes(term) ||
+                                option.email?.toLowerCase().includes(term) ||
+                                option.mobile?.toLowerCase().includes(term)
+                            )
+                        );
+                    }}
+                    renderInput={(params) => (
+                        <TextField
+                            {...params}
+                            variant="outlined"
+                            label="Select Users"
+                            placeholder="Search by name, email or mobile"
+                        />
+                    )}
+                    renderOption={(props, option) => {
+                        const isSelected = selectedUser.includes(option._id);
+                        return (
+                            <li {...props} key={option._id}>
+                                <Checkbox
+                                    checked={isSelected}
+                                    style={{ marginRight: 8 }}
+                                />
+                                <Typography>
+                                    {option.firstName} {option.lastName}
+                                    <Typography component="span" color="textSecondary" sx={{ ml: 1 }}>
+                                        ({option.mobile}) • {option.email}
+                                    </Typography>
+                                </Typography>
+                            </li>
+                        );
+                    }}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
+                />
+            </Grid>
+        );
+    };
+
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            ['bold', 'italic', 'underline', 'strike'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['link', 'image'],
+            ['clean']
+        ],
+    };
+
+    const formats = [
+        'header',
+        'bold', 'italic', 'underline', 'strike',
+        'list', 'bullet',
+        'color', 'background',
+        'align',
+        'link', 'image'
+    ];
+
+    const handleCopy = () => {
+        // Prepend "Copy of " to the course title
+        setCourseTitle(`Copy of ${courseTitle}`);
+        // Update the course link based on new title
+        setCourseLink(convertToSlug(`Copy of ${courseTitle}`));
+        // Reset the sortDate to current date
+        setSortDate("");
+        // Remove the _id by setting it to empty
+        props.setId("");
+        // Show success message
+        snackRef.current.handleSnack({
+            message: "Course copied! You can now save this as a new course.",
+            variant: "success"
+        });
     };
 
     return (
@@ -207,15 +387,50 @@ const EntryArea = forwardRef((props, ref) => {
                 <Typography color="secondary" style={{ fontFamily: 'Courgette' }} align='center' variant='h6'>Create Course</Typography>
                 <ButtonGroup variant="text" aria-label="text button group">
                     <Button startIcon={isPublished ? <FcOk /> : <FcNoIdea />} onClick={() => setIsPublished(!isPublished)}>{isPublished ? "Published" : "Un-Publish"}</Button>
-                    <Button endIcon={<MdDeleteForever />} onClick={handleDelete} disabled={!props.id} color="error">Delete</Button>
+                    {props.id && (
+                        <>
+                            <Button 
+                                startIcon={<FiCopy />} 
+                                onClick={handleCopy} 
+                                color="primary"
+                            >
+                                Copy Course
+                            </Button>
+                            <Button 
+                                endIcon={<MdDeleteForever />} 
+                                onClick={handleDelete} 
+                                color="error"
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    )}
                 </ButtonGroup>
             </Grid>
             <Grid container spacing={2} style={{marginBottom:"20px"}}>
                 <Grid item xs={12} md={4}>
-                    <TextField fullWidth label="Course Title" value={courseTitle} onChange={(e) => onTitleChange(e.target.value)} inputProps={{ minLength: "2", maxLength: "30" }} placeholder='Course Title' variant="standard" />
+                    <TextField fullWidth label="Course Title" value={courseTitle} onChange={(e) => onTitleChange(e.target.value)} inputProps={{ minLength: "2", maxLength: "50" }} placeholder='Course Title' variant="standard" />
                     <Typography variant="subtitle2" gutterBottom>
                     Link- {courseLink}
-      </Typography>                    
+                    </Typography>                    
+                </Grid>
+                
+                {/* Replace the Typography with an editable DateTime field */}
+                <Grid item xs={12} md={4}>
+                    <TextField
+                        fullWidth
+                        label="Sort Date"
+                        type="datetime-local"
+                        value={sortDate ? new Date(sortDate).toISOString().slice(0, 16) : ''} // Better date handling
+                        onChange={(e) => {
+                            const date = e.target.value ? new Date(e.target.value).toISOString() : '';
+                            setSortDate(date);
+                        }}
+                        variant="standard"
+                        InputLabelProps={{
+                            shrink: true,
+                        }}
+                    />
                 </Grid>
       
                 <Grid item xs={12} md={12}>
@@ -254,7 +469,7 @@ const EntryArea = forwardRef((props, ref) => {
         </FormControl>
             
                 </Grid>
-                <Grid item xs={12} md={3}>
+                {/* <Grid item xs={12} md={3}>
                 <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Discount On Full Course</InputLabel>
           <FilledInput
@@ -267,11 +482,11 @@ const EntryArea = forwardRef((props, ref) => {
                     placeholder='Enter Discount Price' 
           />
         </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} md={3}>
                     <Autocomplete
                         isOptionEqualToValue={(option, value) => option?.id === value?.id}
-                        options={allClass}
+                        options={allYear}
                         value={courseClass}
                         onChange={(e, v) => {
                             setCourseClass(v);
@@ -327,53 +542,224 @@ const EntryArea = forwardRef((props, ref) => {
                 
          
             </Grid>
-            <DateSelector dates={dates} setDates={setDates} />
-            <br/> <br/>
-            <Accordion expanded={PAccordion} style={{marginBottom:"30px"}}>
+            <Accordion expanded={privateAccordion} style={{marginBottom:"30px"}}>
                 <AccordionSummary
                     expandIcon={<IconButton > <FcExpand /> </IconButton>}
-                    aria-controls="ProspectInformation"
-                    id="ProspectInformation"
-                    onClick={() => setPAccordion(!PAccordion)}
+                    aria-controls="PrivateInformation"
+                    id="PrivateInformation"
+                    onClick={() => setPrivateAccordion(!privateAccordion)}
                 >
-                    <Typography>Additional Optional Information</Typography>
+                    <Typography>Make it Private or Public</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+         <Grid container spacing={2}>
+        
+                <Grid item xs={12} md={3}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={restrictStartDateChange}
+                           onChange={() => setRestrictStartDateChange(!restrictStartDateChange)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Restrict Start Date Change`} />
+                  
+                </Grid>
+                <Grid item xs={12} md={3}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={forcefullBuyCourse}
+                           onChange={() => setForcefullBuyCourse(!forcefullBuyCourse)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Force Full Buy Course`} />
+                  
+                </Grid>
+                <Grid item xs={12} md={4}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={stopSkipSet}
+                           onChange={() => setStopSkipSet(!stopSkipSet)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Force Continuous Set Buy`} />
+                  
+                </Grid>
+                <Grid item xs={0} md={2}></Grid>
+{/* make a line here */}
+    {/* <div style={{borderBottom: '1px solid #000', width: '100%'}}></div> */}
+                <Grid item xs={12} md={4}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={allowBackDateBuy}
+                           onChange={() => setAllowBackDateBuy(!allowBackDateBuy)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Allow Back Date Buy`} />
+                  
+                </Grid>
+                <Grid item xs={12} md={8}>
+                    <TextField 
+                        fullWidth
+                        label="Back Days" 
+                        type="number"
+                        value={backDayCount} 
+                        onChange={(e) => {
+                            const value = Math.max(0, parseInt(e.target.value) || 0);
+                            setBackDayCount(value.toString());
+                        }} 
+                        inputProps={{ min: "0", step: "1" }}
+                        variant="outlined" 
+                    />
+                </Grid>                     
+                <Grid item xs={12} md={4}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={restrictOnTotalSeat}
+                           onChange={() => setRestrictOnTotalSeat(!restrictOnTotalSeat)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Restrict On Total-Seat`} />
+                  
+                </Grid>
+                <Grid item xs={12} md={8}>
+                    <TextField 
+                        fullWidth
+                        label="Total Seat" 
+                        type="number"
+                        value={totalSeat} 
+                        onChange={(e) => {
+                            // Ensure value is never less than 0
+                            const value = Math.max(0, parseInt(e.target.value) || 0);
+                            setTotalSeat(value.toString());
+                        }}
+                        inputProps={{ 
+                            min: "0",
+                            step: "1"
+                        }} 
+                        placeholder='Total Seat'
+                        variant="outlined"
+                    />
+                </Grid>                     
+                <Grid item xs={12} md={4}>
+                     <FormControlLabel control={
+                           <Checkbox
+                           checked={onlySelectedParent}
+                           onChange={() => setOnlySelectedParent(!onlySelectedParent)}
+                           inputProps={{ 'aria-label': 'controlled' }}
+                         />               
+                     } label={`Only Selected Parent`} />
+                  
+                </Grid>
+                <Grid item xs={12} md={8}>
+                {renderUserSelect()}
+                </Grid>                     
+         </Grid>
+       
+                </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={descriptionAccordion} style={{marginBottom:"30px"}}>
+                <AccordionSummary
+                    expandIcon={<IconButton > <FcExpand /> </IconButton>}
+                    aria-controls="DescriptionInformation"
+                    id="DescriptionInformation"
+                    onClick={() => setDescriptionAccordion(!descriptionAccordion)}
+                >
+                    <Typography>Long Rich Text Description</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <TextField label="Full Description" value={fullDescription} inputProps={{ maxLength: "4000" }} onChange={(e) => setFullDescription(e.target.value)} placeholder="Write the Long Description about the coursees" fullWidth multiline rows={4} variant="outlined" />
+                            <FormControl component="fieldset">
+                                <RadioGroup
+                                    row
+                                    value={viewMode}
+                                    onChange={(e) => setViewMode(e.target.value)}
+                                >
+                                    <FormControlLabel 
+                                        value="editor" 
+                                        control={<Radio />} 
+                                        label="Editor" 
+                                    />
+                                    <FormControlLabel 
+                                        value="html" 
+                                        control={<Radio />} 
+                                        label="HTML" 
+                                    />
+                                    <FormControlLabel 
+                                        value="preview" 
+                                        control={<Radio />} 
+                                        label="Preview" 
+                                    />
+                                </RadioGroup>
+                            </FormControl>
                         </Grid>
-                     <Grid item xs={12} md={4}>
-                    <TextField 
-                    label="Total Seat" variant="filled"
-                     color="success" focused 
-                     type="Number"
-                     value={totalSeat}
-                     onChange={(e) => setTotalSeat(e.target.value)}
-                     />                   
-                </Grid>
-                     <Grid item xs={12} md={4}>
-                    <TextField 
-                    label="Filled Seats" variant="filled"
-                     color="success" focused 
-                     type="Number"
-                     value={filledSeat}
-                     onChange={(e) => setFilledSeats(e.target.value)}
-                     />                   
-                </Grid>
-                     <Grid item xs={12} md={4}>
-                     <FormControlLabel control={
-                           <Checkbox
-                           checked={showRemaining}
-                           onChange={() => setShowRemaining(!showRemaining)}
-                           inputProps={{ 'aria-label': 'controlled' }}
-                         />               
-                     } label={`Show Remaining:  ${totalSeat-filledSeat}   Seats`} />
-                  
-                </Grid>
+                        <Grid item xs={12}>
+                            {viewMode === 'editor' && (
+                                <div style={{ backgroundColor: '#f8f9fa' }}>
+                                    <ReactQuill
+                                        theme="snow"
+                                        value={fullDescription}
+                                        onChange={setFullDescription}
+                                        modules={modules}
+                                        formats={formats}
+                                        style={{ 
+                                            height: '300px', 
+                                            marginBottom: '50px',
+                                            backgroundColor: '#fff'
+                                        }}
+                                        placeholder="Write the Long Description about the courses..."
+                                    />
+                                </div>
+                            )}
+                            {viewMode === 'html' && (
+                                <TextField
+                                    fullWidth
+                                    multiline
+                                    rows={12}
+                                    value={fullDescription}
+                                    onChange={(e) => setFullDescription(e.target.value)}
+                                    variant="outlined"
+                                    InputProps={{
+                                        style: { 
+                                            fontFamily: 'monospace',
+                                            backgroundColor: '#282c34',
+                                            color: '#abb2bf',
+                                        }
+                                    }}
+                                    sx={{
+                                        '& .MuiOutlinedInput-root': {
+                                            '& fieldset': {
+                                                borderColor: '#3e4451',
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor: '#528bff',
+                                            },
+                                            '&.Mui-focused fieldset': {
+                                                borderColor: '#528bff',
+                                            },
+                                        },
+                                    }}
+                                />
+                            )}
+                            {viewMode === 'preview' && (
+                                <div 
+                                    style={{ 
+                                        border: '1px solid #ddd', 
+                                        borderRadius: '4px', 
+                                        padding: '16px',
+                                        minHeight: '300px',
+                                        backgroundColor: '#fff'
+                                    }}
+                                    dangerouslySetInnerHTML={{ __html: fullDescription }}
+                                />
+                            )}
+                        </Grid>
                     </Grid>
                 </AccordionDetails>
             </Accordion>
+            <DateSelector allBatch={allBatch} setAllBatch={setAllBatch} />
+            <br/> <br/>
+         
             <MySnackbar ref={snackRef} />
         </main>
     );

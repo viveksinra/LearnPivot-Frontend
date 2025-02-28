@@ -2,6 +2,7 @@ import React from 'react';
 import { Grid, Card, Typography, Stack } from '@mui/material';
 import { AssignmentOutlined, Book, CalendarToday, Payment, Class } from '@mui/icons-material'; // Added Payment and Class icons
 import { useRouter } from 'next/navigation';
+import { FcStatistics } from 'react-icons/fc';
 
 const quickLinks = [
     {
@@ -34,7 +35,25 @@ const quickLinks = [
       title: 'All Payments Received',
       link: "/dashboard/allPayment",
       icon: <Payment sx={{ fontSize: 40, color: 'warning.main' }} /> // Updated icon to Payment
-    }
+    },
+    {
+      id: 5,
+      title: "Mock Batch Report",
+      link: "/dashboard/report/mockBatchReport",
+      icon: <CalendarToday sx={{ fontSize: 40, color: 'warning.main' }} /> // Updated icon to Payment
+    },
+    {
+      id: 5,
+      title: "Course Batch Report",
+      link: "/dashboard/report/courseBatchReport",
+      icon: <CalendarToday sx={{ fontSize: 40, color: 'warning.main' }} /> // Updated icon to Payment
+    },
+    {
+      id: 5,
+      title: "Parent Course Report",
+      link: "/dashboard/report/parentCourseReport",
+      icon: <CalendarToday sx={{ fontSize: 40, color: 'warning.main' }} /> // Updated icon to Payment
+    },
   ];
 
 export const AdminQuickLinks = () => {

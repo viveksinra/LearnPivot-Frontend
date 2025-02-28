@@ -1,15 +1,16 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import BuyComponent from '../../../Components/PublicPage/BuyForm/BuyComponent';
 import { CircularProgress, Container } from '@mui/material';
 import NoResult from '@/app/Components/NoResult/NoResult';
 import { myCourseService } from "../../../services";
-import Footer from '@/app/Components/Footer/Footer';
 import Navbar from "../../../Components/ITStartup/Common/Navbar/Navbar";
+import MySnackbar from '@/app/Components/MySnackbar/MySnackbar';
 
 export default function OneClassBuy({ params }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+  const snackRef = useRef();
 
   useEffect(() => {
     // Getting date from Voucher in URL
@@ -25,8 +26,6 @@ export default function OneClassBuy({ params }) {
     
       if (res.variant === "success") {
         setData(res.data)
-        console.log(res.data)
-        snackRef.current.handleSnack(res);
       } else {
         snackRef.current.handleSnack(res);
         console.log(res);
@@ -47,7 +46,7 @@ export default function OneClassBuy({ params }) {
 
     <br />
   
-    <Container style={{ marginTop:"50px" }}>
+    <Container style={{ marginTop:"50px", paddingBottom:"100px" }}>
        {loading ? (
                 <div className="center">
                   <CircularProgress size={30} />{" "}
@@ -58,7 +57,7 @@ export default function OneClassBuy({ params }) {
     
     </Container>
   
-    <Footer />
+    <MySnackbar ref={snackRef} />
 
     </main>
   );

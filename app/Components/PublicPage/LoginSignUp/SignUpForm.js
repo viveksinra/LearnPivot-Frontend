@@ -192,266 +192,268 @@ console.log("i passed this point")
   ];
 
   return (
-    <Container>
-      {alert && (
-        <Box mb={2}>
-          <Alert severity={alert.severity}>{alert.message}</Alert>
-        </Box>
-      )}
-
-      <Grid container spacing={2}>
-        {!otpSent ? (
-          <>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                label="First Name"
-                required
-                error={!!errors.firstName}
-                helperText={errors.firstName}
-                disabled={otpSent}
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                label="Last Name"
-                required
-                error={!!errors.lastName}
-                helperText={errors.lastName}
-                disabled={otpSent}
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                label="Email"
-                required
-                error={!!errors.email}
-                helperText={errors.email}
-                disabled={otpSent}
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="mobile"
-                value={formData.mobile}
-                onChange={handleChange}
-                label="Phone"
-                placeholder="e.g. 07123456789"
-                required
-                error={!!errors.mobile}
-                helperText={errors.mobile}
-                disabled={otpSent}
-                autoComplete="off"
-              />
-            </Grid>
-
-            {/* Address Section */}
-            <Grid item xs={12}>
-              {/* Address Line 1: Searchable field via AddressInput */}
-              <AddressInput
-                name="address1"
-                value={formData.address1}
-                onChange={handleChange}
-                error={errors.address1}
-                helperText={errors.address1}
-                disabled={otpSent}
-              />
-            </Grid>
-
-            {/* Other address fields remain visible and editable */}
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                
-                name="address2"
-                value={formData.address2}
-                onChange={handleChange}
-                label="Address Line 2"
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="address3"
-                value={formData.address3}
-                onChange={handleChange}
-                label="Address Line 3"
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                name="city"
-                required
-                value={formData.city}
-                onChange={handleChange}
-                label="City/Town"
-                autoComplete="off"
-                error={errors.city}
-                helperText={errors.city}
-
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                required
-                name="postcode"
-                value={formData.postcode}
-                onChange={handleChange}
-                label="Postcode"
-                autoComplete="off"
-                error={errors.postcode}
-                helperText={errors.postcode}
-
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                label="Password"
-                required
-                error={!!errors.password}
-                helperText={errors.password}
-                disabled={otpSent}
-                autoComplete="off"
-
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                  <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                        aria-label={showPassword ? "Hide password" : "Show password"} // Added accessible label
-                      >
-                        {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-              />
-            </Grid>
-
-            <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                select
-                name="marketing"
-                value={formData.marketing}
-                onChange={handleChange}
-                label="How did you hear about us?"
-                disabled={otpSent}
-                autoComplete="off"
-              >
-                {allMarketing.map((option) => (
-                  <MenuItem key={option} value={option}>
-                    {option}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-
-            <Grid item xs={12}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={acceptedTnC}
-                    onChange={(e) => setAcceptedTnC(e.target.checked)}
-                    name="acceptedTnC"
-                  />
-                }
-                label={
-                  <span>
-                    I accept the{" "}
-                    <a
-                      href="/policy/termandcondition"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Terms and Conditions
-                    </a>
-                  </span>
-                }
-              />
-            </Grid>
-
-            <Grid item xs={12} sx={{ textAlign: "center" }}>
-              <Fab variant="extended" color="primary" onClick={handleSendOtpClick}>
-                <FcFeedback style={{ marginRight: 8 }} />
-                Send Email OTP
-              </Fab>
-            </Grid>
-          </>
-        ) : (
-          <>
-            <Grid item xs={12} md={6} sx={{ mx: "auto" }}>
-              <TextField
-                fullWidth
-                value={otp}
-                onChange={(e) => setOtp(e.target.value)}
-                label="Enter Email OTP"
-                required
-                autoComplete="off"
-              />
-            </Grid>
-
-            <Grid item xs={12}>
-              <Box sx={{ textAlign: "center", color: "text.secondary", mb: 2 }}>
-                Check your email spam/junk folder if OTP is not received in inbox.
-              </Box>
-            </Grid>
-
-            <Grid item xs={12} sx={{ textAlign: "center" }}>
-              <Fab variant="extended" color="primary" onClick={handleSignUpClick}>
-                <FcFeedback style={{ marginRight: 8 }} />
-                Register Now
-              </Fab>
-            </Grid>
-          </>
+    <form autoComplete="off">
+      <Container>
+        {alert && (
+          <Box mb={2}>
+            <Alert severity={alert.severity}>{alert.message}</Alert>
+          </Box>
         )}
-      </Grid>
 
-      <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Registration Successful!</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Your registration was successful. Click the button below to login.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleDialogClose} color="primary" style={{ backgroundColor: "#3f51b5", color: "#fff" }}>
-            Login
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </Container>
+        <Grid container spacing={2}>
+          {!otpSent ? (
+            <>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  label="First Name"
+                  required
+                  error={!!errors.firstName}
+                  helperText={errors.firstName}
+                  disabled={otpSent}
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  label="Last Name"
+                  required
+                  error={!!errors.lastName}
+                  helperText={errors.lastName}
+                  disabled={otpSent}
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  label="Email"
+                  required
+                  error={!!errors.email}
+                  helperText={errors.email}
+                  disabled={otpSent}
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleChange}
+                  label="WhatsApp Number"
+                  placeholder="e.g. 07123456789"
+                  required
+                  error={!!errors.mobile}
+                  helperText={errors.mobile}
+                  disabled={otpSent}
+                  autoComplete="off"
+                />
+              </Grid>
+
+              {/* Address Section */}
+              <Grid item xs={12}>
+                {/* Address Line 1: Searchable field via AddressInput */}
+                <AddressInput
+                  name="address1"
+                  value={formData.address1}
+                  onChange={handleChange}
+                  error={errors.address1}
+                  helperText={errors.address1}
+                  disabled={otpSent}
+                />
+              </Grid>
+
+              {/* Other address fields remain visible and editable */}
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  
+                  name="address2"
+                  value={formData.address2}
+                  onChange={handleChange}
+                  label="Address Line 2"
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="address3"
+                  value={formData.address3}
+                  onChange={handleChange}
+                  label="Address Line 3"
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  name="city"
+                  required
+                  value={formData.city}
+                  onChange={handleChange}
+                  label="City/Town"
+                  autoComplete="off"
+                  error={errors.city}
+                  helperText={errors.city}
+
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  required
+                  name="postcode"
+                  value={formData.postcode}
+                  onChange={handleChange}
+                  label="Postcode"
+                  autoComplete="postal-code"
+                  error={errors.postcode}
+                  helperText={errors.postcode}
+
+                />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  label="Password"
+                  required
+                  error={!!errors.password}
+                  helperText={errors.password}
+                  disabled={otpSent}
+                  autoComplete="off"
+
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                    <IconButton
+                          onClick={() => setShowPassword(!showPassword)}
+                          edge="end"
+                          aria-label={showPassword ? "Hide password" : "Show password"} // Added accessible label
+                        >
+                          {showPassword ? <BsEyeSlashFill /> : <BsEyeFill />}
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  select
+                  name="marketing"
+                  value={formData.marketing}
+                  onChange={handleChange}
+                  label="How did you hear about us?"
+                  disabled={otpSent}
+                  autoComplete="off"
+                >
+                  {allMarketing.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
+
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={acceptedTnC}
+                      onChange={(e) => setAcceptedTnC(e.target.checked)}
+                      name="acceptedTnC"
+                    />
+                  }
+                  label={
+                    <span>
+                      I accept the{" "}
+                      <a
+                        href="/policy/termandcondition"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Terms and Conditions
+                      </a>
+                    </span>
+                  }
+                />
+              </Grid>
+
+              <Grid item xs={12} sx={{ textAlign: "center" }}>
+                <Fab variant="extended" color="primary" onClick={handleSendOtpClick}>
+                  <FcFeedback style={{ marginRight: 8 }} />
+                  Send Email OTP
+                </Fab>
+              </Grid>
+            </>
+          ) : (
+            <>
+              <Grid item xs={12} md={6} sx={{ mx: "auto" }}>
+                <TextField
+                  fullWidth
+                  value={otp}
+                  onChange={(e) => setOtp(e.target.value)}
+                  label="Enter Email OTP"
+                  required
+                  autoComplete="off"
+                />
+              </Grid>
+
+              <Grid item xs={12}>
+                <Box sx={{ textAlign: "center", color: "text.secondary", mb: 2 }}>
+                  Check your email spam/junk folder if OTP is not received in inbox.
+                </Box>
+              </Grid>
+
+              <Grid item xs={12} sx={{ textAlign: "center" }}>
+                <Fab variant="extended" color="primary" onClick={handleSignUpClick}>
+                  <FcFeedback style={{ marginRight: 8 }} />
+                  Register Now
+                </Fab>
+              </Grid>
+            </>
+          )}
+        </Grid>
+
+        <Dialog open={openDialog} onClose={handleDialogClose}>
+          <DialogTitle>Registration Successful!</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Your registration was successful. Click the button below to login.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDialogClose} color="primary" style={{ backgroundColor: "#3f51b5", color: "#fff" }}>
+              Login
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </Container>
+    </form>
   );
 };
 

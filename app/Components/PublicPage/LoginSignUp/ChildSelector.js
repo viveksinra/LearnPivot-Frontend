@@ -43,7 +43,10 @@ const initialChildState = {
   childYear: '',
 };
 
-const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch, selectedChild, setSelectedChild, setStep }) => {
+const ChildSelector = memo(({ 
+  isMobile, title, setTotalAmount,
+   setSelectedBatch, selectedChild, 
+   setSelectedChild, setStep }) => {
   const [allChildren, setAllChildren] = useState([]);
   const [open, setOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -52,6 +55,16 @@ const ChildSelector = memo(({ isMobile, title, setTotalAmount, setSelectedBatch,
   const [isLoading, setIsLoading] = useState(false);
   const isInitialMount = useRef(true);
   const childrenLoaded = useRef(false);
+
+    // Add this new useEffect to reset errors when dialog opens/closes
+    useEffect(() => {
+      setErrors({
+        childName: '',
+        childDob: '',
+        childGender: '',
+        childYear: ''
+      });
+    }, [open]);
 
   const formatDate = useCallback((dateString) => {
     if (!dateString) return '';

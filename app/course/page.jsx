@@ -1,21 +1,33 @@
-import React from 'react'
-import MultiCoursePage from './MultiCoursePage'
+import React, { Fragment } from 'react'
 import Navbar from '../Components/ITStartup/Common/Navbar/Navbar'
 import { Container } from '@mui/material'
 import Footer from '../Components/Footer/Footer'
+import MultiCoursePage from './MultiCoursePage'
 
 function page() {
+  const containerStyle = {
+    marginTop: "85px",
+    '@media (max-width: 600px)': {
+      alignItems: "center",
+      padding: "0",
+      paddingLeft: "3px",
+      paddingRight: "3px",
+      maxWidth: "100%",
+      display: "flex",
+      justifyContent: "center"
+    }
+  }
+
   return (
-    <main style={{ backgroundColor: "#fff" }}>
+    <Fragment style={{ backgroundColor: "#fff" }}>
       <Navbar />
-    
-      <Container style={{ marginTop:"100px" }}>
-      <MultiCoursePage />
-  
+      <Container sx={containerStyle}>
+        <MultiCoursePage />
       </Container>
       <Footer />
-    </main>
+    </Fragment>
   )
 }
 
 export default page
+
