@@ -59,9 +59,14 @@ const SendEmailCom = forwardRef((props, ref) => {
     };
 
     const formatBatchDates = (selectedBatch) => {
-        return selectedBatch.map(batch => 
-            `${batch.date} (${batch.startTime} - ${batch.endTime})`
-        ).join(', ');
+        if (!selectedBatch) return '';
+        const date = new Date(selectedBatch.date);
+        const formattedDate = date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+        return `${formattedDate} (${selectedBatch.startTime} - ${selectedBatch.endTime})`;
     };
 
     const handleSendEmail = async () => {
