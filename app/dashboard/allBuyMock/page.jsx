@@ -225,7 +225,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
               border: '1px solid #ccc'
             }}
           >
-            {[ 10, 25, 50, 100,250,500,1000,10000].map((size) => (
+            {[ 10, 25, 50, 100,1000,10000,50000].map((size) => (
               <option key={size} value={size}>
                 {size}
               </option>
@@ -550,7 +550,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
                   setPageSize(newPageSize);
                   setPage(0);
                 }}
-                pageSizeOptions={[ 10, 25, 50, 100 ]}
+                pageSizeOptions={[ 10, 25, 50, 100,1000,10000,50000 ]}
                 checkboxSelection
                 disableRowSelectionOnClick
                 rowSelectionModel={selectedItems.map(item => item._id)}

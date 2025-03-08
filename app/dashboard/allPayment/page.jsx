@@ -362,7 +362,7 @@ export default function PaymentsPage() {
                     paginationModel: { pageSize: 25, page: 0 },
                   },
                 }}
-                pageSizeOptions={[10, 25, 50, 100]}
+                pageSizeOptions={[10, 25, 50, 100,1000,10000,50000]}
                 disableSelectionOnClick
                 className="border-none"
                 sx={{
