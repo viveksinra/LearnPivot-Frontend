@@ -229,7 +229,7 @@ const columns = [
   {
     field: 'paymentIntent',
     headerName: 'Payment ID',
-    width: 220,
+    width: 300,
   },
   {
     field: 'invoiceLink',

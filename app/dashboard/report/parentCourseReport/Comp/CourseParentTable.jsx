@@ -296,7 +296,7 @@ const CourseParentTable = ({ data: initialData }) => {
         gap: 2
       }}>
         <Typography variant="h5" sx={{ fontWeight: 600 }}>
-          Course Parent Report
+        Parent Course Report
         </Typography>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Button
