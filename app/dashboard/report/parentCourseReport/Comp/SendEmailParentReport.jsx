@@ -4,9 +4,9 @@ import {
     Avatar, Chip, Box
 } from '@mui/material';
 import { BsSendPlus } from "react-icons/bs";
-import MySnackbar from "../../Components/MySnackbar/MySnackbar";
-import { mockTestService } from "../../services";
 import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
+import MySnackbar from '@/app/Components/MySnackbar/MySnackbar';
+import { mockTestService } from '@/app/services';
 
 const SendEmailParentReport = forwardRef((props, ref) => {
     const snackRef = useRef();
@@ -61,18 +61,16 @@ const SendEmailParentReport = forwardRef((props, ref) => {
         try {
             for (const item of props.selectedItems) {
                 const personalizedSubject = emailSubject
-                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
-                    .replace(/{email}/g, item.user.email)
-                    .replace(/{childName}/g, item.childId.childName)
-                    .replace(/{batchDates}/g, item.selectedDates.join(', '))
-                    .replace(/{courseTitle}/g, item.courseId.courseTitle);
+                    .replace(/{name}/g, `${item.user?.firstName || ''} ${item.user?.lastName || ''}`.trim())
+                    .replace(/{email}/g, item.user?.email || '')
+                    .replace(/{childName}/g, item.childId?.childName || 'Student')
+                    .replace(/{courseTitle}/g, item.courseId?.courseTitle || '');
 
                 const personalizedBody = emailBody
-                    .replace(/{name}/g, `${item.user.firstName} ${item.user.lastName}`)
-                    .replace(/{email}/g, item.user.email)
-                    .replace(/{childName}/g, item.childId.childName)
-                    .replace(/{batchDates}/g, item.selectedDates.join(', '))
-                    .replace(/{courseTitle}/g, item.courseId.courseTitle);
+                    .replace(/{name}/g, `${item.user?.firstName || ''} ${item.user?.lastName || ''}`.trim())
+                    .replace(/{email}/g, item.user?.email || '')
+                    .replace(/{childName}/g, item.childId?.childName || 'Student')
+                    .replace(/{courseTitle}/g, item.courseId?.courseTitle || '');
 
                 const emailData = {
                     to: [{
@@ -122,8 +120,6 @@ const SendEmailParentReport = forwardRef((props, ref) => {
                 <Stack direction="row" spacing={2}>
                     <Button variant="outlined" onClick={() => insertAtCursor('{name}', subjectRef)}>{'{name}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{email}', subjectRef)}>{'{email}'}</Button>
-                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', subjectRef)}>{'{childName}'}</Button>
-                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', subjectRef)}>{'{batchDates}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{courseTitle}', subjectRef)}>{'{courseTitle}'}</Button>
                 </Stack>
             </Box>
@@ -156,8 +152,6 @@ const SendEmailParentReport = forwardRef((props, ref) => {
                 <Stack direction="row" spacing={2}>
                     <Button variant="outlined" onClick={() => insertAtCursor('{name}', bodyRef)}>{'{name}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{email}', bodyRef)}>{'{email}'}</Button>
-                    <Button variant="outlined" onClick={() => insertAtCursor('{childName}', bodyRef)}>{'{childName}'}</Button>
-                    <Button variant="outlined" onClick={() => insertAtCursor('{batchDates}', bodyRef)}>{'{batchDates}'}</Button>
                     <Button variant="outlined" onClick={() => insertAtCursor('{courseTitle}', bodyRef)}>{'{courseTitle}'}</Button>
                 </Stack>
             </Box>
