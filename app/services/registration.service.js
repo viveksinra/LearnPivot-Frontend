@@ -63,7 +63,58 @@ export class RegistrationService {
       })
       .then((res) => res.data);
   };
+  getCourseDropDown = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/course/getCourse/forDropDown`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
+
+  getAllUser = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/user/getAllUser`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  getAllChild = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/user/getAllChild`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  getAllChildForDropDown = async ( ) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/otherApi/admin/getAllChildForDropDown`,  {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
   
+  getOneUserOrChildReport = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/otherApi/admin/getOneUserOrChildReport`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  getMyUserReport = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/otherApi/user/getMyUserReport`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  allowDisableLoginApi = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/otherApi/admin/allowDisableLogin`, data, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
   
 
 }

@@ -435,6 +435,7 @@ const ChildrenList = () => {
     <>
       <Card
         elevation={0}
+        className="shadow-md rounded-xl mt-4"
         sx={{
           borderRadius: 4,
           border: '1px solid',
@@ -445,7 +446,7 @@ const ChildrenList = () => {
       >
         <CardContent sx={{ p: 4 }}>
           <Typography variant="h5" sx={{ fontWeight: 600, mb: 3, color: 'primary.main' }}>
-           My Children
+           My Child/Children
           </Typography>
           <Box sx={{ textAlign: 'right', mb: 2 }}>
             <Button

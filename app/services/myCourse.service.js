@@ -61,6 +61,7 @@ export class MyCourseService {
   getPaymentIntentApi = async ( data) => {
     return this.instance
       .post(`/api/v1/publicMaster/stripePayment/stripePay`, data, {
+        headers: getAuthorizationHeader(),
         
       })
       .then((res) => res.data);
@@ -90,6 +91,14 @@ export class MyCourseService {
       .then((res) => res.data);
   };
 
+  checkIfSeatAvailableForChild = async ({id,childId}) => {  
+    return this.instance
+      .get(`/api/v1/publicMaster/course/getCourse/checkIfSeatAvailableForChild/${id}/${childId}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
   alreadyBoughtDate = async ({childId,id}) => {
     return this.instance
       .get(`/api/v1/publicMaster/course/getCourse/alreadyBoughtCourseDate/${childId}/${id}`, {
@@ -97,41 +106,70 @@ export class MyCourseService {
       .then((res) => res.data);
   };
 
+  buyCourseWithBalanceOnly = async (id) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/buyCourse/addBuyCourse/buyCourseWithBalanceOnly/${id}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
+
+  addParentToCourseAccessApi = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/admin/addParentToCourseAccess`, data, {
+        headers: getAuthorizationHeader(),        
+      })
+      .then((res) => res.data);
+  };
+  DoesParentHaveCourseAccessApi = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/admin/doesParentHaveCourseAccess`, data, {
+        headers: getAuthorizationHeader(),        
+      })
+      .then((res) => res.data);
+  };
+
+
+  SaveOrUpdateOneCourseAccessApi = async ( data) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/admin/courseAccess/SaveOrUpdateOneCourseAccess`, data, {
+        headers: getAuthorizationHeader(),        
+      })
+      .then((res) => res.data);
+  };
+
+  GetOneUserOneCourseAccessApi = async ({courseId,userId}) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/admin/courseAccess/getOneUserOneCourse/${courseId}/${userId}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  GetOneUserAllCourseAccessApi = async ({userId}) => {
+    return this.instance
+      .get(`/api/v1/publicMaster/report/admin/courseAccess/getOneUserAllCourseAccess/${userId}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+  DeleteOneUserOneCourseAccessApi = async ({courseId,userId}) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/report/admin/courseAccess/deleteOneUserOneCourse/${courseId}/${userId}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
 
 
 
-  saveHealth = async (id, data) => {
-    return this.instance
-      .post(`/api/v1/enquiry/health/addHealth/${id}`, data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getHealth = async (id) => {
-    return this.instance
-      .get(`/api/v1/enquiry/health/getHealth/getOne/${id}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  saveCompliance = async (id, data) => {
-    return this.instance
-      .post(`/api/v1/enquiry/compliance/addCompliance/${id}`, data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getCompliance = async (prospectId, complianceId) => {
-    return this.instance
-      .get(`/api/v1/enquiry/compliance/getCompliance/getAll/${prospectId}/${complianceId}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
+
+
+
+
+
+  
+
   imgUpload = async (imgData)=>{
     return this.instance
     .post(`/api/v1/other/fileupload/upload`, imgData, {
@@ -143,103 +181,5 @@ export class MyCourseService {
     })
     .then((res) => res.data.result.secure_url)
     .catch((err) => {console.log(err) });
-  };
-  saveContact = async (contactId, data) => {
-    return this.instance
-      .post(`/api/v1/enquiry/contact/addContact/${contactId}`, data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getContact = async (prospectId, contactId) => {
-    return this.instance
-      .get(`/api/v1/enquiry/contact/getContact/getAll/${prospectId}/${contactId}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  saveTask = async (baseUrl,taskId, data) => {
-    return this.instance
-      .post(`/${baseUrl}/${taskId}`, data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getTask = async (taskApi) => {
-    return this.instance
-      .get(`/${taskApi}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  saveNote = async (noteId, data) => {
-    return this.instance
-      .post(`/api/v1/enquiry/note/addNote/${noteId}`, data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getNote = async (prospectId, noteId) => {
-    return this.instance
-      .get(`/api/v1/enquiry/note/getNote/getAll/${prospectId}/${noteId}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  setPassword = async (prospectId, data) => {
-    return this.instance
-      .post(`/api/v1/enquiry/prospect/addProspect/password/${prospectId}`,data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  moveToResident = async (baseUrl, prospectId, data) => {
-    return this.instance
-      .post(`/${baseUrl}/${prospectId}`,data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  scheduleLeave = async (baseUrl, data) => {
-    return this.instance
-      .post(`/${baseUrl}`,data, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-  getScheduleLeave = async (baseUrl) => {
-    return this.instance
-      .get(`/${baseUrl}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-
-  deleteLeave = async (baseUrl) => {
-    return this.instance
-      .delete(`/${baseUrl}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
-  };
-
-  delete = async (id) => {
-    return this.instance
-      .delete(`/api/v1/customer/addCustomer/deleteOne/${id}`, {
-        headers: getAuthorizationHeader(),
-      })
-      .then((res) => res.data)
-      .catch((err) => err);
   };
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   Box,
   Typography,
@@ -19,6 +19,8 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import MockPayButton from "./MockPayButton";
 import { mockTestService } from "@/app/services";
+import Cookies from "js-cookie";
+import MainContext from "../../Context/MainContext";
 
 const MtBatchSelector = ({ 
   isMobile,
@@ -39,6 +41,8 @@ const MtBatchSelector = ({
   const [alreadyBoughtBatch, setAlreadyBoughtBatch] = useState([]);
   const [conflictDialogOpen, setConflictDialogOpen] = useState(false);
   const [conflictBatch, setConflictBatch] = useState(null);
+  const { state } = useContext(MainContext);
+  const currentUser = Cookies.get("currentUser");
 
   function countDecimalPlaces(num) {
     const numStr = num.toString();
@@ -59,6 +63,9 @@ const MtBatchSelector = ({
     }
     setTotalAmount(newTotalAmount);
   }, [selectedBatch]);
+
+
+
 
   const handleCheckboxChange = (batch) => {
     const existingDateBatch = (selectedBatch || []).find(
@@ -83,9 +90,29 @@ const MtBatchSelector = ({
   };
 
   const isBatchSelectable = (batch) => {
-    return !batch.filled && 
-           new Date(batch.date) >= today && 
-           !alreadyBoughtBatch.some(b => b._id === batch._id);
+    console.log(batch)
+    const batchDate = new Date(batch.date);
+    batchDate.setHours(0, 0, 0, 0);
+
+    const alreadyBookedDateBatch = alreadyBoughtBatch.find(
+      b => new Date(b.date).toDateString() === new Date(batch.date).toDateString()
+    );
+
+    if(alreadyBookedDateBatch){
+      return false;
+    }
+    // check if batchDate is today or after today
+    const isAfterToday = batchDate >= today;
+    let allowBuyOnBookingFull = false;
+    if ( batch.byPassBookingFull == true &&  batch.selectedUsers.includes(state.id)) {
+      allowBuyOnBookingFull = true;
+    }
+
+
+
+    let allowBuy = allowBuyOnBookingFull && isAfterToday;
+    return allowBuy || (!batch.filled && 
+           new Date(batch.date) >= today );
   };
 
   const formatDate = (dateString) => {

@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
 
 const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
+  const [pollingActive, setPollingActive] = useState(false);
+
+  // Add useEffect for polling when status is not succeeded
+  useEffect(() => {
+    let intervalId;
+    
+    // Start polling only when we have data and status is not succeeded
+    if (data && data.status && data.status.toLowerCase() !== "succeeded") {
+      console.log("Starting payment status polling...");
+      setPollingActive(true);
+      
+      intervalId = setInterval(() => {
+        console.log("Polling payment status...");
+        onRefresh(); // This calls the API to check the latest status
+      }, 10000); // Poll every 10 seconds
+    } else if (data && data.status && data.status.toLowerCase() === "succeeded") {
+      console.log("Payment succeeded, stopping polling");
+      setPollingActive(false);
+    }
+    
+    // Cleanup function
+    return () => {
+      if (intervalId) {
+        console.log("Clearing polling interval");
+        clearInterval(intervalId);
+      }
+    };
+  }, [data, onRefresh]);
+
   if (isLoading) {
     return (
       <div className="overview-area ptb-100">
@@ -126,7 +155,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
         </li>
         <li>
           <span>
-            <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status === "succeeded" ? "Completed" : paymentDetails.status}
+            <i className="bx bxs-badge-check"></i> Status: {paymentDetails.status === "succeeded" ? "Success" : paymentDetails.status}
           </span>
         </li>
       </ul>

@@ -76,38 +76,8 @@ const CoursePaymentCard = ({ courseData }) => {
   const theme = useTheme();
   const router = useRouter();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  console.log(courseData);
   
-  // Calculate total dates and payment progress
-  const allDates = courseData.courseDateSets.flatMap(set => set.dates);
-  const totalDates = allDates.length;
-  const purchasedDates = courseData.totalPurchasedDates;
-  const progressPercentage = (purchasedDates / totalDates) * 100;
-  
-  // Group dates by payment status
-  const unpaidDates = allDates.filter(date => !date.purchased);
-  const upcomingUnpaidDates = unpaidDates
-    .filter(date => new Date(date.date) >= new Date())
-    .sort((a, b) => new Date(a.date) - new Date(b.date));
-  
-  // Find next upcoming unpaid date
-  
-  const handleNavigateToPayment = () => {
-    router.push(`/course/${courseData.courseLink}/payment`);
-  };
-
-  const child = courseData.childInfo;
-  
-  // Find the current active set (the one with unpaid dates)
-  const getCurrentActiveSetIndex = () => {
-    for (let i = 0; i < courseData.courseDateSets.length; i++) {
-      const set = courseData.courseDateSets[i];
-      const hasUnpaidDates = set.dates.some(date => !date.purchased);
-      if (hasUnpaidDates) {
-        return i;
-      }
-    }
-    return -1; // All sets are paid
-  };
   const [earliestPaidDate, setEarliestPaidDate] = useState(null);
 
   useEffect(() => {
@@ -127,8 +97,6 @@ const CoursePaymentCard = ({ courseData }) => {
 
   // Process sets with updated skipped logic
   const processedDateSets = courseData.courseDateSets.map((set, setIndex) => {
-    // Find the earliest paid date in the set
-
     const today = new Date();
     
     return {
@@ -139,13 +107,42 @@ const CoursePaymentCard = ({ courseData }) => {
         return {
           ...date,
           skipped: !date.purchased && // 1. Not purchased
-                  currentDate > today && // 2. In the future
                   earliestPaidDate && // Ensure earliestPaidDate exists
-                  currentDate < earliestPaidDate // 3. Before earliest paid date
+                  currentDate < earliestPaidDate // 2. Before earliest paid date (removed future date check)
         };
       })
     };
   });
+
+  // Calculate total dates and payment progress (excluding skipped dates)
+  const allProcessedDates = processedDateSets.flatMap(set => set.dates);
+  const totalDates = allProcessedDates.filter(date => !date.skipped).length;
+  const purchasedDates = courseData.totalPurchasedDates;
+  const progressPercentage = (purchasedDates / totalDates) * 100;
+  
+  // Group dates by payment status
+  const unpaidDates = allProcessedDates.filter(date => !date.purchased && !date.skipped);
+  const upcomingUnpaidDates = unpaidDates
+    .filter(date => new Date(date.date) >= new Date())
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  const child = courseData.childInfo;
+
+  const handleNavigateToPayment = () => {
+    router.push(`/course/buy/${courseData.courseId}?childId=${child._id}`);
+  };
+  
+  // Find the current active set (the one with unpaid dates)
+  const getCurrentActiveSetIndex = () => {
+    for (let i = 0; i < courseData.courseDateSets.length; i++) {
+      const set = courseData.courseDateSets[i];
+      const hasUnpaidDates = set.dates.some(date => !date.purchased);
+      if (hasUnpaidDates) {
+        return i;
+      }
+    }
+    return -1; // All sets are paid
+  };
 
   // New method to get next payment date
   const getNextUnpaidDate = () => {
@@ -156,13 +153,24 @@ const CoursePaymentCard = ({ courseData }) => {
         // Must be unpaid
         !date.purchased && 
         // Must not be skipped
-        !date.skipped &&
-        // Must be in the future
-        new Date(date.date) >= new Date()
+        !date.skipped 
       )
       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    return allProcessedDates[0];
+    // Return the first unpaid date if it exists
+    if (allProcessedDates.length > 0) {
+      // Calculate payment due date (7 days before the class)
+      const nextClassDate = new Date(allProcessedDates[0].date);
+      const paymentDueDate = new Date(nextClassDate);
+      paymentDueDate.setDate(paymentDueDate.getDate() - 7);
+      
+      return {
+        date: nextClassDate,
+        dueDate: paymentDueDate
+      };
+    }
+    
+    return null;
   };
 
   const nextUnpaidDate = getNextUnpaidDate();
@@ -287,8 +295,24 @@ const CoursePaymentCard = ({ courseData }) => {
                 Payment Due
               </Typography>
               <Typography variant="body2">
-                Next Course on {moment(nextUnpaidDate.date).format('dddd, MMMM D, YYYY')} requires payment
+                Payment due by {moment(nextUnpaidDate.dueDate).format('MMM D, YYYY')} for course on {moment(nextUnpaidDate.date).format('dddd, MMMM D')}
               </Typography>
+              <Button 
+                variant="contained" 
+                color="error"
+                size="small"
+                endIcon={<ArrowForward />}
+                onClick={handleNavigateToPayment}
+                fullWidth
+                sx={{ 
+                  mt: 1, 
+                  borderRadius: 1.5,
+                  textTransform: 'none',
+                  fontWeight: 600
+                }}
+              >
+                Pay Now
+              </Button>
             </Stack>
             
           </Alert>
@@ -340,11 +364,11 @@ const CoursePaymentCard = ({ courseData }) => {
                       border: '1px solid',
                       borderColor: dateObj.purchased ? 'success.light' : 
                                 dateObj.skipped ? 'grey.300' :
-                                new Date(dateObj.date) < new Date() ? 'grey.300' : 'warning.light',
+                                new Date(dateObj.date) < new Date() ? 'error.light' : 'warning.light',
                       borderRadius: 1.5,
                       bgcolor: dateObj.purchased ? 'success.lighter' : 
                                dateObj.skipped ? 'grey.50' :
-                               new Date(dateObj.date) < new Date() ? 'grey.50' : 'warning.lighter',
+                               new Date(dateObj.date) < new Date() ? 'error.lighter' : 'warning.lighter',
                       textAlign: 'center',
                       position: 'relative'
                     }}
@@ -384,7 +408,7 @@ const CoursePaymentCard = ({ courseData }) => {
                       size="small"
                       color={dateObj.purchased ? "success" : 
                              dateObj.skipped ? "default" :
-                             new Date(dateObj.date) < new Date() ? "default" : "warning"}
+                             new Date(dateObj.date) < new Date() ? "error" : "warning"}
                       sx={{ 
                         height: 20, 
                         '& .MuiChip-label': { px: 0.5, fontSize: '0.625rem', fontWeight: 600 }
@@ -505,7 +529,8 @@ export const PaymentAlert = ({ selectedChild }) => {
   }
 
   return (
-    <Container 
+    <>
+{courseData.length > 0 &&    <Container 
       maxWidth="lg" 
       sx={{ 
         py: isMobile ? 2 : 3,
@@ -543,7 +568,8 @@ export const PaymentAlert = ({ selectedChild }) => {
       ) : (
         <EmptyState />
       )}
-    </Container>
+    </Container>}
+    </>
   );
 };
 

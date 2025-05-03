@@ -32,6 +32,7 @@ const EntryArea = forwardRef((props, ref) => {
     const [courseClass, setCourseClass] = useState(null);
     const [courseType, setCourseType] = useState(null);
     const [duration, setDuration] = useState(null);
+    const [subject, setSubject] = useState(null);
     const [fullDescription, setFullDescription] = useState("");
     const [totalSeat, setTotalSeat] = useState("0");
     const [filledSeat, setFilledSeats] = useState("");
@@ -73,6 +74,11 @@ const EntryArea = forwardRef((props, ref) => {
         { label: "Full Course", id: "fullCourse" },
          { label: "Crash Course", id: "crashCourse" },
         ];
+    const allSubject = [
+        { label: "Maths", id: "maths" },
+        { label: "English", id: "english" },      
+        { label: "Other", id: "other" }
+    ];
     const allDuration = [
         { label: "< 1 Month", id: "lessThan1Month" },
         { label: "1-3 Months", id: "1to3Months" },
@@ -97,7 +103,7 @@ const EntryArea = forwardRef((props, ref) => {
                 if (res.variant === "success") {
                     const { _id, isPublished, allBatch, startTime,sortDate,
                         endTime, courseTitle, courseLink, shortDescription, oneClassPrice, discountOnFullClass,
-                        courseClass, courseType, duration, imageUrls, fullDescription, totalSeat, filledSeat, showRemaining,
+                        courseClass, courseType, duration, subject, imageUrls, fullDescription, totalSeat, filledSeat, showRemaining,
                         onlySelectedParent: selectedParent, selectedUsers, restrictOnTotalSeat: restrictSeat, restrictStartDateChange, forcefullBuyCourse, allowBackDateBuy: backDateBuy, backDayCount: days,stopSkipSet } = res.data;
                     props.setId(_id);
                     setIsPublished(isPublished);
@@ -117,6 +123,7 @@ const EntryArea = forwardRef((props, ref) => {
                     setCourseClass(courseClass);
                     setCourseType(courseType);
                     setDuration(duration);
+                    setSubject(subject);
                     setImageUrls(imageUrls?.length ? imageUrls : [""]);
                     setFullDescription(fullDescription);
                     setTotalSeat(totalSeat);
@@ -169,6 +176,7 @@ const EntryArea = forwardRef((props, ref) => {
         setCourseClass(null);
         setCourseType(null);
         setDuration(null);
+        setSubject(null);
         setFullDescription("");
         setTotalSeat("0");
         setFilledSeats("");
@@ -203,6 +211,7 @@ const EntryArea = forwardRef((props, ref) => {
                     courseClass,
                     courseType,
                     duration,
+                    subject,
                     fullDescription,
                     totalSeat,
                     restrictOnTotalSeat,
@@ -288,7 +297,7 @@ const EntryArea = forwardRef((props, ref) => {
         });
 
         return (
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12}>
                 <Autocomplete
                     multiple
                     id="user-select"
@@ -298,9 +307,10 @@ const EntryArea = forwardRef((props, ref) => {
                     onChange={(event, newValue) => {
                         setSelectedUser(newValue.map(user => user._id));
                     }}
-                    getOptionLabel={(option) => 
-                        `${option.firstName || ''} ${option.lastName || ''} (${option.email || ''}) (${option.mobile || ''})`
-                    }
+                    getOptionLabel={(option) => {
+                        const childrenNames = option.children?.map(child => child.childName).join(', ') || '';
+                        return `${option.firstName || ''} ${option.lastName || ''} (${option.email || ''}) ${childrenNames ? `[Children: ${childrenNames}]` : ''}`;
+                    }}
                     disableCloseOnSelect
                     filterOptions={(options, { inputValue }) => {
                         const searchTerms = inputValue.toLowerCase().split(' ');
@@ -309,7 +319,11 @@ const EntryArea = forwardRef((props, ref) => {
                                 option.firstName?.toLowerCase().includes(term) ||
                                 option.lastName?.toLowerCase().includes(term) ||
                                 option.email?.toLowerCase().includes(term) ||
-                                option.mobile?.toLowerCase().includes(term)
+                                option.mobile?.toLowerCase().includes(term) ||
+                                // Add filter by children names
+                                option.children?.some(child => 
+                                    child.childName?.toLowerCase().includes(term)
+                                )
                             )
                         );
                     }}
@@ -318,7 +332,7 @@ const EntryArea = forwardRef((props, ref) => {
                             {...params}
                             variant="outlined"
                             label="Select Users"
-                            placeholder="Search by name, email or mobile"
+                            placeholder="Search by name, email, mobile or child name"
                         />
                     )}
                     renderOption={(props, option) => {
@@ -329,12 +343,19 @@ const EntryArea = forwardRef((props, ref) => {
                                     checked={isSelected}
                                     style={{ marginRight: 8 }}
                                 />
-                                <Typography>
-                                    {option.firstName} {option.lastName}
-                                    <Typography component="span" color="textSecondary" sx={{ ml: 1 }}>
-                                        ({option.mobile}) • {option.email}
+                                <div>
+                                    <Typography>
+                                        {option.firstName} {option.lastName}
+                                        <Typography component="span" color="textSecondary" sx={{ ml: 1 }}>
+                                            ({option.mobile}) • {option.email}
+                                        </Typography>
                                     </Typography>
-                                </Typography>
+                                    {option.children && option.children.length > 0 && (
+                                        <Typography variant="body2" color="primary" sx={{ ml: 3 }}>
+                                            Children: {option.children.map(child => child.childName).join(', ')}
+                                        </Typography>
+                                    )}
+                                </div>
                             </li>
                         );
                     }}
@@ -450,10 +471,7 @@ const EntryArea = forwardRef((props, ref) => {
                 <Grid item xs={12} md={2}>
                     <TextField focused type='time' value={endTime} onChange={(e) => setEndTime(e.target.value)} fullWidth label="End Time :" variant="standard" />
                 </Grid>
-                <Grid item xs={12} md={6}>
-                    <TextField fullWidth label="Short Description" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} inputProps={{ minLength: "2", maxLength: "100" }} placeholder='Short Description' variant="standard" />
-                </Grid>
-                <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={2}>
                 <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount">One Class Price</InputLabel>
           <OutlinedInput
@@ -469,6 +487,10 @@ const EntryArea = forwardRef((props, ref) => {
         </FormControl>
             
                 </Grid>
+                <Grid item xs={12} md={6}>
+                    <TextField fullWidth label="Short Description" value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} inputProps={{ minLength: "2", maxLength: "100" }} placeholder='Short Description' variant="standard" />
+                </Grid>
+              
                 {/* <Grid item xs={12} md={3}>
                 <FormControl fullWidth sx={{ m: 1 }} variant="filled">
           <InputLabel htmlFor="filled-adornment-amount">Discount On Full Course</InputLabel>
@@ -535,6 +557,25 @@ const EntryArea = forwardRef((props, ref) => {
                             );
                         }}
                         renderInput={(params) => <TextField {...params} label="Duration" variant="standard" />}
+                    />
+                </Grid>
+                
+                <Grid item xs={12} md={3}>
+                    <Autocomplete
+                        isOptionEqualToValue={(option, value) => option?.id === value?.id}
+                        options={allSubject}
+                        value={subject}
+                        onChange={(e, v) => {
+                            setSubject(v);
+                        }}
+                        renderOption={(props, option) => {
+                            return (
+                                <li {...props} key={option.id}>
+                                    {option.label}
+                                </li>
+                            );
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Subject" variant="standard" />}
                     />
                 </Grid>
                 

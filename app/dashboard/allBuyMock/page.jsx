@@ -1,113 +1,39 @@
 'use client';
 import "./addMockTestStyle.css";
-import React, { lazy, Suspense, useEffect, useState, useRef, useCallback } from 'react';
-import { debounce, max, set } from 'lodash';
+import React, { lazy, Suspense, useEffect, useState, useRef } from 'react';
 import {
   Typography, 
   Fab, 
   styled, 
   CircularProgress, 
-  Grid, 
   AppBar, 
   Toolbar,
   Tooltip, 
-  IconButton,
-  Tab,
-  ButtonGroup,
-  ToggleButtonGroup,
-  ToggleButton,
-  Chip,
-  Button,
-  Slider,
   Box,
+  Chip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material/';
 import { 
-  DataGrid, 
-  GridToolbar,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarExport,
-  gridPageCountSelector,
-  gridPageSelector,
-  useGridApiContext,
-  useGridSelector,
-  gridClasses
-} from '@mui/x-data-grid';
-import { MdModeEdit, MdOutlineMail, MdOutlineClose, MdRestartAlt, MdRemove, MdAdd } from "react-icons/md";
-import { FcOk, FcNoIdea, FcOrgUnit, FcTimeline } from "react-icons/fc";
+  MdModeEdit, 
+  MdOutlineMail, 
+  MdOutlineClose
+} from "react-icons/md";
 import { BsTable } from "react-icons/bs";
 import Loading from "../../Components/Loading/Loading";
 import NoResult from "@/app/Components/NoResult/NoResult";
-import Search from "../../Components/Search";
 import { registrationService } from "@/app/services";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
-import MulSelCom from "./MulSelCom";
-import { TabContext, TabList } from "@mui/lab";
-import EmptyContent from '@/app/Components/EmptyContent';
+
+// Import components
+import DataGridView from './comp/DataGridView';
+import CardView from './comp/CardView';
+import FilterControls from './comp/FilterControls';
+import CustomPagination from './comp/CustomPagination';
 
 const SendEmailCom = lazy(() => import("./SendEmailCom"));
 
-// Custom Pagination Component
-
-
-// Updated Custom Toolbar Component
-function CustomToolbar() {
-  return (
-    <GridToolbar 
-      sx={{
-        p: 1,
-        display: 'flex',
-        gap: 1,
-        flexWrap: 'wrap',
-        '& .MuiButton-root': {
-          color: 'primary.main',
-          '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04)',
-          },
-        },
-      }}
-    />
-  );
-}
-
 // Styled Components
-const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-  '& .status-succeeded': {
-    backgroundColor: '#e8f5e9',
-    '&:hover': {
-      backgroundColor: '#c8e6c9',
-    },
-  },
-  '& .status-pending': {
-    backgroundColor: '#fff3e0',
-    '&:hover': {
-      backgroundColor: '#ffe0b2',
-    },
-  },
-  // Add horizontal scroll
-  '& .MuiDataGrid-main': {
-    overflow: 'auto',
-  },
-  '& .MuiDataGrid-virtualScroller': {
-    overflow: 'auto',
-  },
-  // Optional: Add some styling for better scroll appearance
-  '& ::-webkit-scrollbar': {
-    height: '8px',
-    width: '8px',
-  },
-  '& ::-webkit-scrollbar-track': {
-    background: '#f1f1f1',
-  },
-  '& ::-webkit-scrollbar-thumb': {
-    background: '#888',
-    borderRadius: '4px',
-  },
-  '& ::-webkit-scrollbar-thumb:hover': {
-    background: '#555',
-  },
-}));
-
 const ToggleFab = styled(Fab)({
   position: 'absolute',
   zIndex: 1,
@@ -117,27 +43,15 @@ const ToggleFab = styled(Fab)({
   margin: '0 auto',
 });
 
-const StyledCard = styled('div')(({ status }) => ({
-  backgroundColor: status === 'succeeded' ? '#e3ffea' : '#ffffe6',
-  borderRadius: '8px',
-  padding: '20px',
-  position: 'relative',
-  marginBottom: '20px',
-  boxShadow: 'rgba(0, 0, 0, 0.1) 0px 4px 12px',
-}));
-
 function MyMockTest() {
   const [viewTabular, toggleView] = useState(true);
   const [id, setId] = useState("");
   const [selectedItems, setSelectedItems] = useState([]);
   const entryRef = useRef();
 
-   useEffect(() => { 
-  console.log("selectedItems", selectedItems);
-    
-
-  }, [selectedItems])
-  
+  useEffect(() => { 
+    console.log("selectedItems", selectedItems);
+  }, [selectedItems]);
 
   return (
     <main>
@@ -184,88 +98,26 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const [loading, setLoading] = useState(false);
   const [rows, setRows] = useState([]);
   const [tabular, setView] = useState(true);
-  const sortOptions = [
-    { label: "New First", value: "newToOld" }, 
-    { label: "Old First", value: "oldToNew" }
-  ];
   const [sortBy, setSort] = useState("newToOld");
   const [searchText, setSearchText] = useState("");
+  const [localSearchText, setLocalSearchText] = useState("");
   const [totalCount, setTotalCount] = useState(0);
   const [selectedMockTests, setSelectedMockTests] = useState([]);
   const [selectedBatches, setSelectedBatches] = useState([]);
   const [successOnly, setSuccessOnly] = useState(true);
+  const [loadAllData, setLoadAllData] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1250);
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-  const [filterButtonEl, setFilterButtonEl] = useState(null);
-
-  function CustomPagination() {
-    const pageCount = totalCount / pageSize;
-    const handleChangeRowsPerPage = (event) => {
-      const newPageSize = parseInt(event.target.value, 10);
-      setPageSize(newPageSize);
-      setPage(0);
-    };
-  
-    return (
-      <Box sx={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        gap: 2,
-        padding: '8px'
-      }}>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Typography variant="body2" sx={{ mr: 2 }}>Rows per page:</Typography>
-          <select
-            value={pageSize}
-            onChange={handleChangeRowsPerPage}
-            style={{
-              padding: '4px 8px',
-              borderRadius: '4px',
-              border: '1px solid #ccc'
-            }}
-          >
-            {[ 10, 25, 50, 100,1000,10000,50000].map((size) => (
-              <option key={size} value={size}>
-                {size}
-              </option>
-            ))}
-          </select>
-        </Box>
-        <ButtonGroup variant="outlined" size="small">
-          <Button
-            onClick={() => setPage(0)}
-            disabled={page === 0}
-          >
-            First
-          </Button>
-          <Button
-            onClick={() => setPage(Math.max(page - 1, 0))}
-            disabled={page === 0}
-          >
-            Previous
-          </Button>
-          <Button disabled>
-            Page {page + 1} of {Math.ceil(pageCount)}
-          </Button>
-          <Button
-            onClick={() => setPage(Math.min(page + 1, pageCount))}
-            disabled={page >= Math.ceil(pageCount) - 1}
-          >
-            Next
-          </Button>
-          <Button
-            onClick={() => setPage(Math.ceil(pageCount) - 1)}
-            disabled={page >= Math.ceil(pageCount) - 1}
-          >
-            Last
-          </Button>
-        </ButtonGroup>
-      </Box>
-    );
-  }
-
-
+  const [pageSize, setPageSize] = useState(25);
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState({
+    email: false,
+    bookingDate: false,
+    status: false,
+    address: false,
+  });
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleWidthReset = () => {
     setContainerWidth(1250);
@@ -278,13 +130,6 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
   const decrementWidth = () => {
     setContainerWidth(prev => Math.max(prev - 50, 1000));
   };
-
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState({
-    email: false,
-    bookingDate: false,
-    status: false,
-    address: false,
-  });
 
   const columns = [
     {
@@ -360,7 +205,6 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       filterable: true,
       sortable: true,
     },
-
     {
       field: 'mobileNo',
       headerName: 'Mobile Number',
@@ -368,7 +212,6 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       valueGetter: (params) => params?.row?.user?.mobile,
       filterable: true,
     },
-
     {
       field: 'address2',
       headerName: 'Print Add',
@@ -391,7 +234,7 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       try {
         let response = await registrationService.getMockWithFilter({ 
           sortBy, 
-          rowsPerPage: pageSize, 
+          rowsPerPage: loadAllData ? 10000 : pageSize, 
           page: page + 1, // backend expects 1-based page numbers
           searchText, 
           selectedMockTests, 
@@ -416,7 +259,41 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
       }
     }
     fetchAllData();
-  }, [page, pageSize, searchText, sortBy, selectedMockTests, selectedBatches, successOnly]);
+  }, [page, pageSize, searchText, sortBy, selectedMockTests, selectedBatches, successOnly, loadAllData]);
+
+  // Function to filter rows based on local search text
+  const filterRows = (rows) => {
+    if (!localSearchText) return rows;
+    
+    const searchTermLower = localSearchText.toLowerCase();
+    
+    return rows.filter(row => {
+      // Check all searchable fields
+      return (
+        // Mock Test
+        (row.mockTestId?.mockTestTitle?.toLowerCase().includes(searchTermLower)) ||
+        // Parent
+        (`${row.user?.firstName} ${row.user?.lastName}`.toLowerCase().includes(searchTermLower)) ||
+        // Email
+        (row.user?.email?.toLowerCase().includes(searchTermLower)) ||
+        // Child 
+        (row.childId?.childName?.toLowerCase().includes(searchTermLower)) ||
+        (row.childId?.childGender?.toLowerCase().includes(searchTermLower)) ||
+        // Batch
+        (row.selectedBatch?.date?.toString().toLowerCase().includes(searchTermLower)) ||
+        (`${row.selectedBatch?.startTime}-${row.selectedBatch?.endTime}`.toLowerCase().includes(searchTermLower)) ||
+        // Status
+        (row.status?.toLowerCase().includes(searchTermLower)) ||
+        // Mobile
+        (row.user?.mobile?.toString().includes(searchTermLower)) ||
+        // Address
+        (row.user?.address?.toLowerCase().includes(searchTermLower))
+      );
+    });
+  };
+
+  // Apply local filtering
+  const filteredRows = filterRows(rows);
 
   const handleSelectionChange = (newSelectionModel) => {
     console.log("newSelectionModel", newSelectionModel);
@@ -426,225 +303,107 @@ function SearchArea({ handleEdit, selectedItems, setSelectedItems }) {
     setSelectedItems(selectedRows);
   };
 
-  // Function to get toggleable columns
-  const getTogglableColumns = useCallback(() => {
-    return columns.filter(column => column.field !== 'actions');
-  }, []);
+  // Create pagination component instance for reuse
+  const PaginationComponent = () => (
+    <CustomPagination
+      page={page}
+      setPage={setPage}
+      pageSize={pageSize}
+      setPageSize={setPageSize}
+      totalCount={totalCount}
+    />
+  );
 
   return (
-    <main style={{ 
-      background: "#fff", 
-      boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", 
-      borderRadius: 8, 
-      padding: 20,
-      alignItems: "center",
-      justifyContent: "center",
-      alignSelf: "center",
-      marginRight: 20,
-      maxWidth: containerWidth,
-    }}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sx={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          gap: 1,
-          backgroundColor: '#f5f5f5',
-          padding: '8px',
-          borderRadius: '4px',
-        }}>
-          <Tooltip title="Decrease width">
-            <IconButton 
-              onClick={decrementWidth}
-              disabled={containerWidth <= 1000}
-              size="small"
-            >
-              <MdRemove />
-            </IconButton>
-          </Tooltip>
-          <Typography variant="body2" sx={{ mx: 1, minWidth: 80 }}>
-            {containerWidth}px
-          </Typography>
-
-
-          <Tooltip title="Increase width">
-            <IconButton 
-              onClick={incrementWidth}
-              disabled={containerWidth >= 2000}
-              size="small"
-            >
-              <MdAdd />
-            </IconButton>
-          </Tooltip>
-
-      
-
-          <Tooltip title="Reset width">
-            <IconButton 
-              onClick={handleWidthReset}
-              color="primary"
-              size="small"
-            >
-              <MdRestartAlt />
-            </IconButton>
-          </Tooltip>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Typography 
-            color="primary" 
-            variant='h5' 
-            gutterBottom
-          >
-            All Mock Tests
-          </Typography>
-        </Grid>
-       
-        <Grid item xs={12}>
-          <MulSelCom 
-            selectedMockTests={selectedMockTests} 
-            setSelectedMockTests={setSelectedMockTests} 
-            selectedBatches={selectedBatches} 
-            setSelectedBatches={setSelectedBatches} 
-            successOnly={successOnly} 
-            setSuccessOnly={setSuccessOnly} 
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TabContext value={sortBy}>
-            <TabList 
-              onChange={(e, v) => setSort(v)} 
-              aria-label="Sort options"
-            >
-              {sortOptions.map((option) => (
-                <Tab 
-                  key={option.value}
-                  label={option.label}
-                  value={option.value}
-                />
-              ))}
-            </TabList>
-          </TabContext>
-        </Grid>
-      </Grid>
+    <Box
+      sx={{
+        background: "#fff",
+        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px",
+        borderRadius: 2,
+        p: { xs: 1, sm: 2, md: 3 },
+        width: "100%",
+        maxWidth: tabular ? containerWidth : "100%",
+        mx: "auto",
+        overflow: "hidden"
+      }}
+    >
+      {/* Filter Controls */}
+      <FilterControls
+        tabular={tabular}
+        setView={setView}
+        sortBy={sortBy}
+        setSort={setSort}
+        selectedMockTests={selectedMockTests}
+        setSelectedMockTests={setSelectedMockTests}
+        selectedBatches={selectedBatches}
+        setSelectedBatches={setSelectedBatches}
+        successOnly={successOnly}
+        setSuccessOnly={setSuccessOnly}
+        loadAllData={loadAllData}
+        setLoadAllData={setLoadAllData}
+        localSearchText={localSearchText}
+        setLocalSearchText={setLocalSearchText}
+      />
 
       {loading ? (
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: 400 }}>
-          <CircularProgress />
-        </div>
-      ) : rows.length === 0 ? (
-        <NoResult label="No Mock Tests Available" />
+        <Box className="center" sx={{ flexDirection: "column", p: 5 }}>
+          <CircularProgress size={40} sx={{ color: '#00c853' }} />
+          <Typography
+            color="primary"
+            sx={{
+              mt: 2,
+              fontFamily: 'Courgette',
+              fontSize: '1.2rem'
+            }}
+          >
+            Loading Mock Tests...
+          </Typography>
+        </Box>
+      ) : filteredRows.length === 0 ? (
+        <NoResult label={localSearchText ? "No matching results found" : "No Mock Tests Available"} />
+      ) : tabular ? (
+        <DataGridView
+          rows={filteredRows}
+          columns={columns}
+          loading={loading}
+          page={page}
+          setPage={setPage}
+          pageSize={pageSize}
+          setPageSize={setPageSize}
+          totalCount={localSearchText ? filteredRows.length : totalCount}
+          selectedItems={selectedItems}
+          handleSelectionChange={handleSelectionChange}
+          containerWidth={containerWidth}
+          incrementWidth={incrementWidth}
+          decrementWidth={decrementWidth}
+          handleWidthReset={handleWidthReset}
+          columnVisibilityModel={columnVisibilityModel}
+          setColumnVisibilityModel={setColumnVisibilityModel}
+          CustomPagination={PaginationComponent}
+        />
       ) : (
-        <div style={{  width: '99.9%', marginTop: 20 }}>
-          <Grid container>
-            <Grid item xs={12} style={{ overflowX: 'auto' }}>
-              <StyledDataGrid
-                rows={rows}
-                columns={columns}
-                getRowId={(row) => row._id}
-                pagination
-                paginationMode="server"
-                rowCount={totalCount}
-                page={page}
-                onPageChange={(newPage) => setPage(newPage)}
-                pageSize={pageSize}
-                onPageSizeChange={(newPageSize) => {
-                  setPageSize(newPageSize);
-                  setPage(0);
-                }}
-                pageSizeOptions={[ 10, 25, 50, 100,1000,10000,50000 ]}
-                checkboxSelection
-                disableRowSelectionOnClick
-                rowSelectionModel={selectedItems.map(item => item._id)}
-                onRowSelectionModelChange={handleSelectionChange}
-                loading={loading}
-                initialState={{
-                  filter: {
-                    filterModel: {
-                      items: [],
-                    },
-                  },
-                  columns: {
-                    columnVisibilityModel: {
-                      email: false,
-                      bookingDate: false,
-                      status: false,
-                      address: false,
-                    }
-                  }
-                }}
-                columnVisibilityModel={columnVisibilityModel}
-                onColumnVisibilityModelChange={(newModel) => {
-                  setColumnVisibilityModel(newModel);
-                }}
-                components={{
-                  noRowsOverlay: () => <EmptyContent title="No Mock Tests Available" />,
-                  noResultsOverlay: () => <EmptyContent title="No results found" />,
-                }}
-                slots={{ 
-                  toolbar: CustomToolbar,
-                  pagination: CustomPagination,
-                }}
-                slotProps={{
-                  toolbar: {
-                    showQuickFilter: true,
-                    quickFilterProps: { debounceMs: 500 },
-                  },
-                }}
-                getRowClassName={(params) => `status-${params?.row?.status}`}
-                autoHeight
-                disableExtendRowFullWidth={false}
-                filterMode="client"
-                sortingMode="client"
-                disableColumnFilter={false}
-                disableColumnSelector={false}
-                disableDensitySelector={false}
-                sx={{
-                  [`& .${gridClasses.cell}`]: { 
-                    alignItems: 'center', 
-                    display: 'inline-flex' 
-                  },
-                  '& .MuiDataGrid-columnHeaders': {
-                    backgroundColor: '#f5f5f5',
-                  },
-                  '& .MuiDataGrid-cell:focus': {
-                    outline: 'none',
-                  },
-                  width: '99.9%',
-                  '& .MuiDataGrid-root': {
-                    maxWidth: '99.9%',
-                  },
-                  '& .MuiDataGrid-virtualScroller': {
-                    minHeight: 200,
-                  },
-                  '& .MuiDataGrid-footerContainer': {
-                    borderTop: '1px solid rgba(224, 224, 224, 1)',
-                  },
-                  '& .MuiDataGrid-row': {
-                    '&:nth-of-type(odd)': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.02)',
-                    },
-                    '&:hover': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                    },
-                  },
-                  borderRadius: 2,
-                  border: '1px solid rgba(224, 224, 224, 1)',
-                  '& .MuiDataGrid-filterIcon': {
-                    color: 'primary.main',
-                  },
-                  '& .MuiDataGrid-columnHeaderTitleContainer': {
-                    padding: '0 8px',
-                  },
-                  '& .MuiDataGrid-toolbarContainer': {
-                    padding: '8px',
-                    gap: '8px',
-                  }
-                }}
-              />
-            </Grid>
-          </Grid>
-        </div>
+        <>
+          <CardView
+            rows={filteredRows}
+            selectedItems={selectedItems}
+            setSelectedItems={setSelectedItems}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'center', my: 3 }}>
+            <Box sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2,
+              p: 1,
+              background: '#f5f5f5',
+              borderRadius: 1
+            }}>
+              <PaginationComponent />
+            </Box>
+          </Box>
+        </>
       )}
-    </main>
+      <Box sx={{ height: 60 }} /> {/* Space for AppBar */}
+    </Box>
   );
 }
 

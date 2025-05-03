@@ -7,7 +7,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { FcNoIdea, FcOk, FcExpand } from "react-icons/fc";
 import { MdDeleteForever } from "react-icons/md";
 import MySnackbar from "../../Components/MySnackbar/MySnackbar";
-import { mockTestService } from "../../services";
+import { dashboardService, mockTestService } from "../../services";
 import { todayDate } from "../../Components/StaticData";
 import { useImgUpload } from "@/app/hooks/auth/useImgUpload";
 import MultiImageUpload from '@/app/Components/Common/MultiImageUpload';
@@ -32,9 +32,26 @@ const AddMockEntryArea = forwardRef((props, ref) => {
         endTime: "", 
         totalSeat: 100, 
         oneBatchprice: 40, 
-        filled: false 
+        filled: false,
+        byPassBookingFull: false,
+        selectedUsers: []
     }]);
     const [PAccordion, setPAccordion] = useState(false);
+    const [privateAccordion, setPrivateAccordion] = useState(true);
+    const [allUsers, setAllUsers] = useState([]);
+
+    const getAllUsers = async () => {
+        let res = await dashboardService.getAllUserForDropDown();
+        if (res.variant === "success") {
+            setAllUsers(res.data);
+        } else {
+            snackRef.current.handleSnack(res);
+        }
+    };
+
+    useEffect(() => {
+        getAllUsers();
+    }, []);
 
     const AllBlinkText = [
         { label: "High Demand", id: "highDemand" },
@@ -54,7 +71,16 @@ const AddMockEntryArea = forwardRef((props, ref) => {
         setMockTestTitle(e.target.value);
         setMockTestLink(convertToSlug(e.target.value));
     };
-
+    const findUserDetails = (userId) => {
+        const user = allUsers.find(user => user._id === userId);
+        return user || { 
+            firstName: 'User',
+            lastName: 'not found', 
+            email: 'No email', 
+            mobile: 'No mobile',
+            _id: userId 
+        };
+    };
     useEffect(() => {
         async function getOneData() {
             try {
@@ -62,7 +88,7 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                 if (res.variant === "success") {
                     const {
                         isPublished, mockTestTitle, mockTestLink, shortDescription, pincode, highlightedText,
-                        blinkText, testType, location, imageUrls, fullDescription, totalSeat, batch
+                        blinkText, testType, location, imageUrls, fullDescription, totalSeat, batch,
                     } = res.data;
                     setIsPublished(isPublished);
                     setMockTestTitle(mockTestTitle);
@@ -78,7 +104,9 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                     setTotalSeat(totalSeat);
                     setBatch(batch.map(b => ({
                         ...b,
-                        date: b.date.split('T')[0]
+                        date: b.date.split('T')[0],
+                        byPassBookingFull: b.byPassBookingFull || false,
+                        selectedUsers: b.selectedUsers || []
                     })));
                     setPAccordion(true);
                     snackRef.current.handleSnack(res);
@@ -116,7 +144,9 @@ const AddMockEntryArea = forwardRef((props, ref) => {
             endTime: "", 
             totalSeat: 0, 
             oneBatchprice: 0, 
-            filled: false 
+            filled: false,
+            byPassBookingFull: false,
+            selectedUsers: []
         }]);
         setPAccordion(true);
     };
@@ -152,7 +182,9 @@ const AddMockEntryArea = forwardRef((props, ref) => {
             endTime: "", 
             totalSeat: 0, 
             oneBatchprice: 0, 
-            filled: false 
+            filled: false,
+            byPassBookingFull: false,
+            selectedUsers: []
         }]);
     };
 
@@ -196,6 +228,69 @@ const AddMockEntryArea = forwardRef((props, ref) => {
         },
         handleClear: () => handleClear()
     }));
+
+    const renderUserSelect = (batchIndex) => {
+        // Sort users by firstName
+        const sortedUsers = [...allUsers].sort((a, b) => {
+            const nameA = (a.firstName || '').toLowerCase();
+            const nameB = (b.firstName || '').toLowerCase();
+            return nameA.localeCompare(nameB);
+        });
+
+        return (
+            <Autocomplete
+                multiple
+                id={`user-select-${batchIndex}`}
+                options={sortedUsers}
+                value={batch[batchIndex].selectedUsers.map(userId => findUserDetails(userId))
+                    .sort((a, b) => (a.firstName || '').localeCompare(b.firstName || ''))}
+                onChange={(event, newValue) => {
+                    handleBatchChange(batchIndex, 'selectedUsers', newValue.map(user => user._id));
+                }}
+                getOptionLabel={(option) => 
+                    `${option.firstName || ''} ${option.lastName || ''} (${option.email || ''}) (${option.mobile || ''})`
+                }
+                disableCloseOnSelect
+                filterOptions={(options, { inputValue }) => {
+                    const searchTerms = inputValue.toLowerCase().split(' ');
+                    return options.filter(option => 
+                        searchTerms.every(term =>
+                            option.firstName?.toLowerCase().includes(term) ||
+                            option.lastName?.toLowerCase().includes(term) ||
+                            option.email?.toLowerCase().includes(term) ||
+                            option.mobile?.toLowerCase().includes(term)
+                        )
+                    );
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        variant="outlined"
+                        label="Select Users"
+                        placeholder="Search by name, email or mobile"
+                    />
+                )}
+                renderOption={(props, option) => {
+                    const isSelected = batch[batchIndex].selectedUsers.includes(option._id);
+                    return (
+                        <li {...props} key={option._id}>
+                            <Checkbox
+                                checked={isSelected}
+                                style={{ marginRight: 8 }}
+                            />
+                            <Typography>
+                                {option.firstName} {option.lastName}
+                                <Typography component="span" color="textSecondary" sx={{ ml: 1 }}>
+                                    ({option.mobile}) • {option.email}
+                                </Typography>
+                            </Typography>
+                        </li>
+                    );
+                }}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
+            />
+        );
+    };
 
     return (
         <main style={{ background: "#fff", boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px", borderRadius: "10px", padding: 20 }}>
@@ -324,6 +419,22 @@ const AddMockEntryArea = forwardRef((props, ref) => {
             </Grid>
 
             <div style={{ margin: '45px' }}></div>
+            <Accordion expanded={privateAccordion} style={{marginBottom:"30px"}}>
+                <AccordionSummary
+                    expandIcon={<IconButton > <FcExpand /> </IconButton>}
+                    aria-controls="PrivateInformation"
+                    id="PrivateInformation"
+                    onClick={() => setPrivateAccordion(!privateAccordion)}
+                >
+                    <Typography>Booking Rules</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography variant="subtitle2" gutterBottom>
+                        Booking rules are now configured individually for each batch below.
+                    </Typography>
+                </AccordionDetails>
+            </Accordion>
+
 
             {batch.map((entry, index) => (
                 <Paper variant="outlined" style={{ padding: '15px', marginBottom: '10px', borderRadius: '10px' }} key={index}>
@@ -404,6 +515,27 @@ const AddMockEntryArea = forwardRef((props, ref) => {
                                 </Button>
                             </Grid>
                         )}
+                        
+                        <Grid item xs={12}>
+                            <Typography variant="subtitle2" gutterBottom sx={{ mt: 2 }}>
+                                Booking Rules for Batch {index + 1}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                            <FormControlLabel 
+                                control={
+                                    <Checkbox
+                                        checked={entry.byPassBookingFull}
+                                        onChange={(e) => handleBatchChange(index, 'byPassBookingFull', e.target.checked)}
+                                        inputProps={{ 'aria-label': 'controlled' }}
+                                    />               
+                                } 
+                                label={`By-Pass Booking Full`} 
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={8}>
+                            {renderUserSelect(index)}
+                        </Grid>
                     </Grid>
                 </Paper>
             ))}

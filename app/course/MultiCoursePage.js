@@ -29,6 +29,16 @@ function MultiCoursePage() {
       ]
     },
     {
+      title: "Subject",
+      link:"subject",
+
+      tags: [
+        { label: "Maths", id: "maths" },
+        { label: "English", id: "english" },
+        
+      ]
+    },
+    {
       title: "Duration",
       link:"duration",
       tags: [
@@ -46,6 +56,10 @@ function MultiCoursePage() {
     },
     {
       link:"courseType",
+      ids:[]
+    },
+    {
+      link:"subject",
       ids:[]
     },
     {
@@ -80,6 +94,17 @@ function MultiCoursePage() {
     }
     fetchAllData()
   }, [rowsPerPage,page,searchText,sortBy,selectedFilter])
+
+  // Add effect to ensure scrollbar is present
+  useEffect(() => {
+    // Force scrollbar visibility
+    document.documentElement.style.overflowY = 'scroll';
+    
+    // This runs on component unmount to prevent leaking styles
+    return () => {
+      // Do not remove the style when navigating away to preserve scrollbar
+    };
+  }, []);
 
   return (
     <>

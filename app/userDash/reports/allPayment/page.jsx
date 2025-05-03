@@ -24,16 +24,17 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import moment from 'moment';
-import ChildSelectorDropDown from '../../Components/Common/ChildSelectorDropDown';
 import { reportService } from '@/app/services';
 import DownReceipt from '@/app/Components/pdf/DownReceipt';
+import ChildSelectorDropDown from '@/app/Components/Common/ChildSelectorDropDown';
+import { QuickLinks } from '@/app/Components/UserDash/QuickLinks';
 
 const formatPaymentData = (myBuyCourse = [], myBuyMock = []) => {
   const coursePayments = myBuyCourse.map(payment => ({
     ...payment,
     id: payment._id,
     type: 'course',
-    description: payment.courseDescription,
+    description: payment.description,
     dates: payment.selectedDates ? 
       payment.selectedDates.map(date => moment(date).format('DD MMM YYYY')).join(', ') : '',
     duration: payment.courseDuration || '',
@@ -43,7 +44,6 @@ const formatPaymentData = (myBuyCourse = [], myBuyMock = []) => {
     ...payment,
     id: payment._id,
     type: 'mock',
-    courseName: 'Mock Test',
   }));
 
   return [...coursePayments, ...mockPayments].sort((a, b) => 
@@ -74,7 +74,7 @@ const PaymentListItem = ({ payment, expanded, onToggle }) => {
             )}
             <Box flex={1}>
               <Typography variant="subtitle1" className="font-semibold">
-                {payment.courseName}
+                {payment.title}
               </Typography>
          
             </Box>
@@ -182,26 +182,36 @@ const columns = [
   {
     field: 'paymentDate',
     headerName: 'Date',
-    width: 160,
+    width: 120,
     valueGetter: (params) => moment(params.value).format('DD MMM YYYY'),
   },
   {
     field: 'amountPaid',
     headerName: 'Amount',
-    width: 120,
-    valueGetter: (params) => `£${params.value.toFixed(2)}`,
+    width: 280,
+    renderCell: (params) => {
+      const total = params.row.amountPaid;
+      const fromStripe = params.row.amountFromStripe || 0;
+      const fromBalance = params.row.amountFromBalance || 0;
+      
+      return (
+        <Typography variant="body2">
+          £{total.toFixed(2)} ({fromStripe ? `£${fromStripe.toFixed(2)} paid` : '£0 paid'}
+          {fromBalance ? ` + £${fromBalance.toFixed(2)} supercoin` : ''})
+        </Typography>
+      );
+    },
   },
-
   {
-    field: 'courseName',
+    field: 'title',
     headerName: 'Course/Test',
-    width: 250,
+    width: 150,
     valueGetter: (params) => params.value || 'Mock Test',
   },
   {
     field: 'childName',
     headerName: 'Student',
-    width: 150,
+    width: 120,
     renderCell: (params) => (
       <Stack>
         <Typography variant="body2">{params.value} </Typography>
@@ -285,7 +295,8 @@ export default function PaymentsPage() {
 
   return (
     <Box className="p-4">
-      <Card className="shadow-md rounded-xl">
+      <QuickLinks />
+      <Card className="shadow-md rounded-xl mt-4">
         <CardContent>
           <Grid container spacing={2} alignItems="center" className="mb-4">
             <Grid item xs={12} md={6}>
