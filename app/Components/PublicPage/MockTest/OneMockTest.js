@@ -23,6 +23,7 @@ import moment from 'moment';
 import { styled } from '@mui/material/styles';
 import FaqCom from "../../ITStartup/Faq/FaqCom";
 import CloseIcon from '@mui/icons-material/Close';
+import BatchDialog from "./BatchDialog";
 
 // Update AnimatedButton to accept custom colors
 const AnimatedButton = styled('button')(({ theme, bgcolor, hovercolor, textcolor = 'white' }) => ({
@@ -66,6 +67,7 @@ const AnimatedButton = styled('button')(({ theme, bgcolor, hovercolor, textcolor
 const OneMockTest = ({ data }) => {
   const [openBatchModal, setOpenBatchModal] = useState(false);
   const [openFAQModal, setOpenFAQModal] = useState(false);
+  
   // Format date for display
   const formatDateDisplay = (dateString) => {
     return moment(dateString).format('Do MMM YYYY');
@@ -239,94 +241,11 @@ const OneMockTest = ({ data }) => {
       </Grid>
 
       {/* Batch Details Modal */}
-      <Dialog 
-        open={openBatchModal} 
+      <BatchDialog 
+        open={openBatchModal}
         onClose={() => setOpenBatchModal(false)}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ 
-          backgroundColor: '#F3F4F6',
-          color: '#1F2937',
-          fontWeight: 'bold',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center'
-        }}>
-           {data.testType.label} Mock Test Batches
-          <CloseIcon 
-            onClick={() => setOpenBatchModal(false)} 
-            sx={{ cursor: 'pointer', color: '#1F2937' }} 
-          />
-        </DialogTitle>
-        <DialogContent>
-          <div style={{ marginTop: '16px' }}>
-            {data.batch.map((batch, index) => (
-              <div key={index} style={{ 
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#F9FAFB',
-                padding: '16px',
-                borderRadius: '4px',
-                marginBottom: '8px'
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                    <CalendarMonthIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
-                    <Typography variant="body1" sx={{ color: '#4B5563', fontWeight: 'medium' }}>
-                      {formatDateDisplay(batch.date)}
-                    </Typography>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <AccessTimeIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
-                    <Typography variant="body2" sx={{ color: '#6B7280' }}>
-                      {formatTimeDisplay(batch.startTime)} - {formatTimeDisplay(batch.endTime)}
-                    </Typography>
-                  </div>
-                </div>
-                <Typography 
-                  variant="body1" 
-                  sx={{ 
-                    color: batch.filled ? '#DC2626' : '#059669', 
-                    fontWeight: 'bold', 
-                    fontSize: batch.filled ? '0.875rem' : '1rem' 
-                  }}
-                >
-                  {batch.filled ? 'Booking Full' : `£${batch.oneBatchprice}`}
-                </Typography>
-              </div>
-            ))}
-          </div>
-        </DialogContent>
-        <DialogActions sx={{ padding: '16px', display: 'flex', justifyContent: 'space-between' }}>
-          <Button 
-            onClick={() => setOpenBatchModal(false)}
-            sx={{ 
-              color: 'white', 
-              backgroundColor: 'red', 
-              '&:hover': { backgroundColor: 'darkred' },
-              flex: 1,
-              marginRight: '8px'
-            }}
-          >
-            Close
-          </Button>
-          <Link href={"/mockTest/buy/" + data._id} style={{ flex: 1 }}>
-            <Button 
-              onClick={() => setOpenBatchModal(false)}
-              sx={{ 
-                color: 'white', 
-                backgroundColor: 'green', 
-                '&:hover': { backgroundColor: 'darkred' },
-                width: '100%'
-              }}
-            >
-              Buy Now
-            </Button>
-          </Link>
-        </DialogActions>
-      </Dialog>
+        data={data}
+      />
 
       {/* FAQ Modal */}
       <Dialog 
