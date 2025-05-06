@@ -6,7 +6,8 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Skeleton
+  CircularProgress,
+  Box
 } from "@mui/material";
 import Link from "next/link";
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,7 +16,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import moment from 'moment';
 import { mockTestService } from "@/app/services";
 
-const BatchDialog = ({ open, onClose, data }) => {
+const BatchDialog = ({ open, onClose, data, loading: externalLoading }) => {
     const [loading, setLoading] = useState(true);
     const [oneData, setOneData] = useState({});
     const snackRef = useRef();
@@ -28,62 +29,40 @@ const BatchDialog = ({ open, onClose, data }) => {
   const formatTimeDisplay = (time) => {
     return moment(time, 'HH:mm').format('h:mm A');
   };
-console.log({open})
+
   useEffect(() => {
-    if(open){
-    // Getting date from Voucher in URL
-
-    async function getOneMockTest  () {
-      setLoading(true)
-      console.log("function got called")
-    try{
-      let res = await mockTestService.publicGetOne(`${data._id}`);
-console.log(res)    
-      if (res.variant === "success") {
-        setOneData(res.data)
-        console.log(res.data)
-        // snackRef.current.handleSnack(res);
-      } else {
-        snackRef.current.handleSnack(res);
-        console.log(res);
+    // If loading is controlled externally, use that value
+    if (externalLoading !== undefined) {
+      setLoading(externalLoading);
+      // If not loading and we have data from parent, use it
+      if (!externalLoading && data) {
+        setOneData(data);
       }
-    }catch (error) {
-      console.error("Error fetching data:", error);
-    }   
-      setLoading(false)
-
+      return;
     }
-    getOneMockTest();
-  }
-  }, [open]);
 
-
-  // Render loading skeletons
-  const renderSkeletons = () => {
-    return Array(3).fill(0).map((_, index) => (
-      <div key={index} style={{ 
-        display: 'flex',
-        alignItems: 'center',
-        gap: '8px',
-        backgroundColor: '#F9FAFB',
-        padding: '16px',
-        borderRadius: '4px',
-        marginBottom: '8px'
-      }}>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <CalendarMonthIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
-            <Skeleton variant="text" width={120} height={24} />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <AccessTimeIcon sx={{ color: '#6B7280', fontSize: '1rem' }} />
-            <Skeleton variant="text" width={160} height={20} />
-          </div>
-        </div>
-        <Skeleton variant="text" width={60} height={28} />
-      </div>
-    ));
-  };
+    // Otherwise, handle loading internally
+    if (open) {
+      async function getOneMockTest() {
+        setLoading(true);
+        try {
+          let res = await mockTestService.publicGetOne(`${data._id}`);
+          if (res.variant === "success") {
+            setOneData(res.data);
+          } else {
+            if (snackRef.current) {
+              snackRef.current.handleSnack(res);
+            }
+            console.log(res);
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }   
+        setLoading(false);
+      }
+      getOneMockTest();
+    }
+  }, [open, data, externalLoading]);
 
   return (
     <Dialog 
@@ -100,22 +79,30 @@ console.log(res)
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        {loading ? (
-          <Skeleton variant="text" width={200} height={32} />
-        ) : (
-          `${oneData?.testType?.label || 'Mock Test'} Batches`
-        )}
+        {loading ? "Loading Batches..." : `${oneData?.testType?.label || 'Mock Test'} Batches`}
         <CloseIcon 
           onClick={onClose} 
           sx={{ cursor: 'pointer', color: '#1F2937' }} 
         />
       </DialogTitle>
       <DialogContent>
-        <div style={{ marginTop: '16px' }}>
-          {loading ? (
-            renderSkeletons()
-          ) : (
-            oneData?.batch?.map((batch, index) => (
+        {loading ? (
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            alignItems: 'center', 
+            minHeight: '200px',
+            flexDirection: 'column',
+            gap: 2
+          }}>
+            <CircularProgress color="primary" />
+            <Typography variant="body2" color="text.secondary">
+              Loading batch details...
+            </Typography>
+          </Box>
+        ) : (
+          <div style={{ marginTop: '16px' }}>
+            {oneData?.batch?.map((batch, index) => (
               <div key={index} style={{ 
                 display: 'flex',
                 alignItems: 'center',
@@ -150,9 +137,9 @@ console.log(res)
                   {batch.filled ? 'Booking Full' : `£${batch.oneBatchprice}`}
                 </Typography>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </DialogContent>
       <DialogActions sx={{ padding: '16px', display: 'flex', justifyContent: 'space-between' }}>
         <Button 

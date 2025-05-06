@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { 
   Divider, 
   Grid, 
@@ -11,7 +11,8 @@ import {
   Button,
   useMediaQuery,
   useTheme,
-  Stack
+  Stack,
+  CircularProgress
 } from "@mui/material";
 import Link from "next/link";
 import { formatDateToShortMonth } from "@/app/utils/dateFormat";
@@ -24,6 +25,7 @@ import { styled } from '@mui/material/styles';
 import FaqCom from "../../ITStartup/Faq/FaqCom";
 import CloseIcon from '@mui/icons-material/Close';
 import BatchDialog from "./BatchDialog";
+import { mockTestService } from "@/app/services";
 
 // Update AnimatedButton to accept custom colors
 const AnimatedButton = styled('button')(({ theme, bgcolor, hovercolor, textcolor = 'white' }) => ({
@@ -67,6 +69,9 @@ const AnimatedButton = styled('button')(({ theme, bgcolor, hovercolor, textcolor
 const OneMockTest = ({ data }) => {
   const [openBatchModal, setOpenBatchModal] = useState(false);
   const [openFAQModal, setOpenFAQModal] = useState(false);
+  const [isLoadingBatch, setIsLoadingBatch] = useState(false);
+  const [batchData, setBatchData] = useState(null);
+  const snackRef = useRef();
   
   // Format date for display
   const formatDateDisplay = (dateString) => {
@@ -80,9 +85,32 @@ const OneMockTest = ({ data }) => {
 
   // Get lowest price from all batches
   const lowestPrice = Math.min(...data.batch.map(b => b.oneBatchprice));
-    const theme = useTheme();
+  const theme = useTheme();
   
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+  // Function to handle batch button click
+  const handleBatchButtonClick = async () => {
+    try {
+      setIsLoadingBatch(true);
+      // Fetch batch data
+      let res = await mockTestService.publicGetOne(`${data._id}`);
+      if (res.variant === "success") {
+        setBatchData(res.data);
+        // Open the dialog after data is loaded
+        setOpenBatchModal(true);
+      } else {
+        if (snackRef.current) {
+          snackRef.current.handleSnack(res);
+        }
+        console.error("Error fetching batch data:", res);
+      }
+    } catch (error) {
+      console.error("Error fetching batch data:", error);
+    } finally {
+      setIsLoadingBatch(false);
+    }
+  };
 
   return (
     <>
@@ -224,12 +252,32 @@ const OneMockTest = ({ data }) => {
               FAQS
             </AnimatedButton>
             <AnimatedButton
-              onClick={() => setOpenBatchModal(true)}
+              onClick={handleBatchButtonClick}
               bgcolor="#EDE9FE"
               hovercolor="#DDD6FE"
               textcolor="#5B21B6"
+              disabled={isLoadingBatch}
+              style={{ 
+                position: 'relative',
+                minWidth: '90px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
             >
-              Batches
+              {isLoadingBatch ? (
+                <>
+                  <CircularProgress 
+                    size={16} 
+                    sx={{ 
+                      color: '#5B21B6', 
+                      position: 'absolute',
+                      left: '8px'
+                    }} 
+                  />
+                  Loading...
+                </>
+              ) : 'Batches'}
             </AnimatedButton>
             <Link href={"/mockTest/buy/" + data._id} style={{ textDecoration: 'none' }}>
               <AnimatedButton>
@@ -244,7 +292,8 @@ const OneMockTest = ({ data }) => {
       <BatchDialog 
         open={openBatchModal}
         onClose={() => setOpenBatchModal(false)}
-        data={data}
+        data={batchData || data}
+        loading={false} // We've already loaded the data
       />
 
       {/* FAQ Modal */}
