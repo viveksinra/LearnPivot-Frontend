@@ -328,18 +328,25 @@ export function SearchArea({handleEdit}) {
                         <Typography variant="caption" color="success.main">-{c.discountOnFullClass}% on full course</Typography>
                       )}
                     </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="caption" color="text.secondary">Sort Date</Typography>
+                      <Typography variant="body2" fontWeight={500}>
+                        {c.sortDate ? new Date(c.sortDate).toLocaleDateString() : 'Not set'}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="caption" color="text.secondary">Parent Added</Typography>
+                      <Typography variant="body2" fontWeight={500}>
+                        {c.selectedUsers ? c.selectedUsers.length : 'Not set'}
+                      </Typography>
+                    </Grid>
                     <Grid item xs={12}>
                       <Typography variant="caption" color="text.secondary">Schedule</Typography>
                       <Typography variant="body2" fontWeight={500}>
                         ⏰ {c.startTime} - {c.endTime}
                       </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="caption" color="text.secondary">Sort Date</Typography>
-                      <Typography variant="body2" fontWeight={500}>
-                        {c.sortDate ? new Date(c.sortDate).toLocaleDateString() : 'Not set'}
-                      </Typography>
-                    </Grid>
+                   
         
                   </Grid>
                 </div>
