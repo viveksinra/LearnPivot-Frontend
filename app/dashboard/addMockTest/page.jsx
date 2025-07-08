@@ -5,7 +5,7 @@ import {Typography, Fab,styled,Avatar,CircularProgress,Rating,Badge,ToggleButton
 import { useState,useRef} from 'react';
 import {TabContext,TabList } from '@mui/lab/';
 import { mockTestService } from "../../services";
-import Link from 'next/link';
+import Link from 'next/link';  
 import { FiCheck,FiFileMinus } from "react-icons/fi";
 import {FcOk,FcNoIdea,FcOrgUnit,FcTimeline,FcExpand} from "react-icons/fc";
 import {MdModeEdit,MdSend,MdOutlineClose} from "react-icons/md";
@@ -70,12 +70,12 @@ export function SearchArea({handleEdit}) {
     async function fetchAllData() {
       setLoading(true)
       let response = await mockTestService.getAll(`${sortBy}/${rowsPerPage}/${page}/${searchText}`);
-     console.log(response)
       if(response.variant === "success"){
         setLoading(false)
         setRows(response.data)
         setTotalCount(response.totalCount)
-      }else {console.log(response); setLoading(false)}
+      }else {
+        setLoading(false)}
     }
     fetchAllData()
   }, [rowsPerPage,page,searchText,sortBy])
@@ -120,6 +120,7 @@ export function SearchArea({handleEdit}) {
       <TableCell align="left">Total Batches</TableCell>
       <TableCell align="left">Price Range</TableCell>
       <TableCell align="left">Total Seats</TableCell>
+      <TableCell align="left">Stripe</TableCell>
       <TableCell align="center">Action</TableCell>
       </TableRow>
       </TableHead>
@@ -146,6 +147,7 @@ export function SearchArea({handleEdit}) {
         <TableCell align="left">
           {r.batch?.reduce((total, b) => total + b.totalSeat, 0) || 0}
         </TableCell>
+        <TableCell align="left">{r.stripeAccount?.label || '-'}</TableCell>
         <TableCell align="center">
           <Button onClick={()=>handleEdit(r._id)} variant="text" startIcon={<MdModeEdit />}>Edit</Button>
         </TableCell>
@@ -239,6 +241,9 @@ export function SearchArea({handleEdit}) {
       <Typography variant="subtitle2" color="text.secondary" sx={{ mb: 1 }}>
         Available Batches ({c.batch?.length || 0})
       </Typography>
+      {c.stripeAccount?.label && (
+        <Chip label={c.stripeAccount.label} size="small" color="info" sx={{ mb: 1 }} />
+      )}
       <div style={{ 
         maxHeight: '150px', 
         overflowY: 'auto',

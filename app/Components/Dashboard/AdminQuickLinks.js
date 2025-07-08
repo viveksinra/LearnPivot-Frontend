@@ -47,7 +47,10 @@ export const AdminQuickLinks = () => {
       items: [
         { title: "All Courses", link: "/dashboard/addCourse", count: 24 },
         { title: "Mock Tests", link: "/dashboard/addMockTest", count: 16 },
-        { title: "User Course Access", link: "/dashboard/report/userCourseAccess", count: 16 }
+        { title: "User Course Access", link: "/dashboard/report/userCourseAccess", count: 16 },
+        { title: "CSSE Report Maker", link: "/dashboard/reportMaker/csseMockTest", count: 12 },
+        { title: "FSCE Report Maker", link: "/dashboard/reportMaker/fsceMockTest", count: 12 },
+
       ],
       bgColor: theme.palette.primary.light,
       accentColor: theme.palette.primary.main,

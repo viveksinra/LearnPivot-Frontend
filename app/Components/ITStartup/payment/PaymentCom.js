@@ -12,22 +12,18 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
     
     // Start polling only when we have data and status is not succeeded
     if (data && data.status && data.status.toLowerCase() !== "succeeded") {
-      console.log("Starting payment status polling...");
       setPollingActive(true);
       
       intervalId = setInterval(() => {
-        console.log("Polling payment status...");
         onRefresh(); // This calls the API to check the latest status
       }, 10000); // Poll every 10 seconds
     } else if (data && data.status && data.status.toLowerCase() === "succeeded") {
-      console.log("Payment succeeded, stopping polling");
       setPollingActive(false);
     }
     
     // Cleanup function
     return () => {
       if (intervalId) {
-        console.log("Clearing polling interval");
         clearInterval(intervalId);
       }
     };
@@ -82,6 +78,7 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
     paymentDate: data.paymentDate ? formatDateToShortMonth(data.paymentDate) : "N/A",
     status: data.status || "pending",
     testUrl: data.testUrl || "#",
+    childName: data.childName || "N/A",
   };
 
   const stateConfig = {
@@ -146,6 +143,11 @@ const PaymentCom = ({ data, isLoading = false, onRefresh }) => {
         <li>
           <span>
             <i className="bx bxs-badge-check"></i> Ref : {paymentDetails.refNo}
+          </span>
+        </li>
+        <li>
+          <span>
+            <i className="bx bxs-badge-check"></i> Child Name: {paymentDetails.childName}
           </span>
         </li>
         <li>
