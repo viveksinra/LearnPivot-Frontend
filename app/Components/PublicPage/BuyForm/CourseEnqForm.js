@@ -44,6 +44,8 @@ function CourseEnqForm({
   const [canBuy, setCanBuy] = useState(!data.onlySelectedParent);
   const [isAvailable, setIsAvailable] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [allowWaitingList, setAllowWaitingList] = useState(false);
+  const [isWaitListed, setIsWaitListed] = useState(false);
 
   const [alreadyBoughtDate, setAlreadyBoughtDate] = useState([]);
   const [hideStartDateSelector, setHideStartDateSelector] = useState(false);
@@ -86,6 +88,8 @@ function CourseEnqForm({
         try {
           let res = await myCourseService.checkIfSeatAvailable(`${data._id}`);
           setIsAvailable(res?.isAvailable !== false);
+          setAllowWaitingList(res?.allowWaitingList === true);
+          setIsWaitListed(res?.isWaitListed === true);
         } catch (error) {
           console.error("Error checking seat availability:", error);
           setIsAvailable(false);
@@ -105,6 +109,8 @@ function CourseEnqForm({
     } else {
       setIsAvailable(true);
     }
+    setAllowWaitingList(res?.allowWaitingList === true);
+    setIsWaitListed(res?.isWaitListed === true);
   };
 
   useEffect(() => {
@@ -128,6 +134,30 @@ function CourseEnqForm({
     // If coming back from payment, preserveSelections stays true (already set)
   };
 
+  const joinWaiting = async () => {
+    try {
+      const res = await myCourseService.joinWaitingList({ courseId: data._id, childId: selectedChild?._id });
+      // snackRef.current.handleSnack(res);
+      if (res.variant === 'success' || res.variant === 'info') {
+        setIsWaitListed(true);
+      }
+    } catch (error) {
+      snackRef.current.handleSnack({ variant: 'error', message: 'Failed to join waiting list' });
+    }
+  };
+
+  const leaveWaiting = async () => {
+    try {
+      const res = await myCourseService.leaveWaitingList({ courseId: data._id, childId: selectedChild?._id });
+      // snackRef.current.handleSnack(res);
+      if (res.variant === 'success') {
+        setIsWaitListed(false);
+      }
+    } catch (error) {
+      snackRef.current.handleSnack({ variant: 'error', message: 'Failed to remove from waiting list' });
+    }
+  };
+
   return (
     <>
       {step === 1 && <ComLogSigForm isRedirectToDashboard={false} />}
@@ -137,7 +167,14 @@ function CourseEnqForm({
       )}
       
       {step !== 1 && !isLoading && (!canBuy || !isAvailable) && (
-        <CourseBookingFullMessage userInfo={state} data={data}/> 
+        <CourseBookingFullMessage 
+          userInfo={state} 
+          data={data}
+          allowWaitingList={allowWaitingList}
+          isWaitListed={isWaitListed}
+          onJoinWaitingList={joinWaiting}
+          onLeaveWaitingList={leaveWaiting}
+        /> 
       )}
       
       {step === 2 && !isLoading && canBuy && isAvailable && (

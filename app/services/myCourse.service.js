@@ -181,4 +181,40 @@ export class MyCourseService {
     .then((res) => res.data.result.Location)
     .catch((err) => {console.log(err) });
   };
+
+  joinWaitingList = async ({ courseId, childId = null }) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/course/waitingList/join/${courseId}`, { childId }, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
+  // Admin: fetch waiting list
+  adminGetWaitingList = async (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return this.instance
+      .get(`/api/v1/publicMaster/course/waitingList/admin/listAll${qs ? `?${qs}` : ""}`, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
+  // Admin: update status
+  adminUpdateWaitingStatus = async ({ entryId, status }) => {
+    return this.instance
+      .post(`/api/v1/publicMaster/course/waitingList/admin/updateStatus/${entryId}`, { status }, {
+        headers: getAuthorizationHeader(),
+      })
+      .then((res) => res.data);
+  };
+
+  leaveWaitingList = async ({ courseId, childId = null }) => {
+    return this.instance
+      .delete(`/api/v1/publicMaster/course/waitingList/leave/${courseId}`, {
+        headers: getAuthorizationHeader(),
+        data: { childId }
+      })
+      .then((res) => res.data);
+  };
 }
